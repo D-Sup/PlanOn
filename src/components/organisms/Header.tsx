@@ -21,6 +21,7 @@ interface HeaderTypes {
   ChatRoomHeader: ({ data, handleFunc }: { data: any, handleFunc: (() => void)[] }) => JSX.Element;
   PostDetailHeader: ({ title }: { title: string }) => JSX.Element;
   WritePostHeader: ({ isRequired, handleFunc }: { isRequired: boolean, handleFunc: (() => void)[] }) => JSX.Element;
+  ManageSchedulesHeader: ({ title, handleFunc }: { title: string, handleFunc: () => void }) => JSX.Element;
 }
 
 const Header = (): HeaderTypes => {
@@ -51,7 +52,6 @@ const Header = (): HeaderTypes => {
       </div>
     )
   }
-
 
   const MapViewHeader = (): JSX.Element => {
     return (
@@ -110,7 +110,6 @@ const Header = (): HeaderTypes => {
     )
   }
 
-
   const PostDetailHeader = ({ title }: { title: string }): JSX.Element => {
     return (
       <header className="relative flex-center w-screen min-h-[40px]">
@@ -137,7 +136,21 @@ const Header = (): HeaderTypes => {
     )
   }
 
-  return { SearchHeaderForModal, MapViewHeaderForModal, MapViewHeader, SearchHeader, FeedHeader, ChatHeader, ChatRoomHeader, PostDetailHeader, WritePostHeader }
+  const ManageSchedulesHeader = ({ title, handleFunc }: { title: string, handleFunc: () => void }): JSX.Element => {
+    return (
+      <header className="relative flex-center w-screen min-h-[40px]">
+        <button className="absolute left-[30px]" type="button" onClick={goBack}>
+          <p className="text-md text-red">취소</p>
+        </button>
+        <h2 className="text-xlg text-white font-bold">{title}</h2>
+        <button className="absolute right-[30px]" type="button" onClick={handleFunc}>
+          <p className={`text-md font-bold ${isRequired ? "text-red" : "text-gray-heavy"}`}>{isEdit ? "수정" : "추가"}</p>
+        </button>
+      </header>
+    )
+  }
+
+  return { SearchHeaderForModal, MapViewHeaderForModal, MapViewHeader, SearchHeader, FeedHeader, ChatHeader, ChatRoomHeader, PostDetailHeader, WritePostHeader, ManageSchedulesHeader }
 
 }
 
