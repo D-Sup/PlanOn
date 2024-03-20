@@ -13,6 +13,7 @@ import IconMoreVertical from "../../assets/images/icon-more-vertical.svg?react";
 
 interface HeaderTypes {
   SearchHeaderForModal: () => JSX.Element;
+  MapViewHeaderForModal: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element;
 }
 
 const Header = (): HeaderTypes => {
@@ -33,7 +34,18 @@ const Header = (): HeaderTypes => {
     )
   }
 
-  return { SearchHeaderForModal }
+  const MapViewHeaderForModal = ({ data, handleFunc }: { data: any, handleFunc: () => void }): JSX.Element => {
+    return (
+      <div className="w-screen flex items-center justify-between pb-[10px]" style={{ boxShadow: "0 1px var(--gray-heavy)" }}>
+        <ProfileCard title={"1박2일"} description={"게시물 500"} src={iconLocation} />
+        <button type="button" onClick={handleFunc}>
+          <IconCircleX width={20} height={20} fill={"var(--gray-old)"} />
+        </button>
+      </div>
+    )
+  }
+
+  return { SearchHeaderForModal, MapViewHeaderForModal }
 
 }
 
