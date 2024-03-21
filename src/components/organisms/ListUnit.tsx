@@ -23,6 +23,7 @@ interface ListUnitTypes {
   PostScheduleListUnit: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element,
   PostContentListUnit: ({ data }: { data: any }) => JSX.Element,
   PostActionListUnit: ({ data, handleFunc }: { data: any, handleFunc: (() => void)[] }) => JSX.Element,
+  CommentListUnit: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element,
 }
 
 const ListUnit = (): ListUnitTypes => {
@@ -143,8 +144,57 @@ const ListUnit = (): ListUnitTypes => {
     )
   }
 
+  const CommentListUnit = ({ data, handleFunc }: { data: any, handleFunc: () => void }): JSX.Element => {
+    const isLike = true;
+    const commentPermission = false;
+    const heartCount = 30;
+    const [hearted, setHearted] = useState<boolean>(true);
+    return (
+      <li key={""} className="flex w-screen h-[37px]" >
+        <ProfileAvatar
+          className="w-[37px] h-[37px]"
+          src="https://cdn.pixabay.com/photo/2018/08/14/13/23/ocean-3605547_1280.jpg"
+          alt="item-image"
+        />
+        <div className="ml-[10px]">
+          <div className="flex items-center gap-[5px]">
+            <p className="text-sm text-white inline">동섭</p>
+            <IconDot width={3} height={3} fill={"var(--gray-old)"} />
+            <span className="text-xsm text-gray-old">3일전</span>
+          </div>
+          <span className="block text-xsm text-white">안녕하세요?</span>
+        </div>
+        {commentPermission ? (
+          <button
+            className="ml-auto flex flex-col items-center justify-center"
+            onClick={() => {
+              setHearted(Prev => !Prev)
+              handleFunc()
+            }}
+          >
+            <IconTrash width={14} height={13} fill={"var(--gray-heavy)"} />
+          </button>
+        ) : (
+          <button
+            className="ml-auto flex flex-col items-center justify-center"
+            onClick={() => {
+              setHearted(Prev => !Prev)
+              handleFunc()
+            }}
+          >
+            <IconHeart width={14} height={13} fill={hearted ? "#FB004D" : "var(--background)"} stroke={hearted ? "#FB004D" : "var(--gray-old)"} />
+            {isLike ?
+              <span className='text-xsm'>{hearted ? heartCount : heartCount - 1}</span> :
+              <span className='text-xsm'>{hearted ? heartCount + 1 : heartCount}</span>
+            }
+          </button>
+        )}
+      </li>
+    )
+  }
 
-  return { PostAuthorListUnit, PostScheduleListUnit, PostContentListUnit, PostActionListUnit }
+
+  return { PostAuthorListUnit, PostScheduleListUnit, PostContentListUnit, PostActionListUnit, CommentListUnit }
 }
 
 export default ListUnit
