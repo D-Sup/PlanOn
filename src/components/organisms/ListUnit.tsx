@@ -29,7 +29,7 @@ interface ListUnitTypes {
   LocationLinkListUnit: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element,
   LocationDetailLinkListUnit: ({ data, handleFunc }: { data: any, handleFunc: (() => void)[] }) => JSX.Element,
   LocationPickerListUnit: ({ data, handleFunc }: { data: any, handleFunc: (boolean: boolean) => void }) => JSX.Element,
-
+  UserLinkListUnit: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element,
 }
 
 const ListUnit = (): ListUnitTypes => {
@@ -264,7 +264,22 @@ const ListUnit = (): ListUnitTypes => {
     )
   }
 
-  return { PostAuthorListUnit, PostScheduleListUnit, PostContentListUnit, PostActionListUnit, CommentListUnit, HashTagLinkListUnit, HashTagPickerListUnit, LocationLinkListUnit, LocationDetailLinkListUnit, LocationPickerListUnit }
+  const UserLinkListUnit = ({ data, handleFunc }: { data: any, handleFunc: () => void }): JSX.Element => {
+    return (
+      <li
+        key={""}
+        className="w-screen flex items-center justify-between pb-[10px]"
+        style={{ boxShadow: "0 1px var(--gray-heavy)" }}
+        onClick={handleFunc}
+      >
+        <ProfileCard title={"동섭"} description={"안녕하세요?"} src={"https://cdn.pixabay.com/photo/2018/08/14/13/23/ocean-3605547_1280.jpg"} />
+        <IconArrow width={7} height={12} fill={"var(--white)"} />
+      </li>
+    )
+  }
+
+
+  return { PostAuthorListUnit, PostScheduleListUnit, PostContentListUnit, PostActionListUnit, CommentListUnit, HashTagLinkListUnit, HashTagPickerListUnit, LocationLinkListUnit, LocationDetailLinkListUnit, LocationPickerListUnit, UserLinkListUnit }
 }
 
 export default ListUnit
