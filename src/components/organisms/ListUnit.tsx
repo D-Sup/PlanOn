@@ -21,6 +21,7 @@ import iconHash from "../../assets/images/icon-hash.svg";
 interface ListUnitTypes {
   PostAuthorListUnit: ({ handleFunc }: { handleFunc: (() => void)[] }) => JSX.Element,
   PostScheduleListUnit: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element,
+  PostContentListUnit: ({ data }: { data: any }) => JSX.Element,
 }
 
 const ListUnit = (): ListUnitTypes => {
@@ -74,8 +75,36 @@ const ListUnit = (): ListUnitTypes => {
     )
   }
 
+  const PostContentListUnit = ({ data }: { data: any }): JSX.Element => {
+    const [isExpanded, setIsExpanded] = useState<boolean>(false);
+    const [showMoreButton, setShowMoreButton] = useState<boolean>(false);
+    const contentAreaRef = useRef<HTMLDivElement | null>(null);
 
-  return { PostAuthorListUnit, PostScheduleListUnit }
+    useEffect(() => {
+      const contentAreaRefCurrent = contentAreaRef.current;
+      if (contentAreaRefCurrent) {
+        contentAreaRefCurrent.clientHeight > 24 ?
+          setShowMoreButton(true) :
+          setShowMoreButton(false)
+      }
+    }, [])
+
+    return (
+      <div className={`pl-[10px] pr-[20px] mt-[10px] relative w-full flex text-base`} ref={contentAreaRef}>
+        <span className={`${isExpanded ? "w-full" : showMoreButton ? "w-4/5 reduce-words" : "w-full"} text-md text-white`}>
+          {"가나다라마바사가나다라마바사"}
+        </span>
+        {showMoreButton && (
+          <button className={`${isExpanded ? "hidden" : "block"} text-gray-600 absolute top-1.25 right-[20px]`} onClick={() => setIsExpanded((prev) => !prev)}>
+            더보기
+          </button>
+        )}
+      </div>
+    )
+  }
+
+
+  return { PostAuthorListUnit, PostScheduleListUnit, PostContentListUnit }
 }
 
 export default ListUnit
