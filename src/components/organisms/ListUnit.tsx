@@ -30,6 +30,7 @@ interface ListUnitTypes {
   LocationDetailLinkListUnit: ({ data, handleFunc }: { data: any, handleFunc: (() => void)[] }) => JSX.Element,
   LocationPickerListUnit: ({ data, handleFunc }: { data: any, handleFunc: (boolean: boolean) => void }) => JSX.Element,
   UserLinkListUnit: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element,
+  ChatMemberListUnit: ({ data, handleFunc }: { data: any, handleFunc: (() => void)[] }) => JSX.Element,
 }
 
 const ListUnit = (): ListUnitTypes => {
@@ -277,9 +278,28 @@ const ListUnit = (): ListUnitTypes => {
       </li>
     )
   }
+  const ChatMemberListUnit = ({ data, handleFunc }: { data: any, handleFunc: (() => void)[] }): JSX.Element => {
+
+    return (
+      <LeftAndRightSlider key={0} className="h-[34px]" moreAreaWidth={50}>
+        <div className="w-screen flex items-center justify-between" onClick={() => handleFunc[0]}>
+          <ProfileCard title={"동섭"} description={"1박 2일"} src={"https://cdn.pixabay.com/photo/2018/08/14/13/23/ocean-3605547_1280.jpg"} />
+          <div className="h-[34px] flex items-start justify-start flex-col gap-[7px]">
+            <span className="text-xsm text-gray-heavy leading-none">3일 전</span>
+            <div className="px-[5px] py-[2px] min-w-[13px] h-[13px] rounded-full bg-white">
+              <span className="block text-center text-[6px] font-bold text-black">300+</span>
+            </div>
+          </div>
+        </div >
+        <button className="absolute top-1/2 right-[15px] -translate-y-1/2" type="button" onClick={() => handleFunc[1]}>
+          <IconExit width={17} height={17} fill={"var(--red)"} />
+        </button>
+      </LeftAndRightSlider>
+    )
+  }
 
 
-  return { PostAuthorListUnit, PostScheduleListUnit, PostContentListUnit, PostActionListUnit, CommentListUnit, HashTagLinkListUnit, HashTagPickerListUnit, LocationLinkListUnit, LocationDetailLinkListUnit, LocationPickerListUnit, UserLinkListUnit }
+  return { PostAuthorListUnit, PostScheduleListUnit, PostContentListUnit, PostActionListUnit, CommentListUnit, HashTagLinkListUnit, HashTagPickerListUnit, LocationLinkListUnit, LocationDetailLinkListUnit, LocationPickerListUnit, UserLinkListUnit, ChatMemberListUnit }
 }
 
 export default ListUnit
