@@ -22,6 +22,7 @@ interface ListUnitTypes {
   PostAuthorListUnit: ({ handleFunc }: { handleFunc: (() => void)[] }) => JSX.Element,
   PostScheduleListUnit: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element,
   PostContentListUnit: ({ data }: { data: any }) => JSX.Element,
+  PostActionListUnit: ({ data, handleFunc }: { data: any, handleFunc: (() => void)[] }) => JSX.Element,
 }
 
 const ListUnit = (): ListUnitTypes => {
@@ -103,8 +104,47 @@ const ListUnit = (): ListUnitTypes => {
     )
   }
 
+  const PostActionListUnit = ({ data, handleFunc }: { data: any, handleFunc: (() => void)[] }): JSX.Element => {
 
-  return { PostAuthorListUnit, PostScheduleListUnit, PostContentListUnit }
+    const isLike = true;
+
+    const heartCount = 30;
+    const [hearted, setHearted] = useState<boolean>(true);
+
+
+    return (
+      <div className="pl-[10px] pr-[20px] pt-[10px] flex items-center gap-[20px]">
+        <button
+          className="flex gap-[10px] items-center justify-center"
+          type="button"
+          onClick={() => {
+            setHearted(Prev => !Prev)
+            handleFunc[0]()
+          }}
+        >
+          <IconHeart width={22} height={20} fill={hearted ? "#FB004D" : "var(--gray-heavy)"} stroke={hearted ? "#FB004D" : ""} />
+          {isLike ?
+            <span className='text-xsm text-white'>{hearted ? heartCount : heartCount - 1}</span> :
+            <span className='text-xsm text-white'>{hearted ? heartCount + 1 : heartCount}</span>
+          }
+        </button>
+        <button
+          className="flex gap-[10px] items-center justify-center"
+          type="button"
+          onClick={() => {
+            handleFunc[1]()
+          }}
+        >
+          <IconComment width={20} height={20} fill={"var(--gray-heavy)"} />
+          <span className='text-xsm text-white'>{4}</span>
+        </button>
+        <span className="ml-auto text-sm text-gray-old">2024.3.24</span>
+      </div>
+    )
+  }
+
+
+  return { PostAuthorListUnit, PostScheduleListUnit, PostContentListUnit, PostActionListUnit }
 }
 
 export default ListUnit
