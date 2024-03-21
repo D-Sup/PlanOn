@@ -28,6 +28,8 @@ interface ListUnitTypes {
   HashTagPickerListUnit: ({ data, handleFunc }: { data: any, handleFunc: (boolean: boolean) => void }) => JSX.Element,
   LocationLinkListUnit: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element,
   LocationDetailLinkListUnit: ({ data, handleFunc }: { data: any, handleFunc: (() => void)[] }) => JSX.Element,
+  LocationPickerListUnit: ({ data, handleFunc }: { data: any, handleFunc: (boolean: boolean) => void }) => JSX.Element,
+
 }
 
 const ListUnit = (): ListUnitTypes => {
@@ -253,8 +255,16 @@ const ListUnit = (): ListUnitTypes => {
     )
   }
 
+  const LocationPickerListUnit = ({ data, handleFunc }: { data: any, handleFunc: (boolean: boolean) => void }): JSX.Element => {
+    return (
+      <li key={""} className="w-screen flex items-center justify-between pb-[10px]" style={{ boxShadow: "0 1px var(--gray-heavy)" }}>
+        <ProfileCard title={"1박2일"} description={"자양로 117"} src={iconLocation} />
+        <ToggleButton handleFunc={handleFunc} />
+      </li>
+    )
+  }
 
-  return { PostAuthorListUnit, PostScheduleListUnit, PostContentListUnit, PostActionListUnit, CommentListUnit, HashTagLinkListUnit, HashTagPickerListUnit, LocationLinkListUnit, LocationDetailLinkListUnit }
+  return { PostAuthorListUnit, PostScheduleListUnit, PostContentListUnit, PostActionListUnit, CommentListUnit, HashTagLinkListUnit, HashTagPickerListUnit, LocationLinkListUnit, LocationDetailLinkListUnit, LocationPickerListUnit }
 }
 
 export default ListUnit
