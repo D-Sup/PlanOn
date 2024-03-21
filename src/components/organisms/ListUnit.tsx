@@ -24,6 +24,7 @@ interface ListUnitTypes {
   PostContentListUnit: ({ data }: { data: any }) => JSX.Element,
   PostActionListUnit: ({ data, handleFunc }: { data: any, handleFunc: (() => void)[] }) => JSX.Element,
   CommentListUnit: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element,
+  HashTagLinkListUnit: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element,
 }
 
 const ListUnit = (): ListUnitTypes => {
@@ -193,8 +194,22 @@ const ListUnit = (): ListUnitTypes => {
     )
   }
 
+  const HashTagLinkListUnit = ({ data, handleFunc }: { data: any, handleFunc: () => void }): JSX.Element => {
+    return (
+      <li
+        key={""}
+        className="w-screen flex items-center justify-between pb-[10px]"
+        style={{ boxShadow: "0 1px var(--gray-heavy)" }}
+        onClick={handleFunc}
+      >
+        <ProfileCard title={"1박2일"} description={"게시물 500"} src={iconHash} />
+        <IconArrow width={7} height={12} fill={"var(--white)"} />
+      </li>
+    )
+  }
 
-  return { PostAuthorListUnit, PostScheduleListUnit, PostContentListUnit, PostActionListUnit, CommentListUnit }
+
+  return { PostAuthorListUnit, PostScheduleListUnit, PostContentListUnit, PostActionListUnit, CommentListUnit, HashTagLinkListUnit }
 }
 
 export default ListUnit
