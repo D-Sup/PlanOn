@@ -31,6 +31,7 @@ interface ListUnitTypes {
   LocationPickerListUnit: ({ data, handleFunc }: { data: any, handleFunc: (boolean: boolean) => void }) => JSX.Element,
   UserLinkListUnit: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element,
   ChatMemberListUnit: ({ data, handleFunc }: { data: any, handleFunc: (() => void)[] }) => JSX.Element,
+  ChatJoinableMemberItem: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element,
 }
 
 const ListUnit = (): ListUnitTypes => {
@@ -278,6 +279,7 @@ const ListUnit = (): ListUnitTypes => {
       </li>
     )
   }
+
   const ChatMemberListUnit = ({ data, handleFunc }: { data: any, handleFunc: (() => void)[] }): JSX.Element => {
 
     return (
@@ -298,8 +300,16 @@ const ListUnit = (): ListUnitTypes => {
     )
   }
 
+  const ChatJoinableMemberItem = ({ data, handleFunc }: { data: any, handleFunc: () => void }): JSX.Element => {
+    return (
+      <li key={""} className="w-screen" onClick={handleFunc}>
+        <ProfileCard title={"동섭"} description={"안녕하세요?"} src={"https://cdn.pixabay.com/photo/2018/08/14/13/23/ocean-3605547_1280.jpg"} />
+      </li>
+    )
+  }
 
-  return { PostAuthorListUnit, PostScheduleListUnit, PostContentListUnit, PostActionListUnit, CommentListUnit, HashTagLinkListUnit, HashTagPickerListUnit, LocationLinkListUnit, LocationDetailLinkListUnit, LocationPickerListUnit, UserLinkListUnit, ChatMemberListUnit }
+
+  return { PostAuthorListUnit, PostScheduleListUnit, PostContentListUnit, PostActionListUnit, CommentListUnit, HashTagLinkListUnit, HashTagPickerListUnit, LocationLinkListUnit, LocationDetailLinkListUnit, LocationPickerListUnit, UserLinkListUnit, ChatMemberListUnit, ChatJoinableMemberItem }
 }
 
 export default ListUnit
