@@ -1,12 +1,15 @@
 import { Fragment } from "react/jsx-runtime";
 
-const PostProgressIndicator = ({ progress }: { progress: number }) => {
+interface PostProgressIndicatorProps {
+  steps: {
+    progressCheck: number,
+    description: string
+  }[],
+  progress: number
+}
 
-  const steps = [
-    { progressCheck: 0, description: "사진선택" },
-    { progressCheck: 1, description: "일정선택" },
-    { progressCheck: 2, description: "내용선택" }
-  ];
+const PostProgressIndicator = ({ steps, progress }: PostProgressIndicatorProps) => {
+
 
   return (
     <div className="pb-[25px] px-[8px] flex items-center">
