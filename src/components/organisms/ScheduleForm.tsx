@@ -1,3 +1,12 @@
+import { useNavigate } from "react-router-dom";
+import useModalStack from "@/hooks/useModalStack";
+
+import { useSetRecoilState } from "recoil";
+import { routeDirectionValue } from "@/store";
+
+import { SetterOrUpdater } from "recoil";
+
+import SchedulePlacePicker from "./SchedulePlacePicker";
 import FormField from "../mocules/FormField";
 import GenericInput from "../atoms/GenericInput";
 
@@ -5,16 +14,22 @@ import { Switch } from "../shadcnUIKit/switch";
 
 import { produce } from "immer"
 
+import { scheduleFormValueDefault } from "@/store";
 import { ScheduleFormValueType } from "@/store";
 
 interface ScheduleFormProps {
   formData: ScheduleFormValueType,
-  setFormData: React.Dispatch<React.SetStateAction<ScheduleFormValueType>>,
+  setFormData: SetterOrUpdater<ScheduleFormValueType> | React.Dispatch<React.SetStateAction<ScheduleFormValueType>>,
   isPrimarySchedule?: boolean,
-  detailedScheduleId?: number
+  detailedScheduleId?: number,
 }
 
 const ScheduleForm = ({ formData, setFormData, isPrimarySchedule = true, detailedScheduleId }: ScheduleFormProps) => {
+
+  const navigate = useNavigate()
+
+  const { openModal } = useModalStack()
+  const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue)
 
   return (
     <div className="flex flex-col gap-[20px]">
@@ -22,7 +37,7 @@ const ScheduleForm = ({ formData, setFormData, isPrimarySchedule = true, detaile
       {isPrimarySchedule &&
         <FormField label={"공개"}>
           <Switch
-            checked={formData.private}
+            checked={!formData.private}
             onCheckedChange={() => {
               setFormData(Prev => ({ ...Prev, private: !Prev.private }))
             }}
@@ -132,15 +147,30 @@ const ScheduleForm = ({ formData, setFormData, isPrimarySchedule = true, detaile
           id={"time-end-input"}
           type={"text"}
           placeholder={"위치추가..."}
-          value={formData.scheduleLocation}
+          value={detailedScheduleId === 0 || detailedScheduleId ? formData.scheduleDetails[detailedScheduleId]?.scheduleLocation?.placeName : formData.scheduleLocation?.placeName}
+          handleInputChange={(value: string) => {
+            setFormData(Prev => ({ ...Prev, startTime: value }))
+          }}
           resetInputValue={() => {
             setFormData((Prev) =>
               produce(Prev, (draft) => {
-                detailedScheduleId
-                  ? draft.scheduleDetails[detailedScheduleId].scheduleLocation = ""
-                  : draft.scheduleLocation = ""
+                detailedScheduleId === 0 || detailedScheduleId
+                  ? draft.scheduleDetails[detailedScheduleId].scheduleLocation = scheduleFormValueDefault.scheduleLocation
+                  : draft.scheduleLocation = scheduleFormValueDefault.scheduleLocation
               })
             )
+          }}
+          handleInputClick={() => {
+            if (detailedScheduleId === 0 || detailedScheduleId) {
+              setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
+              navigate("/map", {
+                state: {
+                  direction: "up"
+                }
+              });
+            } else {
+              openModal(SchedulePlacePicker, setFormData)
+            }
           }}
           readOnly={true}
         />
