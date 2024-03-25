@@ -105,7 +105,7 @@ const GenericInput = ({ className, id, value, type, placeholder, readOnly = fals
               variant={"outline"}
               id={id}
               className={cn(
-                "w-full px-[0] text-left font-normal",
+                "w-full px-[0] text-left font-normal rounded-none",
                 !input && "text-muted-foreground",
                 className
               )}
@@ -120,7 +120,7 @@ const GenericInput = ({ className, id, value, type, placeholder, readOnly = fals
               </div>
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
+          <PopoverContent className="w-auto p-0 text-white" align="start">
             <Calendar
               mode="single"
               selected={new Date(value as string) || input as Date}
@@ -129,7 +129,6 @@ const GenericInput = ({ className, id, value, type, placeholder, readOnly = fals
                 handleInputChange && handleInputChange(formattedInput)
                 setInput(formattedInput)
               }}
-              className=""
               locale={ko}
               initialFocus
             />
