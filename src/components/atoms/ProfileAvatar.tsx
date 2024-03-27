@@ -1,10 +1,4 @@
 import React, { useState, useEffect } from "react";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@radix-ui/react-avatar";
-import Loader from "../organisms/Loader";
 import { Skeleton } from "../shadcnUIKit/skeleton";
 
 import IconLogo from "../../assets/images/icon-logo.svg?react";
@@ -53,14 +47,3 @@ const ProfileAvatar = ({ src, className, alt, handleFunc }: {
 }
 
 export default ProfileAvatar;
-
-
-// <img src={src} className={`${className} rounded-full object-cover`} alt={alt} />
-// <Avatar>
-//   <AvatarImage src={src} className={`${className} rounded-full object-cover`} alt={alt} />
-//   <AvatarFallback>
-//     <div className="absolute-center w-[20px] h-[5px]">
-//       <Loader isSmallUse={true} />
-//     </div>
-//   </AvatarFallback>
-// </Avatar>
