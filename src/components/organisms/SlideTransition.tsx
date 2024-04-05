@@ -31,7 +31,6 @@ const SlideTransition = ({
       <CSSTransition
         key={progress}
         timeout={300}
-        classNames={`slide-${direction}`}
       >
         <div className={`w-full overflow-x-clip ${className}`}>
           {children}
