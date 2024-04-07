@@ -9,7 +9,7 @@ import LoadingModal from "./LoadingModal";
 import Alert from "./Alert";
 import Popup from "./Popup";
 import Modal from "./Modal";
-import PhotoSingleViewer from "../pages/PhotoSingleViewer";
+import PhotoSingleViewer from "./PhotoSingleViewer";
 
 import { ModalStackType } from "@/store";
 
