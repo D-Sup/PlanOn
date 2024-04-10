@@ -16,6 +16,7 @@ interface HeaderTypes {
   MapViewHeaderForModal: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element;
   MapViewHeader: () => JSX.Element;
   SearchHeader: () => JSX.Element;
+  FeedHeader: ({ handleFunc }: { handleFunc: (() => void)[] }) => JSX.Element;
 }
 
 const Header = (): HeaderTypes => {
@@ -69,7 +70,20 @@ const Header = (): HeaderTypes => {
     )
   }
 
-  return { SearchHeaderForModal, MapViewHeaderForModal, MapViewHeader, SearchHeader }
+  const FeedHeader = ({ handleFunc }: { handleFunc: (() => void)[] }): JSX.Element => {
+    return (
+      <header className="flex items-center w-screen min-h-[40px]">
+        <button className="p-[10px] absolute right-[50px]" type="button" onClick={handleFunc[0]}>
+          <IconSearch width={15} height={15} fill={"var(--white)"} />
+        </button>
+        <button className="p-[10px] absolute right-[10px]" type="button" onClick={handleFunc[1]}>
+          <IconPlus width={15} height={15} fill={"var(--white)"} />
+        </button>
+      </header>
+    )
+  }
+
+  return { SearchHeaderForModal, MapViewHeaderForModal, MapViewHeader, SearchHeader, FeedHeader }
 
 }
 
