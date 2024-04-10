@@ -20,6 +20,7 @@ interface HeaderTypes {
   ChatHeader: () => JSX.Element;
   ChatRoomHeader: ({ data, handleFunc }: { data: any, handleFunc: (() => void)[] }) => JSX.Element;
   PostDetailHeader: ({ title }: { title: string }) => JSX.Element;
+  WritePostHeader: ({ isRequired, handleFunc }: { isRequired: boolean, handleFunc: (() => void)[] }) => JSX.Element;
 }
 
 const Header = (): HeaderTypes => {
@@ -121,7 +122,22 @@ const Header = (): HeaderTypes => {
     )
   }
 
-  return { SearchHeaderForModal, MapViewHeaderForModal, MapViewHeader, SearchHeader, FeedHeader, ChatHeader, ChatRoomHeader, PostDetailHeader }
+  const WritePostHeader = ({ isRequired, handleFunc }: { isRequired: boolean, handleFunc: (() => void)[] }): JSX.Element => {
+    return (
+      <header className="relative flex-center w-screen min-h-[40px]">
+        <button className="p-[10px] absolute left-[20px]" type="button" onClick={handleFunc[0]}>
+          <IconArrow width={7} height={12} fill={"var(--white)"} />
+        </button>
+        <h2 className="text-xlg text-white font-bold">게시물 작성</h2>
+        <button className="absolute right-[30px]" type="button" onClick={handleFunc[1]}>
+          <p className={`text-md font-bold ${isRequired ? "text-red" : "text-gray-heavy"}`}>다음</p>
+        </button>
+      </header>
+
+    )
+  }
+
+  return { SearchHeaderForModal, MapViewHeaderForModal, MapViewHeader, SearchHeader, FeedHeader, ChatHeader, ChatRoomHeader, PostDetailHeader, WritePostHeader }
 
 }
 
