@@ -19,6 +19,7 @@ interface HeaderTypes {
   FeedHeader: ({ handleFunc }: { handleFunc: (() => void)[] }) => JSX.Element;
   ChatHeader: () => JSX.Element;
   ChatRoomHeader: ({ data, handleFunc }: { data: any, handleFunc: (() => void)[] }) => JSX.Element;
+  PostDetailHeader: ({ title }: { title: string }) => JSX.Element;
 }
 
 const Header = (): HeaderTypes => {
@@ -108,7 +109,19 @@ const Header = (): HeaderTypes => {
     )
   }
 
-  return { SearchHeaderForModal, MapViewHeaderForModal, MapViewHeader, SearchHeader, FeedHeader, ChatHeader, ChatRoomHeader }
+
+  const PostDetailHeader = ({ title }: { title: string }): JSX.Element => {
+    return (
+      <header className="relative flex-center w-screen min-h-[40px]">
+        <button className="p-[10px] absolute left-[20px]" type="button" onClick={goBack}>
+          <IconArrow width={7} height={12} fill={"var(--white)"} />
+        </button>
+        <h2 className="text-lg text-white">1박2일</h2>
+      </header>
+    )
+  }
+
+  return { SearchHeaderForModal, MapViewHeaderForModal, MapViewHeader, SearchHeader, FeedHeader, ChatHeader, ChatRoomHeader, PostDetailHeader }
 
 }
 
