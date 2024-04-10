@@ -15,6 +15,7 @@ interface HeaderTypes {
   SearchHeaderForModal: () => JSX.Element;
   MapViewHeaderForModal: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element;
   MapViewHeader: () => JSX.Element;
+  SearchHeader: () => JSX.Element;
 }
 
 const Header = (): HeaderTypes => {
@@ -46,7 +47,6 @@ const Header = (): HeaderTypes => {
     )
   }
 
-
   const MapViewHeader = (): JSX.Element => {
     return (
       <header className="pl-[15px] pr-[15px] flex items-center justify-center gap-[15px] w-screen min-h-[58px]">
@@ -58,7 +58,18 @@ const Header = (): HeaderTypes => {
     )
   }
 
-  return { SearchHeaderForModal, MapViewHeaderForModal, MapViewHeader }
+  const SearchHeader = (): JSX.Element => {
+    return (
+      <header className="pl-[15px] pr-[15px] flex items-center justify-center gap-[15px] w-screen min-h-[58px]">
+        <SearchBar />
+        <button type="button" onClick={goBack}>
+          <p className="w-[30px] text-md">취소</p>
+        </button>
+      </header>
+    )
+  }
+
+  return { SearchHeaderForModal, MapViewHeaderForModal, MapViewHeader, SearchHeader }
 
 }
 
