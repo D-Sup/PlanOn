@@ -14,6 +14,7 @@ import IconMoreVertical from "../../assets/images/icon-more-vertical.svg?react";
 interface HeaderTypes {
   SearchHeaderForModal: () => JSX.Element;
   MapViewHeaderForModal: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element;
+  MapViewHeader: () => JSX.Element;
 }
 
 const Header = (): HeaderTypes => {
@@ -45,7 +46,19 @@ const Header = (): HeaderTypes => {
     )
   }
 
-  return { SearchHeaderForModal, MapViewHeaderForModal }
+
+  const MapViewHeader = (): JSX.Element => {
+    return (
+      <header className="pl-[15px] pr-[15px] flex items-center justify-center gap-[15px] w-screen min-h-[58px]">
+        <button className="relative min-w-[38px] min-h-[38px] bg-input rounded-[10px]" type="button" onClick={goBack}>
+          <IconArrow className="absolute-center" width={7} height={12} fill={"var(--white)"} />
+        </button>
+        <SearchBar />
+      </header>
+    )
+  }
+
+  return { SearchHeaderForModal, MapViewHeaderForModal, MapViewHeader }
 
 }
 
