@@ -18,6 +18,7 @@ interface HeaderTypes {
   SearchHeader: () => JSX.Element;
   FeedHeader: ({ handleFunc }: { handleFunc: (() => void)[] }) => JSX.Element;
   ChatHeader: () => JSX.Element;
+  ChatRoomHeader: ({ data, handleFunc }: { data: any, handleFunc: (() => void)[] }) => JSX.Element;
 }
 
 const Header = (): HeaderTypes => {
@@ -48,6 +49,7 @@ const Header = (): HeaderTypes => {
       </div>
     )
   }
+
 
   const MapViewHeader = (): JSX.Element => {
     return (
@@ -92,7 +94,21 @@ const Header = (): HeaderTypes => {
     )
   }
 
-  return { SearchHeaderForModal, MapViewHeaderForModal, MapViewHeader, SearchHeader, FeedHeader, ChatHeader }
+  const ChatRoomHeader = ({ data, handleFunc }: { data: any, handleFunc: (() => void)[] }): JSX.Element => {
+    return (
+      <div className="px-[30px] flex items-center w-screen min-h-[50px]" >
+        <button className="mr-[20px]" type="button" onClick={goBack}>
+          <IconArrow width={7} height={12} fill={"var(--white)"} />
+        </button>
+        <ProfileCard title={"동섭"} description={"안녕하세요?"} src={"https://cdn.pixabay.com/photo/2018/08/14/13/23/ocean-3605547_1280.jpg"} handleFunc={handleFunc[0]} />
+        <button className="ml-auto" type="button" onClick={() => handleFunc[1]}>
+          <IconMoreVertical width={4} height={15} fill={"var(--white)"} />
+        </button>
+      </div>
+    )
+  }
+
+  return { SearchHeaderForModal, MapViewHeaderForModal, MapViewHeader, SearchHeader, FeedHeader, ChatHeader, ChatRoomHeader }
 
 }
 
