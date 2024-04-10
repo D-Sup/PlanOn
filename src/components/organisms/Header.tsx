@@ -17,6 +17,7 @@ interface HeaderTypes {
   MapViewHeader: () => JSX.Element;
   SearchHeader: () => JSX.Element;
   FeedHeader: ({ handleFunc }: { handleFunc: (() => void)[] }) => JSX.Element;
+  ChatHeader: () => JSX.Element;
 }
 
 const Header = (): HeaderTypes => {
@@ -83,7 +84,15 @@ const Header = (): HeaderTypes => {
     )
   }
 
-  return { SearchHeaderForModal, MapViewHeaderForModal, MapViewHeader, SearchHeader, FeedHeader }
+  const ChatHeader = (): JSX.Element => {
+    return (
+      <header className="flex items-center w-screen min-h-[40px]">
+        <h2 className="ml-[30px] text-white text-xlg font-bold">메시지</h2>
+      </header>
+    )
+  }
+
+  return { SearchHeaderForModal, MapViewHeaderForModal, MapViewHeader, SearchHeader, FeedHeader, ChatHeader }
 
 }
 
