@@ -20,6 +20,7 @@ import iconHash from "../../assets/images/icon-hash.svg";
 
 interface ListUnitTypes {
   PostAuthorListUnit: ({ handleFunc }: { handleFunc: (() => void)[] }) => JSX.Element,
+  PostScheduleListUnit: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element,
 }
 
 const ListUnit = (): ListUnitTypes => {
@@ -57,8 +58,24 @@ const ListUnit = (): ListUnitTypes => {
     )
   }
 
+  const PostScheduleListUnit = ({ data, handleFunc }: { data: any, handleFunc: () => void }): JSX.Element => {
+    return (
+      <div
+        className="pl-[10px] pr-[20px] w-full h-[50px] flex items-center justify-between"
+        style={{ boxShadow: "0 1px var(--gray-heavy)" }}
+        onClick={handleFunc}
+      >
+        <div className="flex flex-col">
+          <p className="text-md text-white">인사동 투어</p>
+          <span className="text-xsm text-gray-old">2024.3.21 - 3.22</span>
+        </div>
+        <IconArrow width={7} height={12} fill={"var(--white)"} />
+      </div>
+    )
+  }
 
-  return { PostAuthorListUnit }
+
+  return { PostAuthorListUnit, PostScheduleListUnit }
 }
 
 export default ListUnit
