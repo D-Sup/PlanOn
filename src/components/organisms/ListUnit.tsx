@@ -1,315 +1,191 @@
-import { useState, useEffect, useRef } from "react";
-
-import LeftAndRightSlider from "../mocules/LeftAndRightSlider";
 import ProfileCard from "../mocules/ProfileCard";
 import ToggleButton from "../atoms/ToggleButton";
-import ProfileAvatar from "../atoms/ProfileAvatar";
 
-import IconCirclePlus from "../../assets/images/icon-circle-plus.svg?react";
-import IconHeart from "../../assets/images/icon-heart.svg?react";
-import IconDot from "../../assets/images/icon-dot.svg?react";
-import IconMoreVertical from "../../assets/images/icon-more-vertical.svg?react";
+import formatDate from "@/utils/formatDate";
+
 import IconArrow from "../../assets/images/icon-arrow-right.svg?react";
 import IconMap from "../../assets/images/icon-map.svg?react";
-import IconExit from "../../assets/images/icon-exit.svg?react";
-import IconTrash from "../../assets/images/icon-trash.svg?react";
-import IconComment from "../../assets/images/icon-comment.svg?react";
+import IconHash from "../../assets/images/icon-hash.svg?react";
+import IconLocation from "../../assets/images/icon-location.svg?react";
+import IconUser from "../../assets/images/icon-user.svg?react";
+import IconCircleX from "../../assets/images/icon-circle-x.svg?react";
 
-import iconLocation from "../../assets/images/icon-location.svg";
-import iconHash from "../../assets/images/icon-hash.svg";
+import { ReadDocumentType } from "@/hooks/useFirestoreRead";
+import { SearchHistoryType, UsersType } from "@/types/users.type";
+import { HashtagsType } from "@/types/hashtags.type";
 
-interface ListUnitTypes {
-  PostAuthorListUnit: ({ handleFunc }: { handleFunc: (() => void)[] }) => JSX.Element,
-  PostScheduleListUnit: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element,
-  PostContentListUnit: ({ data }: { data: any }) => JSX.Element,
-  PostActionListUnit: ({ data, handleFunc }: { data: any, handleFunc: (() => void)[] }) => JSX.Element,
-  CommentListUnit: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element,
-  HashTagLinkListUnit: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element,
-  HashTagPickerListUnit: ({ data, handleFunc }: { data: any, handleFunc: (boolean: boolean) => void }) => JSX.Element,
-  LocationLinkListUnit: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element,
-  LocationDetailLinkListUnit: ({ data, handleFunc }: { data: any, handleFunc: (() => void)[] }) => JSX.Element,
-  LocationPickerListUnit: ({ data, handleFunc }: { data: any, handleFunc: (boolean: boolean) => void }) => JSX.Element,
-  UserLinkListUnit: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element,
-  ChatMemberListUnit: ({ data, handleFunc }: { data: any, handleFunc: (() => void)[] }) => JSX.Element,
-  ChatJoinableMemberItem: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element,
-}
+import { PostsType } from "@/types/posts.type";
+import { SchedulesType } from "@/types/schedules.type";
+import { LocationsType } from "@/types/locations.type";
 
-const ListUnit = (): ListUnitTypes => {
+const ListUnit = () => {
 
-  const PostAuthorListUnit = ({ handleFunc }: { handleFunc: (() => void)[] }): JSX.Element => {
-    return (
-      <div className="flex w-screen h-[40px] pl-[10px] pr-[20px] mb-[10px]">
-        <ProfileAvatar
-          className="w-[40px] h-[40px]"
-          src="https://cdn.pixabay.com/photo/2018/08/14/13/23/ocean-3605547_1280.jpg"
-          alt="item-image"
-          handleFunc={() => handleFunc[0]}
-        />
-        <div className="ml-[10px]">
-          <p className="text-lg text-white button_reset">동섭</p>
-          <div className="flex mt-[1px]">
-            <IconCirclePlus width={15} height={15} fill={"var(--white)"} />
-            {
-              Array(3).fill(10).map(_ => (
-                <div className="-ml-[3px]">
-                  <ProfileAvatar
-                    className="w-[15px] h-[15px] border-[1px] border-background-light"
-                    src="https://cdn.pixabay.com/photo/2018/08/14/13/23/ocean-3605547_1280.jpg"
-                    alt="item-image"
-                  />
-                </div>
-              ))
-            }
-          </div>
-        </div>
-        <button className="ml-auto" type="button" onClick={() => handleFunc[1]}>
-          <IconMoreVertical width={4} height={15} fill={"var(--white)"} />
-        </button>
-      </div>
-    )
-  }
-
-  const PostScheduleListUnit = ({ data, handleFunc }: { data: any, handleFunc: () => void }): JSX.Element => {
-    return (
-      <div
-        className="pl-[10px] pr-[20px] w-full h-[50px] flex items-center justify-between"
-        style={{ boxShadow: "0 1px var(--gray-heavy)" }}
-        onClick={handleFunc}
-      >
-        <div className="flex flex-col">
-          <p className="text-md text-white">인사동 투어</p>
-          <span className="text-xsm text-gray-old">2024.3.21 - 3.22</span>
-        </div>
-        <IconArrow width={7} height={12} fill={"var(--white)"} />
-      </div>
-    )
-  }
-
-  const PostContentListUnit = ({ data }: { data: any }): JSX.Element => {
-    const [isExpanded, setIsExpanded] = useState<boolean>(false);
-    const [showMoreButton, setShowMoreButton] = useState<boolean>(false);
-    const contentAreaRef = useRef<HTMLDivElement | null>(null);
-
-    useEffect(() => {
-      const contentAreaRefCurrent = contentAreaRef.current;
-      if (contentAreaRefCurrent) {
-        contentAreaRefCurrent.clientHeight > 24 ?
-          setShowMoreButton(true) :
-          setShowMoreButton(false)
-      }
-    }, [])
+  const PostScheduleListUnit = ({ data, handleFunc }: { data: PostsType & { scheduleInfo: SchedulesType }, handleFunc: () => void }): JSX.Element => {
+    const { scheduleInfo } = data
 
     return (
-      <div className={`pl-[10px] pr-[20px] mt-[10px] relative w-full flex text-base`} ref={contentAreaRef}>
-        <span className={`${isExpanded ? "w-full" : showMoreButton ? "w-4/5 reduce-words" : "w-full"} text-md text-white`}>
-          {"가나다라마바사가나다라마바사"}
-        </span>
-        {showMoreButton && (
-          <button className={`${isExpanded ? "hidden" : "block"} text-gray-600 absolute top-1.25 right-[20px]`} onClick={() => setIsExpanded((prev) => !prev)}>
-            더보기
-          </button>
-        )}
-      </div>
-    )
-  }
-
-  const PostActionListUnit = ({ data, handleFunc }: { data: any, handleFunc: (() => void)[] }): JSX.Element => {
-
-    const isLike = true;
-
-    const heartCount = 30;
-    const [hearted, setHearted] = useState<boolean>(true);
-
-
-    return (
-      <div className="pl-[10px] pr-[20px] pt-[10px] flex items-center gap-[20px]">
-        <button
-          className="flex gap-[10px] items-center justify-center"
-          type="button"
-          onClick={() => {
-            setHearted(Prev => !Prev)
-            handleFunc[0]()
-          }}
-        >
-          <IconHeart width={22} height={20} fill={hearted ? "#FB004D" : "var(--gray-heavy)"} stroke={hearted ? "#FB004D" : ""} />
-          {isLike ?
-            <span className='text-xsm text-white'>{hearted ? heartCount : heartCount - 1}</span> :
-            <span className='text-xsm text-white'>{hearted ? heartCount + 1 : heartCount}</span>
-          }
-        </button>
-        <button
-          className="flex gap-[10px] items-center justify-center"
-          type="button"
-          onClick={() => {
-            handleFunc[1]()
-          }}
-        >
-          <IconComment width={20} height={20} fill={"var(--gray-heavy)"} />
-          <span className='text-xsm text-white'>{4}</span>
-        </button>
-        <span className="ml-auto text-sm text-gray-old">2024.3.24</span>
-      </div>
-    )
-  }
-
-  const CommentListUnit = ({ data, handleFunc }: { data: any, handleFunc: () => void }): JSX.Element => {
-    const isLike = true;
-    const commentPermission = false;
-    const heartCount = 30;
-    const [hearted, setHearted] = useState<boolean>(true);
-    return (
-      <li key={""} className="flex w-screen h-[37px]" >
-        <ProfileAvatar
-          className="w-[37px] h-[37px]"
-          src="https://cdn.pixabay.com/photo/2018/08/14/13/23/ocean-3605547_1280.jpg"
-          alt="item-image"
-        />
-        <div className="ml-[10px]">
-          <div className="flex items-center gap-[5px]">
-            <p className="text-sm text-white inline">동섭</p>
-            <IconDot width={3} height={3} fill={"var(--gray-old)"} />
-            <span className="text-xsm text-gray-old">3일전</span>
-          </div>
-          <span className="block text-xsm text-white">안녕하세요?</span>
-        </div>
-        {commentPermission ? (
-          <button
-            className="ml-auto flex flex-col items-center justify-center"
-            onClick={() => {
-              setHearted(Prev => !Prev)
-              handleFunc()
-            }}
+      <>
+        {scheduleInfo &&
+          <div
+            className="pl-[10px] pr-[20px] w-full h-[50px] flex items-center justify-between"
+            style={{ boxShadow: "0 1px var(--gray-heavy)" }}
+            onClick={handleFunc}
           >
-            <IconTrash width={14} height={13} fill={"var(--gray-heavy)"} />
-          </button>
-        ) : (
-          <button
-            className="ml-auto flex flex-col items-center justify-center"
-            onClick={() => {
-              setHearted(Prev => !Prev)
-              handleFunc()
-            }}
-          >
-            <IconHeart width={14} height={13} fill={hearted ? "#FB004D" : "var(--background)"} stroke={hearted ? "#FB004D" : "var(--gray-old)"} />
-            {isLike ?
-              <span className='text-xsm'>{hearted ? heartCount : heartCount - 1}</span> :
-              <span className='text-xsm'>{hearted ? heartCount + 1 : heartCount}</span>
-            }
-          </button>
-        )}
-      </li>
+            <div className="flex flex-col">
+              <p className="text-md text-white">{scheduleInfo.scheduleName}</p>
+              <span className="text-xsm text-gray-old">{`${formatDate(scheduleInfo.startTime, 2)} - ${formatDate(scheduleInfo.endTime, 3)}`}</span>
+            </div>
+            <IconArrow width={7} height={12} fill={"var(--white)"} className="mr-[10px]" />
+          </div>
+        }
+      </>
     )
   }
 
-  const HashTagLinkListUnit = ({ data, handleFunc }: { data: any, handleFunc: () => void }): JSX.Element => {
+  const PostHashtagListUnit = ({ data }: { data: string[] }): JSX.Element => {
+    return (
+      <>
+        {data.length !== 0 &&
+          <ul className="flex flex-wrap gap-[10px] mt-[10px] pb-[5px] px-[10px] w-screen overflow-y-scroll">
+            {data.map((hashtag) => (
+              <button key={hashtag} type="button">
+                <span className="px-[15px] py-[5px] bg-white rounded-sm text-xsm text-black">{`# ${hashtag}`}</span>
+              </button>
+            ))}
+          </ul>
+        }
+      </>
+    )
+  }
+
+  const HashTagLinkListUnit = ({ data, handleFunc }: { data: ReadDocumentType<HashtagsType>, handleFunc: () => void }): JSX.Element => {
+    const { id, data: hashTagData } = data
+
     return (
       <li
-        key={""}
-        className="w-screen flex items-center justify-between pb-[10px]"
+        className="w-full flex items-center justify-between py-[10px]"
         style={{ boxShadow: "0 1px var(--gray-heavy)" }}
         onClick={handleFunc}
       >
-        <ProfileCard title={"1박2일"} description={"게시물 500"} src={iconHash} />
-        <IconArrow width={7} height={12} fill={"var(--white)"} />
+        <ProfileCard title={id} description={`게시물 ${hashTagData.taggedPostIds.length}`} src={IconHash} />
+        <IconArrow width={7} height={12} fill={"var(--white)"} className="mr-[10px]" />
       </li>
     )
   }
 
-  const HashTagPickerListUnit = ({ data, handleFunc }: { data: any, handleFunc: (boolean: boolean) => void }): JSX.Element => {
+  const HashTagPickerListUnit = ({ data, selected, handleFunc }: { data: ReadDocumentType<HashtagsType>, selected: boolean, handleFunc: (tag: ReadDocumentType<UsersType> | ReadDocumentType<HashtagsType>) => void }): JSX.Element => {
+    const { id: hashtagId, data: hashtagData } = data
+
     return (
       <li
-        className="w-screen flex items-center justify-between pb-[10px]"
+        className="w-full flex items-center justify-between py-[10px]"
         style={{ boxShadow: "0 1px var(--gray-heavy)" }}
       >
-        <ProfileCard title={"1박2일"} description={"게시물 500"} src={iconHash} />
-        <ToggleButton handleFunc={handleFunc} />
+        <ProfileCard title={hashtagId} description={`게시물 ${hashtagData.taggedPostIds.length}`} src={IconHash} />
+        <ToggleButton options={["취소", "선택"]} selected={selected} handleFunc={() => handleFunc(data)} />
       </li>
     )
   }
 
-  const LocationLinkListUnit = ({ data, handleFunc }: { data: any, handleFunc: () => void }): JSX.Element => {
+  const LocationLinkListUnit = ({ data, handleFunc }: { data: ReadDocumentType<LocationsType>, handleFunc: () => void }): JSX.Element => {
+    const { id: locationId, data: locationData } = data
+
     return (
       <li
-        key={""}
-        className="w-screen flex items-center justify-between pb-[10px]"
+        className="w-full flex items-center justify-between py-[10px]"
         style={{ boxShadow: "0 1px var(--gray-heavy)" }}
         onClick={handleFunc}
       >
-        <ProfileCard title={"1박2일"} description={"게시물 500"} src={iconLocation} />
-        <IconArrow width={7} height={12} fill={"var(--white)"} />
+        <ProfileCard title={locationId} description={`게시물 ${locationData.taggedPostIds.length}`} src={IconLocation} />
+        <IconArrow width={7} height={12} fill={"var(--white)"} className="mr-[10px]" />
       </li>
     )
   }
 
-  const LocationDetailLinkListUnit = ({ data, handleFunc }: { data: any, handleFunc: (() => void)[] }): JSX.Element => {
+  const LocationDetailLinkListUnit = ({ data, handleFunc }: { data: any, handleFunc: [(data: any) => void, (placeId: string) => void] }): JSX.Element => {
+    const { name, formatted_address, place_id } = data;
+
     return (
       <li
-        key={""}
-        className="w-screen flex items-center justify-between pb-[10px]"
+        className="w-full flex items-center justify-between py-[10px]"
         style={{ boxShadow: "0 1px var(--gray-heavy)" }}
-        onClick={() => handleFunc[0]}
+        onClick={() => handleFunc[0](data)}
       >
-        <ProfileCard title={"1박2일"} description={"게시물 500"} src={iconLocation} />
-        <button type="button" onClick={() => handleFunc[1]}>
+        <ProfileCard title={name} description={formatted_address} src={IconLocation} />
+        <button type="button" onClick={(e) => {
+          e.stopPropagation()
+          handleFunc[1](place_id)
+        }}>
           <IconMap width={14} height={14} fill={"var(--white)"} />
         </button>
       </li>
     )
   }
 
-  const LocationPickerListUnit = ({ data, handleFunc }: { data: any, handleFunc: (boolean: boolean) => void }): JSX.Element => {
+  const UserFollowListUnit = ({ data, followed, handleFunc }: { data: ReadDocumentType<UsersType>, followed: boolean, handleFunc: (() => void)[] }): JSX.Element => {
+    const { data: userData } = data
+    const { accountName, description, accountImage } = userData
+
     return (
-      <li key={""} className="w-screen flex items-center justify-between pb-[10px]" style={{ boxShadow: "0 1px var(--gray-heavy)" }}>
-        <ProfileCard title={"1박2일"} description={"자양로 117"} src={iconLocation} />
-        <ToggleButton handleFunc={handleFunc} />
+      <li className="w-full flex items-center justify-between py-[10px]" style={{ boxShadow: "0 1px var(--gray-heavy)" }}>
+        <ProfileCard title={accountName} description={description} src={accountImage} handleFunc={handleFunc[0]} />
+        <ToggleButton options={["팔로잉", "팔로우"]} selected={followed} handleFunc={handleFunc[1]} />
       </li>
     )
   }
 
-  const UserLinkListUnit = ({ data, handleFunc }: { data: any, handleFunc: () => void }): JSX.Element => {
+  const UserTagPickerListUnit = ({ data, selected, handleFunc }: { data: ReadDocumentType<UsersType>, selected: boolean, handleFunc: (tag: ReadDocumentType<UsersType> | ReadDocumentType<HashtagsType>) => void }): JSX.Element => {
+    const { data: userData } = data
+    const { accountName, description, accountImage } = userData
+
+    return (
+      <li className="w-full flex items-center justify-between py-[10px]" style={{ boxShadow: "0 1px var(--gray-heavy)" }}>
+        <ProfileCard title={accountName} description={description} src={accountImage} />
+        <ToggleButton options={["취소", "선택"]} selected={selected} handleFunc={() => handleFunc(data)} />
+      </li>
+    )
+  }
+
+  const HistoryUnit = ({ data, handleFunc }: { data: SearchHistoryType, handleFunc: (() => void)[] }): JSX.Element => {
+    const { title, createdAt, type } = data
+
     return (
       <li
-        key={""}
-        className="w-screen flex items-center justify-between pb-[10px]"
+        className="w-full flex items-center justify-between py-[10px]"
         style={{ boxShadow: "0 1px var(--gray-heavy)" }}
-        onClick={handleFunc}
+        onClick={handleFunc[0]}
       >
-        <ProfileCard title={"동섭"} description={"안녕하세요?"} src={"https://cdn.pixabay.com/photo/2018/08/14/13/23/ocean-3605547_1280.jpg"} />
-        <IconArrow width={7} height={12} fill={"var(--white)"} />
-      </li>
-    )
-  }
-
-  const ChatMemberListUnit = ({ data, handleFunc }: { data: any, handleFunc: (() => void)[] }): JSX.Element => {
-
-    return (
-      <LeftAndRightSlider key={0} className="h-[34px]" moreAreaWidth={50}>
-        <div className="w-screen flex items-center justify-between" onClick={() => handleFunc[0]}>
-          <ProfileCard title={"동섭"} description={"1박 2일"} src={"https://cdn.pixabay.com/photo/2018/08/14/13/23/ocean-3605547_1280.jpg"} />
-          <div className="h-[34px] flex items-start justify-start flex-col gap-[7px]">
-            <span className="text-xsm text-gray-heavy leading-none">3일 전</span>
-            <div className="px-[5px] py-[2px] min-w-[13px] h-[13px] rounded-full bg-white">
-              <span className="block text-center text-[6px] font-bold text-black">300+</span>
-            </div>
-          </div>
-        </div >
-        <button className="absolute top-1/2 right-[15px] -translate-y-1/2" type="button" onClick={() => handleFunc[1]}>
-          <IconExit width={17} height={17} fill={"var(--red)"} />
+        <ProfileCard
+          title={title}
+          description={formatDate(createdAt, 9)}
+          src={
+            type === "usertag" && IconUser ||
+            type === "location" && IconLocation ||
+            type === "hashtag" && IconHash || ""
+          } />
+        <button type="button"
+          onClick={(e) => {
+            e.stopPropagation()
+            handleFunc[1]()
+          }}>
+          <IconCircleX width={15} height={15} fill={"var(--white)"} className="mr-[10px]" />
         </button>
-      </LeftAndRightSlider>
+      </li>
     )
   }
 
-  const ChatJoinableMemberItem = ({ data, handleFunc }: { data: any, handleFunc: () => void }): JSX.Element => {
+  const ChatJoinableMemberItem = ({ data, handleFunc }: { data: UsersType, handleFunc: () => void }): JSX.Element => {
+    const { accountName, description, accountImage } = data
+
     return (
-      <li key={""} className="w-screen" onClick={handleFunc}>
-        <ProfileCard title={"동섭"} description={"안녕하세요?"} src={"https://cdn.pixabay.com/photo/2018/08/14/13/23/ocean-3605547_1280.jpg"} />
+      <li className="w-full" onClick={handleFunc}>
+        <ProfileCard title={accountName} description={description} src={accountImage} />
       </li>
     )
   }
 
 
-  return { PostAuthorListUnit, PostScheduleListUnit, PostContentListUnit, PostActionListUnit, CommentListUnit, HashTagLinkListUnit, HashTagPickerListUnit, LocationLinkListUnit, LocationDetailLinkListUnit, LocationPickerListUnit, UserLinkListUnit, ChatMemberListUnit, ChatJoinableMemberItem }
+  return { PostScheduleListUnit, PostHashtagListUnit, HashTagLinkListUnit, HashTagPickerListUnit, LocationLinkListUnit, LocationDetailLinkListUnit, UserFollowListUnit, UserTagPickerListUnit, HistoryUnit, ChatJoinableMemberItem }
 }
 
 export default ListUnit
