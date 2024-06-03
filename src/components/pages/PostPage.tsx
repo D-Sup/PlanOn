@@ -31,7 +31,7 @@ const PostPage = () => {
 
   const currentCategory = paginationValueState.currentCategory
 
-  const { isOpen } = modalStackState[modalStackState.length - 1] || false;
+  const { isOpen } = modalStackState[modalStackState.length - 1];
 
   const { openModal, closeModal } = useModalStack();
 

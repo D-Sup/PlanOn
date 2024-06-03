@@ -5,7 +5,12 @@ import { scheduleFormValueDefault, newScheduleFormValue, updateScheduleFormValue
 import { modalStackDefault, modalStack } from "../atoms/modalStackAtom";
 import { paginationValueDefault, paginationValue } from "../atoms/paginationValueAtoms";
 
-export const hasValueChangedSelector = selectorFamily({
+type Params = {
+  defaultValue: any;
+  compareValue: any;
+};
+
+export const hasValueChangedSelector = selectorFamily<boolean, Params>({
   key: "hasValueChangedSelector",
   get: ({ defaultValue, compareValue }) => ({ get }) => {
     const currentValue = get(compareValue);

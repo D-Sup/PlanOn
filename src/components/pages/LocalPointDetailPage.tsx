@@ -89,7 +89,7 @@ const LocalPointDetailPage = () => {
         ratio={"16/10"}
         photos={
           photos
-            ? photos.map((photo: string) => (`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${photo.photo_reference}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`))
+            ? photos.map((photo) => (`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${photo.photo_reference}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`))
             : [""]
         }
       />

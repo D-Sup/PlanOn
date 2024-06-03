@@ -11,8 +11,10 @@ const formatDate = (data: Timestamp | Date | string, selectCase: number) => {
 	} catch (error) {
 		const NS_TO_MS_MULTIPLIER = 1/1000000
 		const SEC_TO_MS_MULTIPLIER = 1000
-		const timestampInMilliseconds = data.seconds * SEC_TO_MS_MULTIPLIER + data.nanoseconds * NS_TO_MS_MULTIPLIER
-		date = new Date(timestampInMilliseconds)
+		if (typeof data !== "string" && "seconds" in data && "nanoseconds" in data) {
+			const timestampInMilliseconds = data.seconds * SEC_TO_MS_MULTIPLIER + data.nanoseconds * NS_TO_MS_MULTIPLIER
+			date = new Date(timestampInMilliseconds)
+		}
 	}
 
 	const days = ["일", "월", "화", "수", "목", "금", "토"];

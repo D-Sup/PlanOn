@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const useDataMutation = (
-  mutationKey: string[] | string, 
+  mutationKey: any, 
   mutationFn: any,
   onSuccess: () => void,
   onError: () => void,

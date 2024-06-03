@@ -13,7 +13,7 @@ interface PaginationValueType {
   }
 }
 
-export const paginationValueDefault: PaginationValueType = {
+export const paginationValueDefault = {
   currentCategory: "all-posts",
   allPosts : {
     lastVisible: null,
