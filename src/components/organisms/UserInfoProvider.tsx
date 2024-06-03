@@ -39,12 +39,6 @@ const UserInfoProvider = ({ children }: { children: React.ReactNode }) => {
   })
 
   useEffect(() => {
-    if (accountId) {
-      refetch()
-    }
-  }, [])
-
-  useEffect(() => {
     if (!queryRef.current) {
       return
     }
