@@ -78,7 +78,7 @@ const PostActionOverview = ({ props }: PostActionOverviewProps) => {
   return (
     <div className="flex flex-col gap-[10px] px-[20px] pt-[20px] pb-[30px]">
       {/* {!isMyPost && <ActionCard icon={IconBookmark} name={"저장"} handleFunc={() => { }} />} */}
-      <input ref={formattedAddress} className="a11y-hidden" value={`http://localhost:5173/post/detail/readonly/${id}`} readOnly />
+      <input ref={formattedAddress} className="a11y-hidden" value={`https://plan-on.vercel.app/post/detail/readonly/${id}`} readOnly />
       <ActionCard icon={IconLink} name={"공유"} handleFunc={handleCopyClipBoard} type={"collect"} />
       {isMyPost &&
         <ActionCard icon={IconEdit} name={"수정"} handleFunc={async () => {

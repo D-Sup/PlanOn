@@ -77,7 +77,7 @@ const ScheduleCard = ({
         }}
         className={`${selected ? "border-highlight" : "border-input"} px-[15px] w-full h-full flex items-center justify-between bg-input rounded-[10px] leading-none border transition duration-100 select-none`}
       >
-        <input ref={formattedAddress} className="a11y-hidden" value={`http://localhost:5173/schedule/detail/readonly/${"id" in data && data.id}`} readOnly />
+        <input ref={formattedAddress} className="a11y-hidden" value={`https://plan-on.vercel.app/schedule/detail/readonly/${"id" in data && data.id}`} readOnly />
         <div className="w-full h-3/4 flex flex-col justify-evenly">
           <p className="text-md text-white">{scheduleName}</p>
 
