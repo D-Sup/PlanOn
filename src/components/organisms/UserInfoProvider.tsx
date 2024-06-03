@@ -33,6 +33,10 @@ const UserInfoProvider = ({ children }: { children: React.ReactNode }) => {
   const queryRef = useRef(messagesRef)
 
   useEffect(() => {
+    refetch()
+  }, [accountId])
+
+  useEffect(() => {
     if (!queryRef?.current?.isEqual(messagesRef)) {
       queryRef.current = messagesRef
     }
