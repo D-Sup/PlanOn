@@ -1,0 +1,166 @@
+import { useSetRecoilState } from "recoil";
+import { routeDirectionValue } from "@/store";
+
+import SearchBar from "../atoms/SearchBar";
+import ProfileCard from "../mocules/ProfileCard";
+
+import IconArrow from "../../assets/images/icon-arrow-left.svg?react";
+import IconArrowBottom from "../../assets/images/icon-arrow-bottom.svg?react";
+import IconLogo from "../../assets/images/icon-logo.svg?react";
+import IconPlus from "../../assets/images/icon-plus.svg?react";
+import IconCircleX from "../../assets/images/icon-circle-x.svg?react";
+import IconLocation from "../../assets/images/icon-location.svg?react";
+import IconMoreVertical from "../../assets/images/icon-more-vertical.svg?react";
+import { UsersType } from "@/types/users.type";
+
+const Header = () => {
+  const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue)
+
+  const goBack = () => {
+    setRouteDirectionValueState(Prev => ({ ...Prev, direction: "prev" }))
+  }
+
+  // const SearchHeaderForModal = (): JSX.Element => {
+  //   return (
+  //     <header className="px-[30px] flex justify-center gap-[15px] w-screen min-h-[58px] ">
+  //       <SearchBar />
+  //     </header>
+  //   )
+  // }
+
+  const MapViewHeaderForModal = ({ data, handleFunc }: { data: any, handleFunc: () => void }): JSX.Element => {
+
+    return (
+      <div className="w-full flex items-center justify-between pb-[10px]" style={{ boxShadow: "0 1px var(--gray-heavy)" }}>
+        <ProfileCard title={data?.name || "위치정보없음"} description={data?.formatted_address || "위치정보없음"} src={IconLocation} />
+        <button type="button" onClick={handleFunc}>
+          <IconCircleX width={20} height={20} fill={"var(--gray-old)"} />
+        </button>
+      </div>
+    )
+  }
+
+  const MapViewHeader = ({ handleFunc }: { handleFunc: (() => void)[] }): JSX.Element => {
+    return (
+      <header className="pl-[15px] pr-[15px] flex items-center justify-center gap-[15px] w-screen min-h-[58px]">
+        <button className="relative min-w-[38px] min-h-[38px] bg-input rounded-[10px]" type="button" onClick={handleFunc[0]}>
+          <IconArrow className="absolute-center" width={7} height={12} fill={"var(--white)"} />
+        </button>
+        <div className="w-full" onFocus={handleFunc[1]}>
+          <SearchBar />
+        </div>
+      </header>
+    )
+  }
+
+  // const SearchHeader = (): JSX.Element => {
+  //   return (
+  //     <header className="pl-[15px] pr-[15px] flex items-center justify-center gap-[15px] w-screen min-h-[58px]">
+  //       <SearchBar />
+  //       <button type="button" onClick={goBack}>
+  //         <p className="w-[30px] text-md text-white">취소</p>
+  //       </button>
+  //     </header>
+  //   )
+  // }
+
+  const FeedHeader = ({ handleFunc }: { handleFunc: (() => void)[] }): JSX.Element => {
+    return (
+      <header className="flex items-center justify-evenly w-screen min-h-[60px] bg-background-light">
+        <button className="relative p-[10px]" type="button" onClick={handleFunc[0]}>
+          <IconLogo width={25} height={25} fill={"var(--white)"} />
+          <IconArrowBottom width={8} height={8} fill={"var(--white)"} className="absolute bottom-[7px] right-[2px]" />
+        </button>
+        <div className="w-2/3 ">
+          <SearchBar height={35} handleFunc={handleFunc[1]} />
+        </div>
+        <button className="p-[10px]" type="button" onClick={handleFunc[2]}>
+          <IconPlus width={15} height={15} fill={"var(--white)"} />
+        </button>
+      </header>
+    )
+  }
+
+  const ChatHeader = ({ title }: { title: string }): JSX.Element => {
+    return (
+      <header className="flex items-center w-screen min-h-[40px]">
+        <h2 className="ml-[30px] text-white text-xlg font-bold">{title}</h2>
+      </header>
+    )
+  }
+
+  const ChatRoomHeader = ({ data, handleFunc }: { data: UsersType, handleFunc: () => void }): JSX.Element => {
+    const { accountName, description, accountImage } = data;
+
+    return (
+      <div className="px-[30px] flex items-center w-screen min-h-[50px]" >
+        <button className="mr-[20px]" type="button" onClick={goBack}>
+          <IconArrow width={7} height={12} fill={"var(--white)"} />
+        </button>
+        <ProfileCard title={accountName} description={description} src={accountImage} />
+        <button className="ml-auto" type="button" onClick={handleFunc}>
+          <IconMoreVertical width={4} height={15} fill={"var(--white)"} />
+        </button>
+      </div>
+    )
+  }
+
+  const DetailHeader = ({ title, handleFunc }: { title: string, handleFunc: () => void }): JSX.Element => {
+    return (
+      <header className="relative flex-center w-screen min-h-[40px] bg-background" style={{ boxShadow: "0 1px var(--gray-heavy)" }}>
+        <button className="p-[10px] absolute left-[20px]" type="button" onClick={handleFunc}>
+          <IconArrow width={7} height={12} fill={"var(--white)"} />
+        </button>
+        <h2 className="text-lg text-white">{title}</h2>
+      </header>
+    )
+  }
+
+  const ProfileUpdateHeader = ({ isRequired, handleFunc }: { isRequired: boolean, handleFunc: (() => void)[] }): JSX.Element => {
+    return (
+      <header className="relative flex-center w-screen min-h-[40px] bg-background" style={{ boxShadow: "0 1px var(--gray-heavy)" }}>
+        <button className="p-[10px] absolute left-[20px]" type="button" onClick={handleFunc[0]}>
+          <IconArrow width={7} height={12} fill={"var(--white)"} />
+        </button>
+        <h2 className="text-lg text-white">프로필 편집</h2>
+        <button className="absolute right-[30px]" type="button" onClick={() => isRequired && handleFunc[1]()}>
+          <p className={`text-md font-bold ${isRequired ? "text-red" : "text-gray-heavy"}`}>완료</p>
+        </button>
+      </header>
+    )
+  }
+
+  const WritePostHeader = ({ title, isRequired, handleFunc }: { title: string, isRequired: boolean, handleFunc: (() => void)[] }): JSX.Element => {
+    return (
+      <header className="relative flex-center w-screen min-h-[40px]">
+        <button className="p-[10px] absolute left-[20px]" type="button" onClick={handleFunc[0]}>
+          <IconArrow width={7} height={12} fill={"var(--white)"} />
+        </button>
+        <h2 className="text-xlg text-white font-bold">{title}</h2>
+        <button className="absolute right-[30px]" type="button" onClick={() => isRequired && handleFunc[1]()}>
+          <p className={`text-md font-bold ${isRequired ? "text-red" : "text-gray-heavy"}`}>다음</p>
+        </button>
+      </header>
+
+    )
+  }
+
+  const ManageSchedulesHeader = ({ isRequired, isEdit, title, handleFunc }: { isRequired: boolean, isEdit: string, title: string, handleFunc: (() => void)[] }): JSX.Element => {
+    return (
+      <header className="relative flex-center w-screen min-h-[40px]">
+        <button className="absolute left-[30px]" type="button" onClick={handleFunc[0]}>
+          <p className="text-md text-red">취소</p>
+        </button>
+        <h2 className="text-xlg text-white font-bold">{title}</h2>
+        <button className="absolute right-[30px]" type="button" onClick={() => isRequired && handleFunc[1]()}>
+          <p className={`text-md font-bold ${isRequired ? "text-red" : "text-gray-heavy"}`}>{isEdit}</p>
+        </button>
+      </header>
+    )
+  }
+
+  return { MapViewHeaderForModal, MapViewHeader, FeedHeader, ChatHeader, ChatRoomHeader, DetailHeader, ProfileUpdateHeader, WritePostHeader, ManageSchedulesHeader }
+
+}
+
+export default Header

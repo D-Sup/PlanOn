@@ -1,0 +1,110 @@
+import { useEffect, useState } from "react"
+import useModalStack from "@/hooks/useModalStack";
+
+import CommentService from "@/services/commentService";
+
+import Loader from "./Loader";
+import CommentListUnit from "./CommentListUnit";
+import InteractiveInput from "./InteractiveInput";
+
+import LikeService from "@/services/likeService";
+
+import getAccountId from "@/utils/getAccountId";
+import { v4 as uuidv4 } from "uuid";
+
+import { CommentsType } from "@/types/posts.type";
+
+interface CommentOverViewProps {
+  props: { id: string, comments: CommentsType[] },
+  handleScroll: (e: React.UIEvent<HTMLDivElement>) => void
+}
+
+const CommentOverView = ({ props, handleScroll }: CommentOverViewProps) => {
+
+  const [inputValue, setInputValue] = useState<string>("");
+
+  const accountId = getAccountId()
+
+  const { id, comments } = props
+
+  const { openModal, closeModalDirect } = useModalStack()
+
+  const { UpdateComment, ReadComment } = CommentService()
+  const { data, isLoading, refetch } = ReadComment(comments)
+  const { mutate: mutateLike } = LikeService();
+  const { mutate: mutateUpdateComment } = UpdateComment()
+
+  useEffect(() => {
+    if (comments.length !== data?.length) {
+      refetch()
+    }
+  }, [props])
+
+  if (isLoading) return (
+    <div className="absolute-center w-[100px]">
+      <Loader />
+    </div>
+  )
+
+  return (
+    <>
+      <div className="pb-[10px] text-center" style={{ boxShadow: "0 1px var(--gray-heavy)" }}>
+        <span className="text-md text-white">댓글</span>
+      </div>
+      <div className="flex flex-col gap-[20px] pt-[15px] px-[15px] overflow-y-scroll" onScroll={handleScroll}>
+        {
+          data?.map((comment, index) => (
+            <CommentListUnit key={index} data={comment} handleFunc={[
+              () => {
+                openModal("Alert", "댓글을 삭제하시겠습니까?", ["취소", "확인"],
+                  [null, () => {
+                    closeModalDirect()
+                    mutateUpdateComment({
+                      type: "delete",
+                      id,
+                      comment
+                    })
+                  }
+                  ])
+              },
+              () => {
+                mutateLike({
+                  target: "comment", type: "update", id, comment: {
+                    id: comment.id,
+                    likedUsers: comment.likedUsers.includes(accountId)
+                      ? comment.likedUsers.filter((id: string) => id !== accountId)
+                      : [...comment.likedUsers, accountId],
+                  }
+                })
+              }
+            ]
+            }
+            />
+          ))
+        }
+        {data?.length === 0 &&
+          <span className="absolute-center text-nowrap text-md text-white">댓글이 없습니다.</span>
+        }
+      </div>
+      <InteractiveInput
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+        handleFunc={() => {
+          mutateUpdateComment({
+            type: "create",
+            id,
+            comment: {
+              id: uuidv4(),
+              content: inputValue,
+              createdAt: new Date(),
+              likedUsers: [],
+              userId: accountId
+            }
+          })
+          setInputValue("")
+        }} />
+    </>
+  )
+}
+
+export default CommentOverView
