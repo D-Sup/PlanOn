@@ -17,11 +17,13 @@
     "noEmit": false,
     "jsx": "react-jsx",
     "strict": false,
-    "noImplicitAny": false, // 여기를 false로 변경
+    "noImplicitAny": false,
     "noImplicitReturns": false,
     "noImplicitThis": false,
     "noEmitOnError": false,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "skipDefaultLibCheck": true,
+    "ignoreDeprecations": "5.0" // 추가된 부분
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
