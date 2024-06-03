@@ -186,7 +186,7 @@ const LocalPointDetailPage = () => {
           ? <button onClick={() => handleSubmit(locationInfo)} className="w-full h-[50px] rounded-[5px] bg-white text-black font-bold" type="button">선택완료</button>
           : <button onClick={() => handleCopyClipBoard(false)} className="w-full h-[50px] rounded-[5px] bg-white text-black font-bold" type="button">위치공유</button>
         }
-        <input ref={shareLink} className="a11y-hidden" value={`http://192.168.200.107:5173/map/${place_id}`} readOnly />
+        <input ref={shareLink} className="a11y-hidden" value={`https://plan-on.vercel.app/map/${place_id}`} readOnly />
         <input ref={formattedAddress} className="a11y-hidden" value={formatted_address.replace("대한민국 ", "")} readOnly />
       </div>
     </div>

@@ -48,9 +48,8 @@ const App = () => {
             <Routes location={location}>
 
 
-              <Route path='/' element={<Navigate to='/splash' replace />} />
+              <Route path='/*' element={<Navigate to='/splash' replace />} />
               {/* <Route path='/404page' element={<Page404 />} /> */}
-              {/* <Route path='/*' element={<Page404 />} /> */}
 
               <Route element={<NonLoginProtectedRoute />}>
                 <Route path="/splash/*" element={<SplashPage />} />
