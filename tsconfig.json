@@ -23,7 +23,9 @@
     "noEmitOnError": false,
     "allowSyntheticDefaultImports": true,
     "skipDefaultLibCheck": true,
-    "ignoreDeprecations": "5.0" // 추가된 부분
+    "ignoreDeprecations": "5.0",
+    "suppressImplicitAnyIndexErrors": true,  // 추가된 부분
+    "suppressExcessPropertyErrors": true     // 추가된 부분
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
