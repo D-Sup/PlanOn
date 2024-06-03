@@ -45,7 +45,7 @@ const SignUpPage = () => {
             setAccountName(value)
           }}
           id={"이름 입력"}
-          type={"text"}
+          type={"email"}
           placeholder={"이름 입력"}
           validation={accountName === "" || accountNamePattern.test(accountName)}
           invalidMessage={"이름에 특수문자가 포함되면 안됩니다."}
@@ -56,7 +56,7 @@ const SignUpPage = () => {
             setAccountEmail(value)
           }}
           id={"이메일 입력"}
-          type={"text"}
+          type={"email"}
           placeholder={"이메일 입력"}
           validation={accountEmail === "" || accountEmailPattern.test(accountEmail)}
           invalidMessage={"유효한 이메일 주소 형식이 아닙니다"}

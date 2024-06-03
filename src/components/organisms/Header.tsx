@@ -1,5 +1,6 @@
 import { useSetRecoilState } from "recoil";
 import { routeDirectionValue } from "@/store";
+import { useNavigate } from "react-router-dom";
 
 import SearchBar from "../atoms/SearchBar";
 import ProfileCard from "../mocules/ProfileCard";
@@ -159,7 +160,32 @@ const Header = () => {
     )
   }
 
-  return { MapViewHeaderForModal, MapViewHeader, FeedHeader, ChatHeader, ChatRoomHeader, DetailHeader, ProfileUpdateHeader, WritePostHeader, ManageSchedulesHeader }
+  const DownloadSuggestHeader = (): JSX.Element => {
+    const navigate = useNavigate()
+
+    return (
+      <header className="z-30 fixed top-0 px-[10px] flex items-center justify-between w-screen min-h-[50px] bg-black">
+        <div className="flex items-center gap-[10px]">
+          <div className="bg-input p-[5px] rounded-[5px]">
+            <IconLogo width={20} height={20} />
+          </div>
+          <span className="text-sm text-white">플랜온 앱 추가하고 <span className="text-sm text-red">더 많은 기능 이용하기</span></span>
+
+        </div>
+        <button
+          className="px-[10px] py-[5px] bg-white text-black text-sm rounded-[5px]"
+          type="button"
+          onClick={() => {
+            navigate("/download", { state: { direction: "fade" } })
+          }}
+        >
+          앱으로 열기
+        </button>
+      </header>
+    )
+  }
+
+  return { MapViewHeaderForModal, MapViewHeader, FeedHeader, ChatHeader, ChatRoomHeader, DetailHeader, ProfileUpdateHeader, WritePostHeader, ManageSchedulesHeader, DownloadSuggestHeader }
 
 }
 

@@ -49,7 +49,7 @@ const LoginPage = () => {
             setIsError(true)
           }}
           id={"이메일 입력"}
-          type={"text"}
+          type={"email"}
           placeholder={"이메일 입력"}
           validation={(email === "" || emailPattern.test(email)) && isError}
           invalidMessage={

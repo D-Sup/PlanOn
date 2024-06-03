@@ -4,12 +4,15 @@ import useWindowSize from "@/hooks/useWindowSize"
 
 import { useRecoilValue, useSetRecoilState, useResetRecoilState } from "recoil";
 import { routeDirectionValue, updateScheduleFormValue } from "@/store";
+import IconLogo from "../../assets/images/icon-logo.svg?react";
+
 
 import { Select, SelectTrigger, SelectContent, SelectItem } from "../shadcnUIKit/select";
 import ScheduleCard from "../atoms/ScheduleCard"
 import ScheduleCardField from "../mocules/ScheduleCardField"
 import FixedTrigger from "../mocules/FixedTrigger"
 import MapOverview from "../organisms/MapOverview"
+import Header from "../organisms/Header";
 
 import getAccountId from "@/utils/getAccountId";
 import formatDate from "@/utils/formatDate"
@@ -34,6 +37,8 @@ const ScheduleDetailPage = () => {
 
   const location = useLocation()
   const { data: schedules, isReadOnly } = location.state || []
+
+  const { DownloadSuggestHeader } = Header()
 
   const formatSchedule = (data: SchedulesType) => {
     const result = {
@@ -117,6 +122,9 @@ const ScheduleDetailPage = () => {
 
   return (
     <>
+      {isReadOnly && !accountId &&
+        <DownloadSuggestHeader />
+      }
       {isOverviewMap &&
         <FixedTrigger className="z-20 top-0 w-full" height={currentHeight / 3} enableAnimation={false}>
           <div className="w-full bg-input h-[calc(100dvh/3)]">
@@ -137,14 +145,15 @@ const ScheduleDetailPage = () => {
       <FixedTrigger className="z-20 px-[30px] w-full h-[55px] flex items-center justify-between" height={55} enableAnimation={false}>
         <div className="absolute left-0 bottom-0 w-full h-1" style={{ boxShadow: "0 2px var(--gray-heavy)" }}></div>
 
-        {!isReadOnly && !isOverviewMap && <button className="ml-[-10px] relative min-w-[30px] min-h-[30px] rounded-[10px]" type="button" onClick={() => {
-          navigate("/schedule", {
-            state: { direction: "prev" }
-          })
-          setTimeout(() => resetUpdateScheduleFormValue(), 500)
-        }}>
-          <IconArrow className="absolute-center" width={15} height={15} fill={"var(--white)"} />
-        </button>}
+        {!isReadOnly && !isOverviewMap &&
+          <button className="ml-[-10px] relative min-w-[30px] min-h-[30px] rounded-[10px]" type="button" onClick={() => {
+            navigate("/schedule", {
+              state: { direction: "prev" }
+            })
+            setTimeout(() => resetUpdateScheduleFormValue(), 500)
+          }}>
+            <IconArrow className="absolute-center" width={15} height={15} fill={"var(--white)"} />
+          </button>}
 
         <div className="w-[180px]">
           <Select

@@ -1,32 +1,58 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "skipLibCheck": true,
+    "target": "es2015",
+    "downlevelIteration": true,
+    "module": "ES6",
+    "esModuleInterop": true,
     "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": false,
-    "jsx": "react-jsx",
+    "outDir": "./dist",
+    "baseUrl": "./src",
     "strict": false,
-    "noImplicitAny": false,
-    "noImplicitReturns": false,
-    "noImplicitThis": false,
-    "noEmitOnError": false,
-    "allowSyntheticDefaultImports": true,
-    "skipDefaultLibCheck": true,
-    "ignoreDeprecations": "5.0",
-    "suppressImplicitAnyIndexErrors": true,  // 추가된 부분
-    "suppressExcessPropertyErrors": true,    // 추가된 부분
-    "allowJs": true,                         // 추가 제안
-    "checkJs": false                         // 추가 제안
-  },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+    "paths": {
+      "react-router-dom": ["../node_modules/react-router-dom"],
+      "*": ["*", "src/*"]
+    },
+      "jsx": "react-jsx",
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true,
+      "resolveJsonModule": true,
+      "isolatedModules": false,
+      "noImplicitAny": true,
+      "checkJs": true
+    },
+    "include": ["./src"],
+    "typeRoots": ["./src"]
 }
+
+// {
+//   "compilerOptions": {
+//     "baseUrl": ".",
+//     "paths": {
+//       "@/*": ["./src/*"]
+//     },
+//     "target": "ES2020",
+//     "useDefineForClassFields": true,
+//     "lib": ["ES2020", "DOM", "DOM.Iterable"],
+//     "module": "ESNext",
+//     "skipLibCheck": true,
+//     "moduleResolution": "node",
+//     "resolveJsonModule": true,
+//     "isolatedModules": true,
+//     "noEmit": false,
+//     "jsx": "react-jsx",
+//     "strict": false,
+//     "noImplicitAny": false,
+//     "noImplicitReturns": false,
+//     "noImplicitThis": false,
+//     "noEmitOnError": false,
+//     "allowSyntheticDefaultImports": true,
+//     "skipDefaultLibCheck": true,
+//     "ignoreDeprecations": "5.0",
+//     "suppressImplicitAnyIndexErrors": true,  // 추가된 부분
+//     "suppressExcessPropertyErrors": true,    // 추가된 부분
+//     "allowJs": true,                         // 추가 제안
+//     "checkJs": false                         // 추가 제안
+//   },
+//   "include": ["src"],
+//   "references": [{ "path": "./tsconfig.node.json" }]
+// }

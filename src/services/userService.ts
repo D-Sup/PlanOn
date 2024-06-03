@@ -70,6 +70,7 @@ const UserService = () => {
         staleTime: Infinity,
         gcTime: Infinity,
       },
+      false
     )
     return { data, isLoading, refetch }
   }

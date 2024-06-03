@@ -67,10 +67,18 @@ const PostCard = ({ data, isReadOnly }: { data: PostMachinedType, isReadOnly?: b
           <PostHashtagListUnit data={postData.hashtags} />
           <PostActionListUnit data={postData} handleFunc={[
             () => {
-              mutate({ target: "post", type: postData.likedUsers.includes(accountId) ? "delete" : "create", id })
+              if (isReadOnly) {
+                openModal("Toast", { type: "info", message: "회원만 이용 가능한 기능입니다." });
+              } else {
+                mutate({ target: "post", type: postData.likedUsers.includes(accountId) ? "delete" : "create", id })
+              }
             },
             () => {
-              openModal(CommentOverView, { id, comments: postData.comments })
+              if (isReadOnly) {
+                openModal("Toast", { type: "info", message: "회원만 이용 가능한 기능입니다." });
+              } else {
+                openModal(CommentOverView, { id, comments: postData.comments })
+              }
             }]} />
         </div >
       }

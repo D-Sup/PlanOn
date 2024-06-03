@@ -17,9 +17,9 @@ export default defineConfig(({ mode }) => {
           },
           includeAssets: ["favicon.ico", "apple-touch-icon.png", "mask-icon.svg"],
           manifest: {
-            name: "Vite PWA Project",
-            short_name: "Vite PWA Project",
-            theme_color: "#ffffff",
+            name: "플랜온",
+            short_name: "플랜온",
+            theme_color: "#1A1A1A",
             icons: [
                 {
                     src: "pwa-64x64.png",
