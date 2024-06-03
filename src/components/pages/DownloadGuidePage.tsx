@@ -83,7 +83,7 @@ const DownloadGuidePage = () => {
         </div>
       </div>
 
-      <div className="absolute bottom-[10px] left-1/2 -translate-x-1/2 opacity-0 animate-infinite-down">
+      <div className="fixed bottom-[10px] left-1/2 -translate-x-1/2 opacity-0 animate-infinite-down">
         <IconArrowBottom width={20} height={20} fill={"var(--white)"} className="absolute-center" />
       </div>
 
