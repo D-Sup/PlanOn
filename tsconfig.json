@@ -2,9 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     },
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -25,7 +23,9 @@
     "skipDefaultLibCheck": true,
     "ignoreDeprecations": "5.0",
     "suppressImplicitAnyIndexErrors": true,  // 추가된 부분
-    "suppressExcessPropertyErrors": true     // 추가된 부분
+    "suppressExcessPropertyErrors": true,    // 추가된 부분
+    "allowJs": true,                         // 추가 제안
+    "checkJs": false                         // 추가 제안
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
