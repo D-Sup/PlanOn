@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import ScheduleService from "@/services/scheduleService";
@@ -11,7 +12,12 @@ const ScheduleDetailReadOnlyPage = () => {
   const { ReadOnlySchedule } = ScheduleService()
   const { data, isLoading } = ReadOnlySchedule(location.pathname.split("/")[4])
 
-  if (!isLoading) navigate("/schedule/detail", { state: { direction: "fade", data: data?.data, isReadOnly: true } })
+  useEffect(() => {
+    if (data) {
+      navigate("/schedule/detail", { state: { direction: "fade", data: data?.data, isReadOnly: true } })
+    }
+  }, [isLoading])
+
 
   return (
     <div className="absolute-center w-[150px]">

@@ -24,6 +24,9 @@ const RouteTransition = ({ location, children }: RouteTransitionProps) => {
 
   // const pastDirection = useRef<RouteState["state"]["direction"] | null>(null);
 
+  console.log(routeDirectionValueState);
+
+
   const navigate = useNavigate()
 
   useEffect(() => {

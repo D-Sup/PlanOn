@@ -84,6 +84,7 @@ const MapViewerPage = () => {
   const handleSubmitForList = (data) => {
     const { name, formatted_address, place_id, geometry } = data;
 
+    setRouteDirectionValueState(Prev => ({ ...Prev, direction: "prev" }))
     navigate("/schedule/update", {
       state: {
         direction: "down",
