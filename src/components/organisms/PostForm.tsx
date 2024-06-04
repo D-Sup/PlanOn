@@ -25,7 +25,7 @@ const PostForm = ({ postFormState, setPostFormState }: PostFormProps) => {
     <div className="flex flex-col gap-[20px]">
       <FormField label={"공개"}>
         <Switch
-          checked={postFormState.private}
+          checked={!postFormState.private}
           onCheckedChange={() => {
             setPostFormState(Prev => ({ ...Prev, private: !Prev.private }))
           }}

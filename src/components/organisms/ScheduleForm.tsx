@@ -37,7 +37,7 @@ const ScheduleForm = ({ formData, setFormData, isPrimarySchedule = true, detaile
       {isPrimarySchedule &&
         <FormField label={"공개"}>
           <Switch
-            checked={formData.private}
+            checked={!formData.private}
             onCheckedChange={() => {
               setFormData(Prev => ({ ...Prev, private: !Prev.private }))
             }}
