@@ -31,11 +31,11 @@ const SecurityUnlockPage = () => {
       updateField(userData.id, {
         secureNumber: value
       })
+      setIsUnLockValueState(true)
       navigate("/setting", { state: { direction: "down", updateOption: true } })
+    } else if (value.length === 4 && value == secureNumber) {
       setIsUnLockValueState(true)
-    } else if (value.length === 4 && value === secureNumber) {
-      setIsUnLockValueState(true)
-      setRouteDirectionValueState(Prev => ({ ...Prev, direction: "down" }))
+      setTimeout(() => setRouteDirectionValueState(Prev => ({ ...Prev, direction: "down" })), 300)
     } else if (value.length === 4 && value !== secureNumber) {
       setTimeout(() => setValue(""), 300)
     }
