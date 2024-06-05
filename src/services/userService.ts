@@ -12,6 +12,7 @@ import { useRecoilValue } from "recoil";
 import { inputValue } from "@/store";
 
 import getAccountId from "@/utils/getAccountId";
+import generateKeywordCombinations from "@/utils/generateKeywordCombinations";
 
 import { ReadDocumentType } from "@/hooks/useFirestoreRead";
 import { UsersType } from "@/types/users.type";
@@ -91,7 +92,8 @@ const UserService = () => {
             updateField(accountId, {
               accountImage: uploadedPhoto[0],
               accountName: data.accountName,
-              description: data.description
+              description: data.description,
+              accountNameKeywords: generateKeywordCombinations(data.accountName)
             })
           }
         } else {
@@ -99,12 +101,14 @@ const UserService = () => {
             updateField(accountId, {
               accountImage: "",
               accountName: data.accountName,
-              description: data.description
+              description: data.description,
+              accountNameKeywords: generateKeywordCombinations(data.accountName)
             })
           } else {
             updateField(accountId, {
               accountName: data.accountName,
-              description: data.description
+              description: data.description,
+              accountNameKeywords: generateKeywordCombinations(data.accountName)
             })
           }
         }
