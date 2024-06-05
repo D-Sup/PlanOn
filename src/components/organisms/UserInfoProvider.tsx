@@ -53,8 +53,8 @@ const UserInfoProvider = ({ children }: { children: React.ReactNode }) => {
           if (new Date().getTime() - chat.lastMessageCreatedAt.toDate().getTime() < 1000 && chat.unreadLength > 0) {
             openModal("Toast", { type: "message", title: chat.userName, message: chat.lastReceive })
           }
+          refetch()
         })
-        refetch()
       }
     })
 
