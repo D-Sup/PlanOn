@@ -3,7 +3,7 @@ import { recoilPersist } from "recoil-persist";
 
 import getStorageData from "@/utils/getStorageData";
 
-const { isSaved } = getStorageData("isLoginPersistValue", ["isSaved"], "sessionStorage") || ""
+const { isSaved } = getStorageData("persistedIsLoginPersist", ["isLoginPersistValue"], "sessionStorage") || ""
 
 const storage = typeof window !== "undefined"
 ? isSaved 

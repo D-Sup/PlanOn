@@ -10,6 +10,8 @@ import AuthInput from "../atoms/AuthInput";
 import Loader from "../organisms/Loader";
 import { Checkbox } from "../shadcnUIKit/checkbox";
 
+import getStorageData from "@/utils/getStorageData";
+
 import IconGoogle from "../../assets/images/icon-google.svg?react";
 import IconKakao from "../../assets/images/icon-kakao.svg?react";
 
