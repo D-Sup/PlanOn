@@ -77,13 +77,13 @@ const PostPage = () => {
     }
   }, [])
 
-  // useEffect(() => {
-  //   if (userData?.data.secureNumber !== undefined && userData?.data.secureNumber !== "") {
-  //     if (!isUnLockValueState) {
-  //       navigate("/security", { state: { direction: "up" } })
-  //     }
-  //   }
-  // }, [userData])
+  useEffect(() => {
+    if (userData?.data.secureNumber !== undefined && userData?.data.secureNumber !== "") {
+      if (!isUnLockValueState) {
+        navigate("/security", { state: { direction: "up" } })
+      }
+    }
+  }, [userData])
 
   useEffect(() => {
     if (currentCategory === "all-posts" && paginationValueState.allPosts.lastVisible === null) {
