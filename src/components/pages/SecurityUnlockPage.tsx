@@ -26,6 +26,10 @@ const SecurityUnlockPage = () => {
 
   const { isSetPassword } = location.state || {};
 
+  console.log("value", value);
+  console.log("secureNumber", secureNumber);
+
+
   useEffect(() => {
     if (isSetPassword && value.length === 4) {
       updateField(userData.id, {
@@ -34,6 +38,7 @@ const SecurityUnlockPage = () => {
       setIsUnLockValueState(true)
       navigate("/setting", { state: { direction: "down", updateOption: true } })
     } else if (value.length === 4 && value === secureNumber) {
+      console.log("실행");
       setIsUnLockValueState(true)
       setRouteDirectionValueState(Prev => ({ ...Prev, direction: "down" }))
     } else if (value.length === 4 && value !== secureNumber) {
