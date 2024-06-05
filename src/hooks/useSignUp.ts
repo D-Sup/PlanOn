@@ -61,7 +61,8 @@ const useSignUp = (): SignUpResponse => {
 				chats: [],
 				isDarkMode: true,
 				isAlert: false,
-				isFirstEntry: true
+				isFirstEntry: true,
+				secureNumber: ""
 				// postIds: [],
 				// scheduleIds: []
 			};
