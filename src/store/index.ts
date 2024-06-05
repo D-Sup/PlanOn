@@ -7,7 +7,6 @@ export * from "./atoms/scheduleFormValueAtom";
 export * from "./atoms/paginationValueAtoms";
 export * from "./atoms/routeDirectionValueAtom";
 export * from "./atoms/scrollPositionValue";
-export * from "./atoms/isLoginPersistValueAtom";
 export * from "./atoms/isUnLockValueAtom";
 
 export * from "./selectors/hasValueChangedSelector";

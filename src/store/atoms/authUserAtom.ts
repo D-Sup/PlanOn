@@ -1,19 +1,17 @@
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
 
-import getStorageData from "@/utils/getStorageData";
+const sessionStorage = typeof window !== "undefined" ? window.sessionStorage : undefined;
+const localStorage = typeof window !== "undefined" ? window.localStorage : undefined;
 
-const { isSaved } = getStorageData("persistedIsLoginPersist", ["isLoginPersistValue"], "sessionStorage") || ""
+const { persistAtom: sessionPersistAtom } = recoilPersist({
+  key: "sessionPersistedAuthUser",
+  storage: sessionStorage,
+});
 
-const storage = typeof window !== "undefined"
-? isSaved 
-? window.localStorage
-  : window.sessionStorage
-: undefined;
-
-const { persistAtom } = recoilPersist({
-  key: "persistedAuthUser",
-  storage: storage,
+const { persistAtom: localPersistAtom } = recoilPersist({
+  key: "localPersistedAuthUser",
+  storage: localStorage,
 });
 
 interface AuthUser {
@@ -25,5 +23,5 @@ export const authUser = atom<AuthUser>({
   default: {
     accountId: "",
   },
-  effects_UNSTABLE: [persistAtom],
+  effects_UNSTABLE: [sessionPersistAtom, localPersistAtom],
 });

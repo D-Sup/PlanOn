@@ -26,6 +26,7 @@ const UserInfoProvider = ({ children }: { children: React.ReactNode }) => {
   const { data, isLoading, refetch } = ReadUser();
 
   const { openModal } = useModalStack()
+
   const accountId = getAccountId()
 
   const messagesRef = db.collection("users").doc(accountId)

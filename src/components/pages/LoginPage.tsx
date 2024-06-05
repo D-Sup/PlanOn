@@ -3,14 +3,9 @@ import { useNavigate } from "react-router-dom";
 import useLogin from "@/hooks/useLogin";
 import useModalStack from "@/hooks/useModalStack";
 
-import { isLoginPersistValue } from "@/store";
-import { useSetRecoilState } from "recoil";
-
 import AuthInput from "../atoms/AuthInput";
 import Loader from "../organisms/Loader";
 import { Checkbox } from "../shadcnUIKit/checkbox";
-
-import getStorageData from "@/utils/getStorageData";
 
 import IconGoogle from "../../assets/images/icon-google.svg?react";
 import IconKakao from "../../assets/images/icon-kakao.svg?react";
@@ -21,11 +16,11 @@ const LoginPage = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isError, setIsError] = useState<boolean>(true);
-  const setIsLoginPersistValueState = useSetRecoilState(isLoginPersistValue)
+  const [isChecked, setIsChecked] = useState<boolean>(true);
 
   const navigate = useNavigate()
 
-  const { error, isSuccess, isPending, login } = useLogin();
+  const { error, isSuccess, isPending, login } = useLogin(isChecked);
 
   const { openModal } = useModalStack()
 
@@ -80,7 +75,7 @@ const LoginPage = () => {
           }
         />
         <div className="flex items-center space-x-2">
-          <Checkbox id="login-save" className="w-[20px] h-[20px] border-gray-old transition duration-100" onClick={() => setIsLoginPersistValueState(Prev => ({ isSaved: !Prev.isSaved }))} />
+          <Checkbox id="login-save" className="w-[20px] h-[20px] border-gray-old transition duration-100" onClick={() => setIsChecked(!isChecked)} />
           <label
             htmlFor="login-save"
             className="text-sm text-white"

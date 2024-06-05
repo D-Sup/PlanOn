@@ -5,7 +5,6 @@ const getStorageData = (key: string, propertyPath: string[], type: "sessionStora
   for (const property of propertyPath) {
     result = result ? result[property] : null;
   }
-
   return result;
 }
 

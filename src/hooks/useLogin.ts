@@ -20,14 +20,14 @@ interface LoginParams {
   password: string;
 }
 
-const useLogin = (): LoginResponse => {
+const useLogin = (isChecked: boolean): LoginResponse => {
 
   const setAuthUserState = useSetRecoilState(authUser);
   const [error, setError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState<boolean>(false);
 	const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
-  const { readDocumentSingle } = useFirestoreRead("users");
+    const { readDocumentSingle } = useFirestoreRead("users");
 
   const login = (loginFormData: LoginParams) => {
     setError(null);
@@ -55,6 +55,11 @@ const useLogin = (): LoginResponse => {
         setError(e.message);
       })
       .finally(() => {
+        if (isChecked) {
+          setTimeout(()=> localStorage.removeItem("localPersistedAuthUser"), 1000)
+        } else {
+          setTimeout(()=> sessionStorage.removeItem("sessionPersistedAuthUser"), 1000)
+        }
         setIsPending(false);
       });
   };

@@ -62,8 +62,10 @@ const SecurityUnlockPage = () => {
             <li className="aspect-square flex-center w-full">
               <button
                 type="button"
-                className="w-2/3 aspect-square rounded-full bg-input text-lg"
-                onClick={() => value.length !== 4 && setValue(value + (index === 9 ? 0 : index + 1))}
+                className="w-4/5 aspect-square rounded-full bg-input text-2xl hover:bg-white hover:text-black transition duration-300"
+                onClick={() => {
+                  value.length !== 4 && setValue(value + (index === 9 ? 0 : index + 1))
+                }}
               >
                 {index === 9 ? 0 : index + 1}
               </button>
