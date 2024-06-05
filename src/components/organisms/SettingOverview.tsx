@@ -1,4 +1,16 @@
+import { useContext } from "react";
+import { UserContext } from "./UserInfoProvider";
+import { useNavigate } from "react-router-dom";
+
+import useFirestoreUpdate from "@/hooks/useFirestoreUpdate";
+import useFirestoreDelete from "@/hooks/useFirestoreDelete";
+import logoutService from "@/services/logoutService";
+
+import useModalStack from "@/hooks/useModalStack";
 import SettingCard from "../mocules/SettingCard";
+
+import { v4 as uuidv4 } from "uuid";
+import { appAuth } from "@/firebase/config";
 
 import IconDarkmode from "../../assets/images/icon-darkmode.svg?react";
 import IconAlert from "../../assets/images/icon-alert.svg?react";
@@ -7,14 +19,63 @@ import IconContact from "../../assets/images/icon-contact.svg?react";
 import IconUnsubscribe from "../../assets/images/icon-unsubscribe.svg?react";
 
 const SettingOverview = () => {
+
+  const navigate = useNavigate()
+
+  const { data: userData, } = useContext(UserContext);
+
+
+  const { updateField } = useFirestoreUpdate("users")
+  const { deleteDocument } = useFirestoreDelete("users")
+
+  const { openModal, closeModal } = useModalStack()
+
+  const isFirstChat = userData && !userData.data.chats.some((chat) => chat.userId === "sAksWjNPRfMt7PJ6IDtWM0Rnunt1")
+
   return (
-    <ul className="flex flex-col gap-[10px]">
-      <SettingCard icon={IconDarkmode} name={"다크모드"} handleFunc={() => { }} hasSwitch={true} />
-      <SettingCard icon={IconAlert} name={"알림"} handleFunc={() => { }} hasSwitch={true} />
-      <SettingCard icon={IconInfo} name={"앱 튜토리얼"} handleFunc={() => { }} />
-      <SettingCard icon={IconContact} name={"문의하기"} handleFunc={() => { }} />
-      <SettingCard icon={IconUnsubscribe} name={"계정탈퇴"} handleFunc={() => { }} />
-    </ul>
+    <>
+      {userData &&
+        <ul className="flex flex-col gap-[10px]">
+          <SettingCard icon={IconDarkmode} name={"다크모드"} handleFunc={() => { updateField(userData.id, { isDarkMode: !userData.data.isDarkMode }) }} hasSwitch={true} isChecked={userData.data.isDarkMode} />
+          <SettingCard icon={IconAlert} name={"알림"} handleFunc={() => { updateField(userData.id, { isDarkMode: !userData.data.isAlert }) }} hasSwitch={true} isChecked={userData.data.isAlert} />
+          <SettingCard icon={IconInfo} name={"앱 튜토리얼"} handleFunc={() => {
+            openModal("Toast", { type: "info", message: "아직 준비 중인 서비스입니다." })
+          }} />
+          <SettingCard icon={IconContact} name={"문의하기"} handleFunc={() => {
+            navigate("/chatroom", {
+              state: {
+                direction: "next",
+                userInfo: {
+                  authorizationId: "sAksWjNPRfMt7PJ6IDtWM0Rnunt1",
+                  accountName: "플랜온",
+                  description: "최대한 신속하게 도와드리겠습니다.",
+                  accountImage: ""
+                },
+                id: isFirstChat ? uuidv4() : userData?.data.chats[userData?.data.chats.findIndex((chat) => chat.userId === "sAksWjNPRfMt7PJ6IDtWM0Rnunt1")].id,
+                isFirstChat
+              }
+            })
+          }} />
+          <SettingCard icon={IconUnsubscribe} name={"계정탈퇴"} handleFunc={() => {
+            openModal("Alert", "정말로 계정을 탈퇴하시겠습니까?", ["취소", "탈퇴하기"],
+              [null, () => {
+                closeModal()
+                setTimeout(async () => {
+                  await deleteDocument(userData.id)
+                  appAuth.currentUser.delete().then(async function () {
+                    logoutService()
+                    navigate("/login", { state: { direction: "prev" } })
+                    openModal("Toast", { message: "계정이 삭제되었습니다." })
+                  }).catch(function () {
+                    openModal("Toast", { message: "계정이 삭제를 실패했습니다." })
+                  });
+                }, 500)
+              }
+              ])
+          }} />
+        </ul>
+      }
+    </>
   )
 }
 

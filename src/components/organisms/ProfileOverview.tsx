@@ -44,7 +44,7 @@ const ProfileOverview = ({ data, postLength, isMyProfile, chatRoomId, isFirstCha
 
       <div className="my-[20px] px-[30px] w-full flex gap-[20px]">
         <button
-          className={`h-[37px] rounded-[5px]  text-md ${accountId === authorizationId ? "bg-input text-gray-old" : followed ? "bg-input text-gray-old" : "bg-white text-black"} ${accountId === authorizationId ? "w-full" : "w-8/12"}`}
+          className={`h-[37px] rounded-[5px]  text-md ${accountId === authorizationId ? "bg-input text-white" : followed ? "bg-input text-white" : "bg-white text-black"} ${accountId === authorizationId ? "w-full" : "w-8/12"}`}
           type="button"
           onClick={() => {
             setFollowed(Prev => !Prev)
@@ -59,8 +59,10 @@ const ProfileOverview = ({ data, postLength, isMyProfile, chatRoomId, isFirstCha
         </button>
         {accountId !== authorizationId &&
           <button
-            onClick={() => { navigate("/chatroom", { state: { direction: "next", userInfo: data, id: chatRoomId, isFirstChat } }) }}
-            className="w-4/12 h-[37px] rounded-[5px] bg-input text-md text-gray-old"
+            onClick={() => {
+              navigate("/chatroom", { state: { direction: "next", userInfo: data, id: chatRoomId, isFirstChat } })
+            }}
+            className="w-4/12 h-[37px] rounded-[5px] bg-input text-md text-white"
             type="button"
           >
             메시지

@@ -12,7 +12,10 @@ export interface UsersType {
   followers: string[],
   followings: string[],
   searchHistory: SearchHistoryType[]
-  chats: ChatsType[]
+  chats: ChatsType[],
+  isDarkMode: boolean,
+  isAlert: boolean,
+  isFirstEntry: boolean
   // postIds: string[],
   // scheduleIds: string[]
 }

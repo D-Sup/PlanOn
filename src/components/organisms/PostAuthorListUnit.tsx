@@ -2,7 +2,7 @@ import ProfileAvatar from "../atoms/ProfileAvatar";
 
 import IconCirclePlus from "../../assets/images/icon-circle-plus.svg?react";
 import IconMoreVertical from "../../assets/images/icon-more-vertical.svg?react";
-import IconLogo from "../../assets/images/icon-logo.svg?react";
+import IconLock from "../../assets/images/icon-lock.svg?react";
 
 import { ReadDocumentType } from "@/hooks/useFirestoreRead";
 import { UsersType } from "@/types/users.type";
@@ -10,10 +10,13 @@ import { PostsType } from "@/types/posts.type";
 
 
 const PostAuthorListUnit = ({ data, handleFunc }: { data: PostsType & { userInfo: UsersType, tagUserInfo: ReadDocumentType<UsersType>[] }, handleFunc: (() => void)[] }): JSX.Element => {
-  const { userInfo, usertags } = data
+  const { userInfo, usertags, private: isPrivate } = data
 
   return (
-    <div className="flex w-full h-[40px] pl-[10px] pr-[20px] mb-[10px]">
+    <div className="flex items-center w-full h-[40px] pl-[10px] pr-[20px] mb-[10px]">
+
+      {isPrivate === true && <IconLock width={15} height={15} fill={"var(--gray-old)"} className="mr-[10px]" />}
+
       <ProfileAvatar
         className="w-[40px] h-[40px]"
         src={userInfo?.accountImage || ""}

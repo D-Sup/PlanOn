@@ -1,5 +1,5 @@
-const getSessionStorageData = (key: string, propertyPath: string[]) => {
-  const item = sessionStorage.getItem(key);
+const getStorageData = (key: string, propertyPath: string[]) => {
+  const item = localStorage.getItem(key);
   let result = item ? JSON.parse(item) : null;
 
   for (const property of propertyPath) {
@@ -9,4 +9,4 @@ const getSessionStorageData = (key: string, propertyPath: string[]) => {
   return result;
 }
 
-export default getSessionStorageData;
+export default getStorageData;

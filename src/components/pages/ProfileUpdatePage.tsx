@@ -88,7 +88,7 @@ const ProfileUpdatePage = () => {
 
   if (isPending && isFetching) {
     closeModalDirect()
-    openModal("Loading", { isLoader: true, message: "프로필 업데이트 중..." });
+    openModal("Loading", { isLoader: true, message: "프로필 수정 중 ..." });
     setIsFetching(false)
   }
 
@@ -117,10 +117,10 @@ const ProfileUpdatePage = () => {
               />
               {accountImage.length === 0 &&
                 <div className="absolute top-0 w-[150px] h-[150px] rounded-full" style={{ backgroundColor: "rgba(0,0,0,0.3)" }}>
-                  <span className="absolute-center text-white">{accountImagePreview?.length === 0 ? "프로필 추가" : "프로필 수정"}</span>
+                  <span className="absolute-center text-white">{accountImagePreview[0] === "" ? "프로필 추가" : "프로필 수정"}</span>
                 </div>
               }
-              {accountImagePreview.length !== 0 &&
+              {accountImagePreview[0] !== "" &&
                 <button
                   className="absolute top-0 right-0 w-[40px] h-[40px] rounded-full bg-white bg-white"
                   type="button"

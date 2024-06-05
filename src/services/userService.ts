@@ -3,6 +3,9 @@ import useDataMutation from "@/hooks/useDataMutation";
 import useFirestoreRead from "@/hooks/useFirestoreRead";
 import useFirestoreUpdate from "@/hooks/useFirestoreUpdate";
 
+import { useSetRecoilState } from "recoil";
+import { paginationValue } from "@/store";
+
 import usePhotoUpload from "@/hooks/usePhotoUpload";
 
 import { useRecoilValue } from "recoil";
@@ -78,8 +81,9 @@ const UserService = () => {
     const { updateField } = useFirestoreUpdate("users")
     const { photoUpload } = usePhotoUpload()
     const accountId = getAccountId()
+    const setPaginationValue = useSetRecoilState(paginationValue)
     const { mutate, isPending } = useDataMutation(
-      "my-userInfo",
+      ["my-userInfo", "all-posts", "following-posts"],
       async() => {
         if (data.accountImage.length !== 0) {
           const uploadedPhoto = await photoUpload("users", data.accountImage)
@@ -104,6 +108,15 @@ const UserService = () => {
             })
           }
         }
+        setPaginationValue(Prev => ({...Prev, 
+          allPosts : {
+            lastVisible: null,
+            isDataEnd: false
+          },
+          followingPosts: {
+            lastVisible: null,
+            isDataEnd: false
+        }}))
       },
       onSuccess,
       onError

@@ -81,6 +81,15 @@ const PostPage = () => {
     }
   }, [paginationValueState])
 
+  useEffect(() => {
+    if (!filteredData) {
+      if (currentCategory === "all-posts") {
+        refectchPostAll()
+      } else {
+        refectchPost()
+      }
+    }
+  }, [filteredData])
 
   return (
     <div className="relative">

@@ -94,7 +94,7 @@ const ChatRoomPage = () => {
     let uploadedPhotos
     if (inputValue || photoState.photos.checked.length !== 0) {
       if (photoState.photos.checked.length !== 0) {
-        openModal("Loading", { isLoader: true, message: "전송 중..." });
+        openModal("Loading", { isLoader: true, message: "전송 중 ..." });
         uploadedPhotos = await photoUpload("chats", photoState.photos.checked.map(index => photoState.photos.file[index]))
         setPhotoState(postFormValueDefault)
       }

@@ -78,7 +78,7 @@ const LoginPage = () => {
           onClick={() => login({ email, password })}
         >
           {isPending ? (
-            <div className="absolute-center w-[50px]">
+            <div className="absolute-center w-[40px]">
               <Loader isSmallUse={true} color="black" />
             </div>
           ) : (

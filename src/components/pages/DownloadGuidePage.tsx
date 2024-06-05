@@ -78,7 +78,7 @@ const DownloadGuidePage = () => {
             <div className="bg-background p-[8px] rounded-[5px]">
               <IconLogo width={20} height={20} />
             </div>
-            <span className="text-sm">플랫온</span>
+            <span className="text-sm">플랜온</span>
           </div>
         </div>
       </div>

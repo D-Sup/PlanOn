@@ -19,7 +19,7 @@ const SignUpPage = () => {
 
   const accountNamePattern = /^[a-zA-Z0-9가-힣ㅏ-ㅣㄱ-ㅎ]+$/;
   const accountEmailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const accountPasswordPattern = /^(?=.*[a-zA-Z]{8,})(?=.*[0-9])(?=.*[!@#$%^&*]).{10,}$/;
+  const accountPasswordPattern = /^(?=.*[a-zA-Z]{6,})(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$/;
 
   const isRequire = accountNamePattern.test(accountName) &&
     accountEmailPattern.test(accountEmail) &&
@@ -70,7 +70,7 @@ const SignUpPage = () => {
           type={"password"}
           placeholder={"비밀번호 입력"}
           validation={accountPassword === "" || accountPasswordPattern.test(accountPassword)}
-          invalidMessage={"최소 하나의 숫자, 특수문자와 8개의 영문자를 포함해야합니다"}
+          invalidMessage={"최소 하나의 숫자, 특수문자와 6개의 영문자를 포함해야합니다"}
         />
         <AuthInput
           value={accountPasswordConfirm}
@@ -97,7 +97,7 @@ const SignUpPage = () => {
           }}
         >
           {isPending ? (
-            <div className="absolute-center w-[50px]">
+            <div className="absolute-center w-[40px]">
               <Loader isSmallUse={true} color="black" />
             </div>
           ) : (

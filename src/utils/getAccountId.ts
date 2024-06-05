@@ -1,7 +1,7 @@
-import getSessionStorageData from "./getSessionStorageData";
+import getStorageData from "./getStorageData"
 
 const getAccountId = () => {
-  const {accountId} = getSessionStorageData("persistedAuthUser", ["authUser"]) || ""
+  const {accountId} = getStorageData("persistedAuthUser", ["authUser"]) || ""
   return accountId
 }
 

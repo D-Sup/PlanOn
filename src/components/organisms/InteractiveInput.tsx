@@ -100,7 +100,13 @@ const InteractiveInput = ({ isCommentOnly = true, inputValue, setInputValue, pho
             ref={textareaRef}
           />
           <button
-            onClick={() => (inputValue.length !== 0 || photoState && photoState.photos.checked.length !== 0) && handleFunc()}
+            onClick={() => {
+              textareaRef.current.focus()
+              if ((inputValue.length !== 0 || photoState && photoState.photos.checked.length !== 0)) {
+                handleFunc()
+              }
+            }
+            }
             className="p-[10px] absolute bottom-[-18px] right-[5px] transform -translate-y-1/2"
           >
             <IconSubmit width={20} height={20} fill={inputValue.length > 0 || (photoState && photoState.photos.checked.length > 0) ? "var(--white)" : "var(--gray-heavy)"} />

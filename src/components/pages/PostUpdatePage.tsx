@@ -144,13 +144,13 @@ const PostUpdatePage = () => {
 
   if (isUpdatePostPending && isFetching) {
     closeModalDirect()
-    openModal("Loading", { isLoader: true, message: "게시물 수정 중..." });
+    openModal("Loading", { isLoader: true, message: "게시물 수정 중 ..." });
     setIsFetching(false)
   }
 
   if (isCreatePostPending && isFetching) {
     closeModalDirect()
-    openModal("Loading", { isLoader: true, message: "업로드 중..." });
+    openModal("Loading", { isLoader: true, message: "업로드 중 ..." });
     setIsFetching(false)
   }
 

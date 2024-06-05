@@ -36,7 +36,7 @@ const SchedulePlacePicker = ({ props, closeModal, handleScroll, handleScrollLock
   const fetchLocationDetails = async (placeId: string) => {
     setLoading(true)
     try {
-      const response = await fetch(`${process.env.REACT_APP_SEARCH_PLACES_API_URL}?request=details&keyword=${placeId}`,
+      const response = await fetch(`${process.env.REACT_APP_SEARCH_PLACES_API_URL}?request=details&keyword=${placeId}&apikey=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`,
         {
           method: "GET",
         }

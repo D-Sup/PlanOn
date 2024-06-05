@@ -504,7 +504,7 @@ const PostUpdatePage = () => {
 
   if (isPending && isFetching) {
     closeModalDirect()
-    openModal("Loading", { isLoader: true, message: "업로드 중..." });
+    openModal("Loading", { isLoader: true, message: "전 중 ..." });
     setIsFetching(false)
   }
 

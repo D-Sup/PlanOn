@@ -10,7 +10,6 @@ import { useRecoilValue } from "recoil";
 import { newScheduleFormValue } from "@/store";
 
 import getAccountId from "@/utils/getAccountId";
-import formatDate from "@/utils/formatDate";
 import generateKeywordCombinations from "@/utils/generateKeywordCombinations";
 
 import { ReadDocumentType } from "@/hooks/useFirestoreRead";
@@ -108,7 +107,7 @@ const ScheduleService = () => {
   const ReadSchedule = () => {
     const { readDocumentsSimplePaged } = useFirestoreRead("schedules")
 
-    const { data, isLoading } = useDataQuery<ReadDocumentType<SchedulesType>[], Error, ReadDocumentType<SchedulesType>[]>(
+    const { data, isLoading, refetch } = useDataQuery<ReadDocumentType<SchedulesType>[], Error, ReadDocumentType<SchedulesType>[]>(
       "schedules",
       ()=> readDocumentsSimplePaged<SchedulesType>([], "authorizationId", [accountId], "startTime", "asc", Infinity),
       (data) => data,
@@ -117,7 +116,7 @@ const ScheduleService = () => {
         gcTime: Infinity,
       },
     )
-    return { data, isLoading }
+    return { data, isLoading, refetch }
   }
 
   const UpdateSchedule = (data: ReadDocumentType<ScheduleFormValueType> , onSuccess: () => void, onError: () => void) => {

@@ -27,18 +27,18 @@ const ProfileAvatar = ({ src, className, alt, handleFunc }: {
           </div>
         ) : (
           src !== ""
-            ? <img src={src} className={`${className} rounded-full object-cover`} alt={alt} />
+            ? (
+              <Avatar onClick={handleFunc}>
+                <AvatarImage src={src} className={`${className} rounded-full object-cover`} alt={alt} />
+                <AvatarFallback>
+                  <div className="absolute-center w-[20px] h-[5px]">
+                    <Loader isSmallUse={true} />
+                  </div>
+                </AvatarFallback>
+              </Avatar>
+            )
             : <IconLogo fill={"var(--white)"} className="absolute-center w-1/3" />
-          // </div>
-          //   <div className="relative w-[40px] h-[40px] rounded-full bg-background-light" onCl={handleFunc[0]}>
-          // <Avatar onClick={handleFunc}>
-          //   <AvatarImage src={src} className={`${className} rounded-full object-cover`} alt={alt} />
-          //   <AvatarFallback>
-          //     <div className="absolute-center w-[20px] h-[5px]">
-          //       <Loader isSmallUse={true} />
-          //     </div>
-          //   </AvatarFallback>
-          // </Avatar>
+          // <img src={src} className={`${className} rounded-full object-cover`} alt={alt} />
         )
       }
     </div>

@@ -60,7 +60,7 @@ const ScheduleOverview = ({ postFormState, setPostFormState, isScheduleSelectabl
   const { openModal, closeModal, closeModalDirect } = useModalStack()
 
   const { ReadSchedule, DeleteSchedule } = ScheduleService()
-  const { data: scheduleData, isLoading } = ReadSchedule()
+  const { data: scheduleData, isLoading, refetch } = ReadSchedule()
   // const { data: scheduleData, isLoading } = ReadSchedule()
   const { mutate, isPending } = DeleteSchedule(targetDeleteSchedule,
     () => {
@@ -145,6 +145,12 @@ const ScheduleOverview = ({ postFormState, setPostFormState, isScheduleSelectabl
   useEffect(() => {
     resetSelectedDate()
   }, [])
+
+  useEffect(() => {
+    if (!scheduleData) {
+      refetch()
+    }
+  }, [scheduleData])
 
   if (isLoading) return <ScheduleOverviewSkeleton isScheduleSelectable={isScheduleSelectable} />
 

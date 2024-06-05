@@ -155,7 +155,7 @@ const ListUnit = () => {
     return (
       <li className="w-full flex items-center justify-between py-[10px]" style={{ boxShadow: "0 1px var(--gray-heavy)" }}>
         <ProfileCard title={accountName} description={description} src={accountImage} />
-        <ToggleButton options={["언팔로잉", "팔로잉"]} selected={followed} handleFunc={handleFunc} />
+        <ToggleButton options={["팔로잉", "팔로우"]} selected={followed} handleFunc={handleFunc} />
       </li>
     )
   }

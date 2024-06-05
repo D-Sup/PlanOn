@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 import { useRecoilState } from "recoil";
 import { selectedDateValue } from "@/store";
@@ -27,7 +27,7 @@ const Calendar = () => {
 
   const { ReadSchedule } = ScheduleService()
   // const { data: scheduleData, isLoading } = ReadSchedule()
-  const { data: scheduleData, isLoading } = ReadSchedule()
+  const { data: scheduleData, isLoading, refetch } = ReadSchedule()
 
   const colStartClasses = [
     "",
@@ -62,6 +62,12 @@ const Calendar = () => {
     const firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 })
     setSelectedDateState(format(firstDayNextMonth, "yyyy-MM"))
   }
+
+  useEffect(() => {
+    if (!scheduleData) {
+      refetch()
+    }
+  }, [scheduleData])
 
   if (isLoading) return <CalendarSkeleton />
 

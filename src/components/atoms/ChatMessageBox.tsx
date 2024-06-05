@@ -83,13 +83,13 @@ const ChatMessageBox = ({ chatRoomId, data, previousCreatedAt, nextCreatedAt }: 
             {!isRead && <span className="text-xsm text-highlight">1</span>}
             {isEqual && <span className="text-nowrap text-xsm text-white">{formatDate(createdAt, 7)}</span>}
             {text.includes("http")
-              ? <a href={text} className="inline-block px-[10px] py-[8px] rounded-[5px] rounded-br-none bg-white text-sm text-blue-500 underline underline-offset-1" target="_blank">{text}</a>
+              ? <a href={text} className="inline-block px-[10px] py-[8px] rounded-[5px] rounded-br-none bg-white text-sm text-blue-500 underline underline-offset-1 break-all" target="_blank">{text}</a>
               : <p className="inline-block px-[10px] py-[8px] rounded-[5px] rounded-br-none bg-white text-sm text-black">{text}</p>
             }
           </div>
         ) : (
           photoURL &&
-          <div className={`${isEqual ? "mb-[20px]" : "mb-[5px]"} ml-auto leading-none flex items-end gap-[10px]`}>
+          <div className={`${isEqual ? "mb-[20px]" : "mb-[5px]"} mr-[10px] ml-auto leading-none flex items-end gap-[10px]`}>
             {!isRead && <span className="text-xsm text-highlight">1</span>}
             {isEqual && <span className={"text-xsm text-white"}>{formatDate(createdAt, 7)}</span>}
             <ul className={`grid-cols-${photoURL.length <= 3 ? (photoURL.length % 3) === 0 ? 3 : (photoURL.length % 3) === 2 ? 2 : 1 : 3} w-[250px] grid gap-1 rounded-[100px]`}>
@@ -112,7 +112,7 @@ const ChatMessageBox = ({ chatRoomId, data, previousCreatedAt, nextCreatedAt }: 
             className="mb-[10px] ml-[10px] max-w-[80%] flex items-end gap-[10px]"
           >
             {text.includes("http")
-              ? <a href={text} className="inline-block px-[10px] py-[8px] rounded-[5px] rounded-bl-none bg-input text-sm text-blue-500 underline underline-offset-1" target="_blank">{text}</a>
+              ? <a href={text} className="inline-block px-[10px] py-[8px] rounded-[5px] rounded-bl-none bg-input text-sm text-blue-500 underline underline-offset-1 break-all" target="_blank">{text}</a>
               : <p className="inline-block px-[10px] py-[8px] rounded-[5px] rounded-bl-none bg-input text-sm text-white">{text}</p>
             }
             {isEqual && <span className={"text-nowrap text-xsm text-white"}>{formatDate(createdAt, 7)}</span>}
@@ -120,7 +120,7 @@ const ChatMessageBox = ({ chatRoomId, data, previousCreatedAt, nextCreatedAt }: 
           </div>
         ) : (
           photoURL &&
-          <div className={`${isEqual ? "mb-[20px]" : "mb-[5px]"} leading-none flex items-end gap-[10px]`}>
+          <div className={`${isEqual ? "mb-[20px]" : "mb-[5px]"} ml-[10px] leading-none flex items-end gap-[10px]`}>
             <ul className={`grid-cols-${photoURL.length <= 3 ? (photoURL.length % 3) === 0 ? 3 : (photoURL.length % 3) === 2 ? 2 : 1 : 3} w-[250px] grid gap-1 rounded-[100px]`}>
               {photoURL.map((url) => (
                 <li className="relative w-full aspect-square bg-background rounded-[10px] overflow-hidden"

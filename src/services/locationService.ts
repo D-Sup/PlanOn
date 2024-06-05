@@ -13,7 +13,7 @@ const LocationService = () => {
 
     const queryFn = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_SEARCH_PLACES_API_URL}?request=textsearch&keyword=${inputValueState}`,
+        const response = await fetch(`${process.env.REACT_APP_SEARCH_PLACES_API_URL}?request=textsearch&keyword=${inputValueState}&apikey=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`,
           {
             method: "GET",
           }

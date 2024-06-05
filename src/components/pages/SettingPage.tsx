@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom"
 import { UserContext } from "../organisms/UserInfoProvider"
 import useModalStack from "@/hooks/useModalStack"
 
-import { useResetRecoilState } from "recoil"
-import { authUser } from "@/store"
+import { useResetRecoilState, useSetRecoilState } from "recoil"
+import { authUser, routeDirectionValue } from "@/store"
 
 import logoutService from "@/services/logoutService"
 
@@ -14,6 +14,8 @@ import ListUnitSkeleton from "../skeleton/ListUnitSkeleton"
 import ListUnit from "../organisms/ListUnit"
 
 const SettingPage = () => {
+
+  const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue);
 
   const { data: userData, isLoading } = useContext(UserContext);
 
@@ -34,6 +36,7 @@ const SettingPage = () => {
       <div className="px-[30px]" style={{ boxShadow: "0 1px var(--gray-heavy)" }}>
         {!isLoading && userData
           ? <UserLinkListUnit data={userData.data} handleFunc={() => {
+            setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
             navigate("/profile", { state: { direction: "next", id: userData.id } })
           }} />
           : <ListUnitSkeleton className="py-[10px]" />

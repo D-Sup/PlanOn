@@ -58,7 +58,10 @@ const useSignUp = (): SignUpResponse => {
 				followers: [],
 				followings: [],
 				searchHistory: [],
-				chats: []
+				chats: [],
+				isDarkMode: true,
+				isAlert: false,
+				isFirstEntry: true
 				// postIds: [],
 				// scheduleIds: []
 			};
