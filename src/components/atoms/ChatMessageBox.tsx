@@ -11,9 +11,8 @@ import { db } from "@/firebase/config";
 import { MessagesType } from "@/types/messages.type";
 import { Timestamp } from "firebase/firestore";
 
-// { permission }: { permission: boolean }
 const ChatMessageBox = ({ chatRoomId, data, previousCreatedAt, nextCreatedAt }: { chatRoomId: string, data: MessagesType, previousCreatedAt: Timestamp, nextCreatedAt: Timestamp | Date }) => {
-  const messageRef = useRef<HTMLLIElement | null>(null); // 메시지 DOM 요소를 참조하기 위한 ref
+  const messageRef = useRef<HTMLLIElement | null>(null);
   const { id, userId, text, photoURL, isRead, createdAt, isLocal } = data
 
   const { updateFieldObject } = useFirestoreUpdate("users")

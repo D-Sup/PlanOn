@@ -1,5 +1,8 @@
 import { useRef, useEffect, createContext } from "react";
+import { useNavigate } from "react-router-dom";
 import useModalStack from "@/hooks/useModalStack"
+import { useRecoilValue } from "recoil";
+import { isUnLockValue } from "@/store";
 
 import UserService from "@/services/userService";
 
@@ -22,9 +25,11 @@ const UserContext = createContext<UserContextType>({
 });
 
 const UserInfoProvider = ({ children }: { children: React.ReactNode }) => {
+  const isUnLockValueState = useRecoilValue(isUnLockValue);
   const { ReadUser } = UserService();
   const { data, isLoading, refetch } = ReadUser();
 
+  const navigate = useNavigate()
   const { openModal } = useModalStack()
 
   const accountId = getAccountId()
@@ -61,6 +66,14 @@ const UserInfoProvider = ({ children }: { children: React.ReactNode }) => {
 
     return unsubscribe
   }, [queryRef])
+
+  useEffect(() => {
+    if (data?.data.secureNumber !== undefined && data?.data.secureNumber !== "") {
+      if (!isUnLockValueState) {
+        navigate("/security", { state: { direction: "up" } })
+      }
+    }
+  }, [data])
 
 
   return (

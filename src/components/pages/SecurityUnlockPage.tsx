@@ -8,7 +8,7 @@ import {
   InputOTPSlot,
 } from "../shadcnUIKit/input-otp"
 import { useSetRecoilState } from "recoil"
-import { isUnLockValue } from "@/store"
+import { isUnLockValue, routeDirectionValue } from "@/store"
 
 const SecurityUnlockPage = () => {
 
@@ -17,6 +17,7 @@ const SecurityUnlockPage = () => {
   const { data: userData } = useContext(UserContext);
   const [value, setValue] = useState<string>("")
   const setIsUnLockValueState = useSetRecoilState(isUnLockValue);
+  const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue)
 
   const secureNumber = userData?.data.secureNumber
 
@@ -34,7 +35,7 @@ const SecurityUnlockPage = () => {
       setIsUnLockValueState(true)
     } else if (value.length === 4 && value === secureNumber) {
       setIsUnLockValueState(true)
-      navigate("/post", { state: { direction: "down" } })
+      setRouteDirectionValueState(Prev => ({ ...Prev, direction: "down" }))
     } else if (value.length === 4 && value !== secureNumber) {
       setTimeout(() => setValue(""), 300)
     }
