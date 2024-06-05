@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react"
+import { useEffect, useState, useRef, useContext } from "react"
 import { UserContext } from "../organisms/UserInfoProvider"
 import { useNavigate, useLocation } from "react-router-dom"
 import useFirestoreUpdate from "@/hooks/useFirestoreUpdate"
@@ -47,7 +47,7 @@ const SecurityUnlockPage = () => {
 
       <h2 className="text-2xl text-white">{isSetPassword ? "암호를 설정해주세요" : "암호 입력"}</h2>
 
-      <InputOTP maxLength={4} value={value} onChange={(value) => setValue(value)}>
+      <InputOTP maxLength={4} value={value}>
         <InputOTPGroup className="w-screen px-[60px] ">
           <InputOTPSlot index={0} className={`transition duration-300 ${!isSetPassword && value.length === 4 && value !== secureNumber && "border-red"}`} />
           <InputOTPSlot index={1} className={`transition duration-300 ${!isSetPassword && value.length === 4 && value !== secureNumber && "border-red"}`} />
@@ -65,7 +65,7 @@ const SecurityUnlockPage = () => {
                 type="button"
                 className="w-4/5 aspect-square rounded-full bg-input text-2xl hover:bg-white hover:text-black transition duration-300"
                 onClick={() => {
-                  value.length !== 4 && setValue(value + (index === 9 ? 0 : index + 1))
+                  value.length !== 4 && setValue(value + `${(index === 9 ? 0 : index + 1)}`)
                 }}
               >
                 {index === 9 ? 0 : index + 1}
