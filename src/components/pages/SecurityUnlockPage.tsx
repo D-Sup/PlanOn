@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useContext } from "react"
+import { useEffect, useState, useContext } from "react"
 import { UserContext } from "../organisms/UserInfoProvider"
 import { useNavigate, useLocation } from "react-router-dom"
 import useFirestoreUpdate from "@/hooks/useFirestoreUpdate"
@@ -14,12 +14,12 @@ const SecurityUnlockPage = () => {
 
   const { updateField } = useFirestoreUpdate("users");
 
-  const { data: userData } = useContext(UserContext);
+  const { data: userData, isLoading } = useContext(UserContext);
   const [value, setValue] = useState<string>("")
   const setIsUnLockValueState = useSetRecoilState(isUnLockValue);
   const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue)
 
-  const secureNumber = userData?.data.secureNumber
+  const secureNumber = userData?.data.secureNumber;
 
   const location = useLocation()
   const navigate = useNavigate()
@@ -33,9 +33,9 @@ const SecurityUnlockPage = () => {
       })
       setIsUnLockValueState(true)
       navigate("/setting", { state: { direction: "down", updateOption: true } })
-    } else if (value.length === 4 && value == secureNumber) {
+    } else if (value.length === 4 && value === secureNumber) {
       setIsUnLockValueState(true)
-      setTimeout(() => setRouteDirectionValueState(Prev => ({ ...Prev, direction: "down" })), 300)
+      setRouteDirectionValueState(Prev => ({ ...Prev, direction: "down" }))
     } else if (value.length === 4 && value !== secureNumber) {
       setTimeout(() => setValue(""), 300)
     }
@@ -49,10 +49,10 @@ const SecurityUnlockPage = () => {
 
       <InputOTP maxLength={4} value={value}>
         <InputOTPGroup className="w-screen px-[60px] ">
-          <InputOTPSlot index={0} className={`transition duration-300 ${!isSetPassword && value.length === 4 && value !== secureNumber && "border-red"}`} />
-          <InputOTPSlot index={1} className={`transition duration-300 ${!isSetPassword && value.length === 4 && value !== secureNumber && "border-red"}`} />
-          <InputOTPSlot index={2} className={`transition duration-300 ${!isSetPassword && value.length === 4 && value !== secureNumber && "border-red"}`} />
-          <InputOTPSlot index={3} className={`transition duration-300 ${!isSetPassword && value.length === 4 && value !== secureNumber && "border-red"}`} />
+          <InputOTPSlot index={0} className={`transition duration-300 ${!isSetPassword && value.length === 4 && value !== secureNumber && "border-red"}`} readonly />
+          <InputOTPSlot index={1} className={`transition duration-300 ${!isSetPassword && value.length === 4 && value !== secureNumber && "border-red"}`} readonly />
+          <InputOTPSlot index={2} className={`transition duration-300 ${!isSetPassword && value.length === 4 && value !== secureNumber && "border-red"}`} readonly />
+          <InputOTPSlot index={3} className={`transition duration-300 ${!isSetPassword && value.length === 4 && value !== secureNumber && "border-red"}`} readonly />
         </InputOTPGroup>
       </InputOTP>
 
@@ -65,7 +65,7 @@ const SecurityUnlockPage = () => {
                 type="button"
                 className="w-4/5 aspect-square rounded-full bg-input text-2xl hover:bg-white hover:text-black transition duration-300"
                 onClick={() => {
-                  value.length !== 4 && setValue(value + `${(index === 9 ? 0 : index + 1)}`)
+                  secureNumber && !isLoading && value.length !== 4 && setValue(value + `${(index === 9 ? 0 : index + 1)}`)
                 }}
               >
                 {index === 9 ? 0 : index + 1}
