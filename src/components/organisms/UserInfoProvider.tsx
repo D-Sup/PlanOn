@@ -1,8 +1,8 @@
 import { useRef, useEffect, createContext } from "react";
 import { useNavigate } from "react-router-dom";
 import useModalStack from "@/hooks/useModalStack"
-import { useRecoilValue } from "recoil";
-import { isUnLockValue } from "@/store";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { isUnLockValue, routeDirectionValue } from "@/store";
 
 import UserService from "@/services/userService";
 
@@ -26,6 +26,7 @@ const UserContext = createContext<UserContextType>({
 
 const UserInfoProvider = ({ children }: { children: React.ReactNode }) => {
   const isUnLockValueState = useRecoilValue(isUnLockValue);
+  const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue)
 
   const { ReadUser } = UserService();
   const { data, isLoading, refetch } = ReadUser();
@@ -71,6 +72,7 @@ const UserInfoProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (data?.data.secureNumber !== undefined && data?.data.secureNumber !== "") {
       if (!isUnLockValueState) {
+        setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
         navigate("/security", { state: { direction: "up" } })
       }
     }
