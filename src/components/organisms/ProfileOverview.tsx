@@ -35,6 +35,11 @@ const ProfileOverview = ({ data, postLength, isMyProfile, chatRoomId, isFirstCha
   return (
     <div className="flex flex-col items-center">
       <ProfileAvatar
+        handleFunc={() => {
+          if (accountImage !== "") {
+            navigate("/photo", { state: { direction: "up", photo: accountImage } })
+          }
+        }}
         className="w-[100px] h-[100px]"
         src={accountImage}
         alt="profile-image"
