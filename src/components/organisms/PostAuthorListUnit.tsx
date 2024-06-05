@@ -15,7 +15,7 @@ const PostAuthorListUnit = ({ data, handleFunc }: { data: PostsType & { userInfo
   return (
     <div className="flex items-center w-full h-[40px] pl-[10px] pr-[20px] mb-[10px]">
 
-      {isPrivate === true && <IconLock width={15} height={15} fill={"var(--gray-old)"} className="mr-[10px]" />}
+      {/* {isPrivate === true && <IconLock width={15} height={15} fill={"var(--gray-old)"} className="mr-[10px]" />} */}
 
       <ProfileAvatar
         className="w-[40px] h-[40px]"
@@ -42,6 +42,8 @@ const PostAuthorListUnit = ({ data, handleFunc }: { data: PostsType & { userInfo
             <IconCirclePlus width={15} height={15} fill={"var(--white)"} className="relative -ml-[3px]" />
           </div>}
       </div>
+      {isPrivate === true && <IconLock width={15} height={15} fill={"var(--gray-old)"} className="ml-[10px] mb-[3px]" />}
+
       <button className="ml-auto" type="button" onClick={handleFunc[2]}>
         <IconMoreVertical width={4} height={15} fill={"var(--white)"} />
       </button>
