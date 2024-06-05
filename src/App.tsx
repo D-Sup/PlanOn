@@ -1,4 +1,3 @@
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import RouteTransition from "./components/organisms/RouteTransition";
@@ -32,6 +31,7 @@ import ProfileUpdatePage from "./components/pages/ProfileUpdatePage";
 import SplashPage from "./components/pages/SplashPage";
 import IntroducePage from "./components/pages/IntroducePage";
 import DownloadGuidePage from "./components/pages/DownloadGuidePage";
+import SecurityUnlockPage from "./components/pages/SecurityUnlockPage";
 
 export const queryClient = new QueryClient()
 
@@ -54,10 +54,12 @@ const App = () => {
               <Route element={<NonLoginProtectedRoute />}>
                 <Route path="/splash/*" element={<SplashPage />} />
                 <Route path="/introduce/*" element={<IntroducePage />} />
+                <Route path="/login/*" element={<LoginPage />} />
                 <Route path="/signup/*" element={<SignUpPage />} />
               </Route>
 
               <Route element={<LoginProtectedRoute />}>
+                <Route path="/post/*" element={<PostPage />} />
                 <Route path="/post/update/*" element={<PostUpdatePage />} />
                 <Route path="/search/*" element={<SearchPage />} />
                 <Route path="/post/collection/*" element={<PostCollectionPage />} />
@@ -70,11 +72,9 @@ const App = () => {
                 <Route path="/chatroom/gallery/*" element={<PhotoHistoryCollectionPage />} />
                 <Route path="/gallery/*" element={<PhotoCollectionPage />} />
                 <Route path="/photo/*" element={<PhotoSingleViewer />} />
+                <Route path="/setting/*" element={<SettingPage />} />
+                <Route path="/security/*" element={<SecurityUnlockPage />} />
               </Route>
-
-              <Route path="/login/*" element={<LoginPage />} />
-              <Route path="/post/*" element={<PostPage />} />
-              <Route path="/setting/*" element={<SettingPage />} />
 
               <Route path="/download/*" element={<DownloadGuidePage />} />
               <Route path="/post/detail/*" element={<PostDetailPage />} />

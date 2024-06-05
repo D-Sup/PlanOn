@@ -58,8 +58,9 @@ const SettingPage = () => {
                 setTimeout(() => {
                   logoutService()
                   resetAuthUserState()
-                  navigate("/login", { state: { direction: "prev" } })
-                  openModal("Toast", { message: "로그아웃 되었습니다." })
+                  setTimeout(() => {
+                    openModal("Toast", { message: "로그아웃 되었습니다." })
+                  }, 600)
                 }, 500)
               }
               ])

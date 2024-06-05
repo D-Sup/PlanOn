@@ -1,7 +1,8 @@
 import getStorageData from "./getStorageData"
 
 const getAccountId = () => {
-  const {accountId} = getStorageData("persistedAuthUser", ["authUser"]) || ""
+const { isSaved } = getStorageData("isLoginPersistValue", ["isSaved"], "sessionStorage") || ""
+  const {accountId} = getStorageData("persistedAuthUser", ["authUser"], isSaved ? "localStorage" : "sessionStorage") || ""
   return accountId
 }
 

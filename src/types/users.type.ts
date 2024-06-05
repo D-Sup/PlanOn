@@ -15,7 +15,8 @@ export interface UsersType {
   chats: ChatsType[],
   isDarkMode: boolean,
   isAlert: boolean,
-  isFirstEntry: boolean
+  isFirstEntry: boolean,
+  secureNumber: string
   // postIds: string[],
   // scheduleIds: string[]
 }

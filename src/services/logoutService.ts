@@ -4,6 +4,7 @@ import { signOut } from "firebase/auth";
 const logoutService = async () => {
   signOut(appAuth).then(() => {
     localStorage.removeItem("persistedAuthUser");
+    sessionStorage.removeItem("persistedAuthUser");
     console.log("로그아웃 했습니다.");
   }).catch((error) => {
     console.error("로그아웃에 실패했습니다.", error)

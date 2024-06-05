@@ -3,17 +3,23 @@ import { useNavigate } from "react-router-dom";
 import useLogin from "@/hooks/useLogin";
 import useModalStack from "@/hooks/useModalStack";
 
+import { isLoginPersistValue } from "@/store";
+import { useSetRecoilState } from "recoil";
+
 import AuthInput from "../atoms/AuthInput";
 import Loader from "../organisms/Loader";
+import { Checkbox } from "../shadcnUIKit/checkbox";
 
 import IconGoogle from "../../assets/images/icon-google.svg?react";
 import IconKakao from "../../assets/images/icon-kakao.svg?react";
 
 const LoginPage = () => {
 
+
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isError, setIsError] = useState<boolean>(true);
+  const setIsLoginPersistValueState = useSetRecoilState(isLoginPersistValue)
 
   const navigate = useNavigate()
 
@@ -29,9 +35,8 @@ const LoginPage = () => {
 
   if (isSuccess) {
     setTimeout(() => {
-      navigate("/post", { state: { direction: "next" } })
       openModal("Toast", { message: "로그인에 성공했습니다." })
-    }, 100)
+    }, 600)
   }
 
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -72,6 +77,15 @@ const LoginPage = () => {
             error && error.includes("wrong-password") && "비밀번호가 일치하지 않습니다" || "로그인에 실패했습니다"
           }
         />
+        <div className="flex items-center space-x-2">
+          <Checkbox id="login-save" className="w-[20px] h-[20px] border-gray-old transition duration-100" onClick={() => setIsLoginPersistValueState(Prev => ({ isSaved: !Prev.isSaved }))} />
+          <label
+            htmlFor="login-save"
+            className="text-sm text-white"
+          >
+            로그인 상태 유지
+          </label>
+        </div>
         <button
           type="button"
           className="relative mt-[10px] w-full h-[50px] rounded-[10px] bg-white text-lg text-black font-bold"
