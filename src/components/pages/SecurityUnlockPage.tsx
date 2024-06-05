@@ -35,7 +35,8 @@ const SecurityUnlockPage = () => {
       navigate("/setting", { state: { direction: "down", updateOption: true } })
     } else if (value.length === 4 && value === secureNumber) {
       setIsUnLockValueState(true)
-      setRouteDirectionValueState(Prev => ({ ...Prev, direction: "down" }))
+      // setRouteDirectionValueState(Prev => ({ ...Prev, direction: "down" }))
+      navigate("/post", { state: { direction: "down" } })
     } else if (value.length === 4 && value !== secureNumber) {
       setTimeout(() => setValue(""), 300)
     }
