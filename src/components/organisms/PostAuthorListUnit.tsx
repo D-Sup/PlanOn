@@ -25,7 +25,10 @@ const PostAuthorListUnit = ({ data, handleFunc }: { data: PostsType & { userInfo
       />
 
       <div className="ml-[10px] display flex flex-col justify-center">
-        <p className="text-lg text-white button_reset" onClick={handleFunc[0]}>{userInfo?.accountName}</p>
+        <div className="flex">
+          <p className="text-lg text-white button_reset" onClick={handleFunc[0]}>{userInfo?.accountName}</p>
+          {isPrivate === true && <IconLock width={15} height={15} fill={"var(--gray-old)"} className="ml-[10px] mt-[3px]" />}
+        </div>
         {usertags.length !== 0 &&
           <div className="flex mt-[1px] ml-[3px]" onClick={handleFunc[1]}>
             {
@@ -42,7 +45,6 @@ const PostAuthorListUnit = ({ data, handleFunc }: { data: PostsType & { userInfo
             <IconCirclePlus width={15} height={15} fill={"var(--white)"} className="relative -ml-[3px]" />
           </div>}
       </div>
-      {isPrivate === true && <IconLock width={15} height={15} fill={"var(--gray-old)"} className="ml-[10px] mb-[3px]" />}
 
       <button className="ml-auto" type="button" onClick={handleFunc[2]}>
         <IconMoreVertical width={4} height={15} fill={"var(--white)"} />
