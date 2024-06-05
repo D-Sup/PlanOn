@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { useSetRecoilState } from "recoil"
+import { routeDirectionValue } from "@/store"
+
 import useModalStack from "@/hooks/useModalStack";
 import FollowService from "@/services/followService";
 
@@ -29,6 +32,7 @@ const ProfileOverview = ({ data, postLength, isMyProfile, chatRoomId, isFirstCha
   const { mutate } = UpdateFollow()
 
   const [followed, setFollowed] = useState<boolean>(followers.includes(accountId));
+  const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue)
 
   const navigate = useNavigate()
 
@@ -37,6 +41,7 @@ const ProfileOverview = ({ data, postLength, isMyProfile, chatRoomId, isFirstCha
       <ProfileAvatar
         handleFunc={() => {
           if (accountImage !== "") {
+            setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, { id: accountId }] }))
             navigate("/photo", { state: { direction: "up", photo: accountImage } })
           }
         }}
@@ -53,11 +58,14 @@ const ProfileOverview = ({ data, postLength, isMyProfile, chatRoomId, isFirstCha
           type="button"
           onClick={() => {
             setFollowed(Prev => !Prev)
-            accountId === authorizationId
-              ? navigate("/profile/update", { state: { direction: "next" } })
-              : followed
+            if (accountId === authorizationId) {
+              setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, { id: accountId }] }))
+              navigate("/profile/update", { state: { direction: "next" } })
+            } else {
+              followed
                 ? mutate({ type: "delete", id: authorizationId })
                 : mutate({ type: "create", id: authorizationId })
+            }
           }}
         >
           {accountId === authorizationId ? "프로필 편집" : followed ? "팔로우 취소" : "팔로우"}

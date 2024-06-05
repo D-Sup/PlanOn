@@ -28,7 +28,7 @@ const ProfileAvatar = ({ src, className, alt, handleFunc }: {
         ) : (
           src !== ""
             ? (
-              <Avatar onClick={handleFunc}>
+              <Avatar>
                 <AvatarImage src={src} className={`${className} rounded-full object-cover`} alt={alt} />
                 <AvatarFallback>
                   <div className="absolute-center w-[20px] h-[5px]">
