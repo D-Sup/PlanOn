@@ -70,7 +70,7 @@ const SecurityUnlockPage = () => {
                 type="button"
                 className="w-4/5 aspect-square rounded-full bg-input text-2xl hover:bg-white hover:text-black transition duration-300"
                 onClick={() => {
-                  secureNumber && !isLoading && value.length !== 4 && setValue(value + `${(index === 9 ? 0 : index + 1)}`)
+                  secureNumber && !isLoading && value.length !== 4 && setValue(value + (index === 9 ? 0 : index + 1))
                 }}
               >
                 {index === 9 ? 0 : index + 1}
