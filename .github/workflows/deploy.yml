@@ -1,0 +1,30 @@
+# .github/workflows/deploy.yml
+
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+    env:
+      PUBLIC_URL: ${{ secrets.PUBLIC_URL }}
+      REACT_APP_API_KEY: ${{ secrets.REACT_APP_API_KEY }}
+      REACT_APP_AUTH_DOMAIN: ${{ secrets.REACT_APP_AUTH_DOMAIN }}
+      REACT_APP_PROJECT_ID: ${{ secrets.REACT_APP_PROJECT_ID }}
+      REACT_APP_STORAGE_BUCKET: ${{ secrets.REACT_APP_STORAGE_BUCKET }}
+      REACT_APP_MESSAGING_SENDER_ID: ${{ secrets.REACT_APP_MESSAGING_SENDER_ID }}
+      REACT_APP_APP_ID: ${{ secrets.REACT_APP_APP_ID }}
+      REACT_APP_MEASUREMENT_ID: ${{ secrets.REACT_APP_MEASUREMENT_ID }}
+      REACT_APP_GOOGLE_MAPS_API_KEY: ${{ secrets.REACT_APP_GOOGLE_MAPS_API_KEY }}
+      REACT_APP_META_TAGS_API_URL: ${{ secrets.REACT_APP_META_TAGS_API_URL }}
+      REACT_APP_SEARCH_PLACES_API_URL: ${{ secrets.REACT_APP_SEARCH_PLACES_API_URL }}
+      REACT_APP_SEND_MESSAGE_API_URL: ${{ secrets.REACT_APP_SEND_MESSAGE_API_URL }}
+      REACT_APP_VAPID_KEY: ${{ secrets.REACT_APP_VAPID_KEY }}
+      REACT_APP_ADMIN_ID: ${{ secrets.REACT_APP_ADMIN_ID }}
