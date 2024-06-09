@@ -27,6 +27,9 @@ const ProfileOverview = ({ data, postLength, isMyProfile, chatRoomId, isFirstCha
   const { accountImage, accountName, description, followers, followings, authorizationId } = data as UsersType;
   const accountId = getAccountId()
 
+  console.log(followers);
+
+
   const { openModal } = useModalStack();
   const { UpdateFollow } = FollowService()
   const { mutate } = UpdateFollow()

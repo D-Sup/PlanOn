@@ -33,8 +33,8 @@ const FollowService = () => {
       },
       (data) => data,
       {
-        staleTime: 300000,
-        gcTime: 600000
+        staleTime: 0,
+        gcTime: 0
       }
     )
     return { data, isLoading }
