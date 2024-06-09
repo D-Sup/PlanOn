@@ -123,8 +123,8 @@ const SearchPage = () => {
             {userData?.data.searchHistory.length === 0 &&
               <span className="mt-[150px] block text-center text-nowrap text-md text-white">검색기록이 없습니다.</span>
             }
-            {userData?.data.searchHistory.slice().reverse().map((history, index) => (
-              <HistoryUnit key={index} data={history} handleFunc={[
+            {userData?.data.searchHistory.slice().reverse().map((history) => (
+              <HistoryUnit key={history.id} data={history} handleFunc={[
                 () => {
                   if (history.title) {
                     setProgress(history.type === "usertag" && 1 || history.type === "location" && 2 || history.type === "hashtag" && 3 || 0)
@@ -144,21 +144,21 @@ const SearchPage = () => {
           <>
             {inputValueState && data?.map((singleData, index) => (
               progress === 1 &&
-              <UserLinkListUnit key={index} data={singleData.data as UsersType}
+              <UserLinkListUnit key={singleData.id} data={singleData.data as UsersType}
                 handleFunc={() => {
                   mutate({ type: "create", searchHistory: { id: uuidv4(), type: "usertag", title: inputValueState, createdAt: new Date() } })
                   setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, "usertag"] }))
-                  navigate("/profile", { state: { direction: "next", id: singleData.data.authorizationId } })
+                  navigate(`/profile/${singleData.data.authorizationId}`, { state: { direction: "next" } })
                 }} /> ||
               progress === 2 &&
-              <LocationLinkListUnit key={index} data={singleData.data as SchedulesType}
+              <LocationLinkListUnit key={singleData.id} data={singleData.data as SchedulesType}
                 handleFunc={() => {
                   mutate({ type: "create", searchHistory: { id: uuidv4(), type: "location", title: inputValueState, createdAt: new Date() } })
                   setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, "location"] }))
                   navigate("/post/collection", { state: { direction: "next", type: "location", data: singleData, title: "scheduleLocation" in singleData.data && singleData.data.scheduleLocation.placeName } })
                 }} /> ||
               progress === 3 &&
-              <HashTagLinkListUnit key={index} data={singleData as ReadDocumentType<HashtagsType>}
+              <HashTagLinkListUnit key={singleData.id} data={singleData as ReadDocumentType<HashtagsType>}
                 handleFunc={() => {
                   mutate({ type: "create", searchHistory: { id: uuidv4(), type: "hashtag", title: inputValueState, createdAt: new Date() } })
                   setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, "hashtag"] }))

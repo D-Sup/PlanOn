@@ -49,7 +49,7 @@ const PhotoChecker = ({ isGridAutoFlow, photoState, setPhotoState }: PhotoChecke
         <IconRecycle className="absolute-center" width={30} height={30} fill={"var(--black)"} />
       </button>
       {photoState.photos.preview.map((image, index) => (
-        <li key={index} className={`${isGridAutoFlow ? "w-[calc(100vw/2)] h-[200px]" : "aspect-square"} relative bg-background`}>
+        <li key={image} className={`${isGridAutoFlow ? "w-[calc(100vw/2)] h-[200px]" : "aspect-square"} relative bg-background`}>
           <ImageFrame
             src={image}
             alt={`album-${index}`}

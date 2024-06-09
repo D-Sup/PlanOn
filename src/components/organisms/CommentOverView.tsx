@@ -53,8 +53,8 @@ const CommentOverView = ({ props, handleScroll }: CommentOverViewProps) => {
       </div>
       <div className="flex flex-col gap-[20px] pt-[15px] px-[15px] overflow-y-scroll" onScroll={handleScroll}>
         {
-          data?.map((comment, index) => (
-            <CommentListUnit key={index} data={comment} handleFunc={[
+          data?.map((comment) => (
+            <CommentListUnit key={comment.id} data={comment} handleFunc={[
               () => {
                 openModal("Alert", "댓글을 삭제하시겠습니까?", ["취소", "확인"],
                   [null, () => {

@@ -40,7 +40,7 @@ const PhotoHistoryCollectionPage = () => {
             </div>
           }
 
-          <ul className="m-auto grid grid-cols-3 gap-1" key={index}>
+          <ul className="m-auto grid grid-cols-3 gap-1" key={singleData.id}>
             {singleData.photoURL.map((photo) => (
               <li
                 className="relative aspect-square bg-background"

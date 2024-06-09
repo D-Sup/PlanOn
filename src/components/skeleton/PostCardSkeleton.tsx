@@ -14,7 +14,7 @@ const PostCardSkeleton = ({ repeat }: { repeat: number }) => {
               </div>
             </div>
           </div>
-          <Skeleton className="w-full rounded-[0px]" style={{ aspectRatio: "16/12" }} />
+          <Skeleton className="w-full rounded-none" style={{ aspectRatio: "16/12" }} />
           <div className={`pl-[10px] pr-[20px] mt-[10px] w-full flex`}>
             <div className="flex-center h-[24px]">
               <Skeleton className={`w-[150px] h-[15px]`}>

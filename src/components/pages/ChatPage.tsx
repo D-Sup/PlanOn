@@ -121,7 +121,7 @@ const ChatPage = () => {
                 {singleData.id !== accountId &&
                   <ChatJoinableMemberItem data={singleData.data} handleFunc={() => {
                     setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
-                    navigate("/profile", { state: { direction: "next", id: singleData.data.authorizationId } })
+                    navigate(`/profile/${singleData.data.authorizationId}`, { state: { direction: "next" } })
                   }} key={singleData.id} />
                 }
               </>

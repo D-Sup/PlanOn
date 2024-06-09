@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "@radix-ui/react-avatar";
 import Loader from "../organisms/Loader";
+import { Skeleton } from "../shadcnUIKit/skeleton";
 
 import IconLogo from "../../assets/images/icon-logo.svg?react";
 
@@ -14,6 +15,13 @@ const ProfileAvatar = ({ src, className, alt, handleFunc }: {
   alt: string,
   handleFunc?: () => void
 }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = typeof src === "string" && src;
+    img.onload = () => setIsLoaded(true);
+  }, [src]);
 
   const widthAndHeightPattern = /w-\[\d+px\]|h-\[\d+px\]/g;
   const widthAndHeight = className.match(widthAndHeightPattern);
@@ -28,17 +36,16 @@ const ProfileAvatar = ({ src, className, alt, handleFunc }: {
         ) : (
           src !== ""
             ? (
-              <Avatar>
-                <AvatarImage src={src} className={`${className} rounded-full object-cover`} alt={alt} />
-                <AvatarFallback>
-                  <div className="absolute-center w-[20px] h-[5px]">
-                    <Loader isSmallUse={true} />
-                  </div>
-                </AvatarFallback>
-              </Avatar>
+              <>
+                {!isLoaded && <Skeleton className="min-w-full h-full rounded-full" />}
+                <img
+                  src={src}
+                  alt={alt}
+                  className={`${className} min-w-full h-full object-cover transition-opacity duration-300 ${isLoaded ? "opacity-100" : "opacity-0"}`}
+                />
+              </>
             )
             : <IconLogo fill={"var(--white)"} className="absolute-center w-1/3" />
-          // <img src={src} className={`${className} rounded-full object-cover`} alt={alt} />
         )
       }
     </div>
@@ -46,3 +53,14 @@ const ProfileAvatar = ({ src, className, alt, handleFunc }: {
 }
 
 export default ProfileAvatar;
+
+
+// <img src={src} className={`${className} rounded-full object-cover`} alt={alt} />
+// <Avatar>
+//   <AvatarImage src={src} className={`${className} rounded-full object-cover`} alt={alt} />
+//   <AvatarFallback>
+//     <div className="absolute-center w-[20px] h-[5px]">
+//       <Loader isSmallUse={true} />
+//     </div>
+//   </AvatarFallback>
+// </Avatar>

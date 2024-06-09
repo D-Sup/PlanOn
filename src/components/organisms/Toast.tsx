@@ -29,13 +29,14 @@ const Toast = ({ isOpen, closeModal, props }: ToastProps) => {
   }, [isOpen])
 
   return (
-    <div className="max-w-[calc(100%-60px)] z-50 fixed top-0 left-1/2 bg-input px-5 py-2 flex-center gap-[10px] font-lg text-center text-white text-md rounded-lg backdrop-blur-sm" style={{ backgroundColor: "rgba(46,46,46,0.8)", opacity: isOpen ? 1 : 0, transition: isOpen ? ".3s ease-out" : ".3s ease-in", transform: isOpen ? "translate(-50%, 0.5rem)" : "translate(-50%, -80%)" }}>
+    <div className="max-w-[calc(100%-60px)] z-50 fixed top-0 left-1/2  px-5 py-2 flex-center gap-[10px] font-lg text-center text-white text-lg rounded-lg backdrop-blur-sm" style={{ backgroundColor: "rgba(118, 122, 126,0.3)", opacity: isOpen ? 1 : 0, transition: isOpen ? ".3s ease-out" : ".3s ease-in", transform: isOpen ? "translate(-50%, 0.5rem)" : "translate(-50%, -80%)" }}>
+      {/* <div className="max-w-[calc(100%-60px)] z-50 fixed top-0 left-1/2 bg-input px-5 py-2 flex-center gap-[10px] font-lg text-center text-white text-lg rounded-lg backdrop-blur-sm" style={{ backgroundColor: "rgba(46,46,46,0.8)", opacity: isOpen ? 1 : 0, transition: isOpen ? ".3s ease-out" : ".3s ease-in", transform: isOpen ? "translate(-50%, 0.5rem)" : "translate(-50%, -80%)" }}> */}
       {props.type === "fail" && <IconCircleX width={15} height={15} fill={"var(--red)"} />}
       {props.type === "info" && <IconInfo width={15} height={15} fill={"var(--highlight)"} />}
       {props.type === "message" &&
         <>
           <IconMessage width={17} height={17} fill={"var(--highlight)"} className="min-w-[17px]" />
-          <span className="text-nowrap text-lg leading-none">{props.title}</span>
+          <span className="text-nowrap leading-none">{props.title}</span>
         </>
       }
       {!props.type && <IconCheck width={15} height={15} fill={"#1CCC70"} />}

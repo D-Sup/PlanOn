@@ -41,7 +41,7 @@ const ProfileOverview = ({ data, postLength, isMyProfile, chatRoomId, isFirstCha
       <ProfileAvatar
         handleFunc={() => {
           if (accountImage !== "") {
-            setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, { id: accountId }] }))
+            setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
             navigate("/photo", { state: { direction: "up", photo: accountImage } })
           }
         }}

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { useSetRecoilState } from "recoil"
 import { routeDirectionValue } from "@/store"
 
-import ListUnit from "./ListUnit"
+import UserLinkListUnit from "./UserLinkListUnit"
 
 import { ReadDocumentType } from "@/hooks/useFirestoreRead"
 import { UsersType } from "@/types/users.type"
@@ -14,7 +14,6 @@ interface TagUserOverviewProps {
 }
 
 const TagUserOverview = ({ closeModal, props }: TagUserOverviewProps) => {
-  const { UserLinkListUnit } = ListUnit()
 
   const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue)
 
@@ -27,8 +26,8 @@ const TagUserOverview = ({ closeModal, props }: TagUserOverviewProps) => {
           closeModal()
           setTimeout(() => {
             setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
-            navigate("/profile", { state: { direction: "next", id: data.authorizationId } })
-          }, 200)
+            navigate(`/profile/${data.authorizationId}`, { state: { direction: "next" } })
+          }, 400)
         }} />
       ))}
     </div>

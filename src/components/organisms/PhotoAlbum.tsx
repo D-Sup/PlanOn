@@ -7,15 +7,15 @@ const PhotoAlbum = ({ data, handleFunc }: { data: ReadDocumentType<PostsType>[],
 
   return (
     <ul className="m-auto grid grid-cols-3 gap-1">
-      {data.map((singleData, index) => (
+      {data.map((singleData) => (
         <li
-          key={index}
+          key={singleData.id}
           className="relative aspect-square bg-background"
           onClick={() => {
             handleFunc(singleData)
           }}
         >
-          <ImageFrame src={singleData.data.images[0]} alt={`photo-${index}`} className="w-full aspect-square object-cover" />
+          <ImageFrame src={singleData.data.images[0]} alt={`photo-${singleData.id}`} className="w-full aspect-square object-cover" />
         </li>
       ))}
     </ul>

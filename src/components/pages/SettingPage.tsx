@@ -11,7 +11,7 @@ import logoutService from "@/services/logoutService"
 import Header from "../organisms/Header"
 import SettingOverview from "../organisms/SettingOverview"
 import ListUnitSkeleton from "../skeleton/ListUnitSkeleton"
-import ListUnit from "../organisms/ListUnit"
+import UserLinkListUnit from "../organisms/UserLinkListUnit"
 
 const SettingPage = () => {
 
@@ -26,7 +26,6 @@ const SettingPage = () => {
   const { openModal, closeModal } = useModalStack()
 
   const { ChatHeader } = Header();
-  const { UserLinkListUnit } = ListUnit()
 
   return (
     <>
@@ -35,9 +34,9 @@ const SettingPage = () => {
       </div>
       <div className="px-[30px]" style={{ boxShadow: "0 1px var(--gray-heavy)" }}>
         {!isLoading && userData
-          ? <UserLinkListUnit data={userData.data} handleFunc={() => {
+          ? <UserLinkListUnit key={userData.id} data={userData.data} handleFunc={() => {
             setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
-            navigate("/profile", { state: { direction: "next", id: userData.id } })
+            navigate(`/profile/${userData.id}`, { state: { direction: "next" } })
           }} />
           : <ListUnitSkeleton className="py-[10px]" />
         }

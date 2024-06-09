@@ -45,11 +45,23 @@ const formatDate = (data: Timestamp | Date | string, selectCase: number) => {
 
 	const convertToRelativeDate = () => {
 		const now = new Date();
-		const diffDays = Math.ceil((date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-
+		const diffTime = date.getTime() - now.getTime();
+		const diffMinutes = Math.ceil(diffTime / (1000 * 60));
+		const diffHours = Math.ceil(diffTime / (1000 * 60 * 60));
+		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+	
 		let relativeDate = "";
+	
 		if (diffDays === 0) {
-			relativeDate = "오늘";
+			if (diffHours === 0) {
+				if (diffMinutes === 0) {
+					relativeDate = "방금 전";
+				} else {
+					relativeDate = `${Math.abs(diffMinutes)}분 전`;
+				}
+			} else {
+				relativeDate = `${Math.abs(diffHours)}시간 전`;
+			}
 		} else if (diffDays === 1) {
 			relativeDate = "내일";
 		} else if (diffDays === -1) {
@@ -66,7 +78,7 @@ const formatDate = (data: Timestamp | Date | string, selectCase: number) => {
 				relativeDate = `${Math.abs(diffWeeks)}주 전`;
 			}
 		}
-  return `${relativeDate}`;
+		return `${relativeDate}`;
 	}
 
 	switch(selectCase) {

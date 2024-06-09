@@ -215,7 +215,7 @@ const ChatRoomPage = () => {
           return sortedMessages.map((message, index) => (
             <ChatMessageBox
               chatRoomId={id}
-              key={index}
+              key={message.id}
               data={message}
               previousCreatedAt={
                 sortedMessages[

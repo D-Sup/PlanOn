@@ -42,31 +42,6 @@ const PhotoSelector = ({ postFormState, setPostFormState }: PhotoSelectorProps) 
     }
   };
 
-  // const handleCheckBox = (id: number) => {
-  //   if (postFormState.photos.checked.length < 10 || postFormState.photos.checked.includes(id)) {
-  //     setPostFormState(prev => {
-  //       const checkedData = prev.photos.checked;
-  //       return {
-  //         ...prev,
-  //         photos: {
-  //           ...prev.photos,
-  //           checked: checkedData.includes(id)
-  //             ? checkedData.filter(item => item !== id)
-  //             : [...checkedData, id],
-  //         },
-  //       };
-  //     });
-  //   } else {
-  //     openModal("Alert", "최대 10장까지 선택가능합니다.", ["확인"], [null])
-  //   }
-  // };
-
-  // const resetPhotos = () => {
-  //   setPostFormState(Prev => ({
-  //     ...Prev,
-  //     photos: { checked: [], file: [], preview: [] },
-  //   }));
-  // }
 
   return (
     <>
@@ -93,27 +68,6 @@ const PhotoSelector = ({ postFormState, setPostFormState }: PhotoSelectorProps) 
               </div>
             </div>
           ) : (
-            // <ul className="m-auto grid grid-cols-3 gap-1">
-            //   <button className="relative aspect-square bg-white" type="button" onClick={resetPhotos}>
-            //     <IconRecycle className="absolute-center" width={30} height={30} fill={"var(--black)"} />
-            //   </button>
-            //   {postFormState.photos.preview.map((image, index) => (
-            //     <li key={index} className="relative aspect-square bg-background">
-            //       <ImageFrame
-            //         src={image}
-            //         alt={`album-${index}`}
-            //         className="aspect-square object-cover"
-            //         onError={resetPhotos}
-            //       />
-            //       <CheckBox
-            //         id={index}
-            //         checkedBox={postFormState.photos.checked}
-            //         checked={postFormState.photos.checked.includes(index)}
-            //         handleFunc={handleCheckBox}
-            //       />
-            //     </li>
-            //   ))}
-            // </ul>
             <PhotoChecker photoState={postFormState} setPhotoState={setPostFormState} />
           )
         }

@@ -28,7 +28,7 @@ const ProfilePage = () => {
   const location = useLocation()
 
   const accountId = getAccountId()
-  const id = location.state?.id
+  const id = location.pathname.split("/")[2]
 
   const { ReadOtherUser } = UserService()
   const { ReadPostAll, ReadPostAllOther } = PostService()
@@ -64,7 +64,9 @@ const ProfilePage = () => {
     navigate("/post/detail", { state: { direction: "next", post } })
   }
 
-  const filteredData = fetchPostData?.filter(singleData => singleData.data.authorizationId === accountId || singleData.data.private === false).reverse()
+  const filteredData = fetchPostData?.
+    filter(singleData => singleData.data.authorizationId === accountId || singleData.data.private === false).
+    sort((first, second) => first.data.createdAt.seconds >= second.data.createdAt.seconds ? -1 : 1)
 
   return (
     <>

@@ -73,8 +73,8 @@ const ListUnit = () => {
       <>
         {data.length !== 0 &&
           <ul className="flex flex-wrap gap-[10px] mt-[10px] pb-[5px] px-[10px] w-screen overflow-y-scroll">
-            {data.map((hashtag, index) => (
-              <button key={index} type="button">
+            {data.map((hashtag) => (
+              <button key={hashtag} type="button">
                 <span className="px-[15px] py-[5px] bg-white rounded-sm text-xsm text-black">{`# ${hashtag}`}</span>
               </button>
             ))}
@@ -148,14 +148,14 @@ const ListUnit = () => {
     )
   }
 
-  const UserFollowListUnit = ({ data, followed, handleFunc }: { data: ReadDocumentType<UsersType>, followed: boolean, handleFunc: () => void }): JSX.Element => {
+  const UserFollowListUnit = ({ data, followed, handleFunc }: { data: ReadDocumentType<UsersType>, followed: boolean, handleFunc: (() => void)[] }): JSX.Element => {
     const { data: userData } = data
     const { accountName, description, accountImage } = userData
 
     return (
       <li className="w-full flex items-center justify-between py-[10px]" style={{ boxShadow: "0 1px var(--gray-heavy)" }}>
-        <ProfileCard title={accountName} description={description} src={accountImage} />
-        <ToggleButton options={["팔로잉", "팔로우"]} selected={followed} handleFunc={handleFunc} />
+        <ProfileCard title={accountName} description={description} src={accountImage} handleFunc={handleFunc[0]} />
+        <ToggleButton options={["팔로잉", "팔로우"]} selected={followed} handleFunc={handleFunc[1]} />
       </li>
     )
   }
@@ -168,21 +168,6 @@ const ListUnit = () => {
       <li className="w-full flex items-center justify-between py-[10px]" style={{ boxShadow: "0 1px var(--gray-heavy)" }}>
         <ProfileCard title={accountName} description={description} src={accountImage} />
         <ToggleButton options={["취소", "선택"]} selected={selected} handleFunc={() => handleFunc(data)} />
-      </li>
-    )
-  }
-
-  const UserLinkListUnit = ({ data, handleFunc }: { data: UsersType, handleFunc: () => void }): JSX.Element => {
-    const { accountName, accountImage, description } = data
-    return (
-
-      <li
-        className="w-full flex items-center justify-between py-[10px]"
-        style={{ boxShadow: "0 1px var(--gray-heavy)" }}
-        onClick={handleFunc}
-      >
-        <ProfileCard title={accountName} description={description} src={accountImage} />
-        <IconArrow width={7} height={12} fill={"var(--white)"} className="mr-[10px]" />
       </li>
     )
   }
@@ -249,7 +234,7 @@ const ListUnit = () => {
   }
 
 
-  return { PostScheduleListUnit, PostHashtagListUnit, HashTagLinkListUnit, HashTagPickerListUnit, LocationLinkListUnit, LocationDetailLinkListUnit, UserFollowListUnit, UserTagPickerListUnit, UserLinkListUnit, HistoryUnit, ChatMemberListUnit, ChatJoinableMemberItem }
+  return { PostScheduleListUnit, PostHashtagListUnit, HashTagLinkListUnit, HashTagPickerListUnit, LocationLinkListUnit, LocationDetailLinkListUnit, UserFollowListUnit, UserTagPickerListUnit, HistoryUnit, ChatMemberListUnit, ChatJoinableMemberItem }
 }
 
 export default ListUnit

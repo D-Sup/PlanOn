@@ -107,9 +107,9 @@ const ToggleTagList = ({ closeModal, handleScroll, props }: ToggleTagListProps) 
           <ListSkeleton className="py-[10px] px-[30px]" repeat={4} />
         ) : (
           <div className="py-[10px] px-[30px] overflow-y-scroll" onScroll={handleScroll}>
-            {props.type === "userSearch" && inputValueState && userSearchData?.map((singleUserData, index) => (
+            {props.type === "userSearch" && inputValueState && userSearchData?.map((singleUserData) => (
               accountId !== singleUserData.data.authorizationId &&
-              <UserTagPickerListUnit key={index} data={singleUserData} selected={prePostFormState.usertags.some(item => item.id === singleUserData.id)} handleFunc={handleSelectTag} />
+              <UserTagPickerListUnit key={singleUserData.id} data={singleUserData} selected={prePostFormState.usertags.some(item => item.id === singleUserData.id)} handleFunc={handleSelectTag} />
             ))}
             {props.type === "userSearch" && inputValueState && userSearchData?.length === 0 &&
               <span className="absolute-center text-nowrap text-md text-white">검색어와 일치하는 유저가 없습니다.</span>
@@ -126,8 +126,8 @@ const ToggleTagList = ({ closeModal, handleScroll, props }: ToggleTagListProps) 
                   </li>
                 }
                 {
-                  tagSearchData?.map((singleUserData, index) => (
-                    <HashTagPickerListUnit key={index + 1} data={singleUserData} selected={prePostFormState.hashtags.some(item => item.id === singleUserData.id)} handleFunc={handleSelectTag} />
+                  tagSearchData?.map((singleUserData) => (
+                    <HashTagPickerListUnit key={singleUserData.id} data={singleUserData} selected={prePostFormState.hashtags.some(item => item.id === singleUserData.id)} handleFunc={handleSelectTag} />
                   ))}
               </>
             }

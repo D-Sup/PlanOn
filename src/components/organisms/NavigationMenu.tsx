@@ -46,9 +46,9 @@ const NavigationMenu = () => {
   return (
     <>
       <ul className="fixed bottom-0 z-20 flex justify-evenly items-center w-screen h-[80px] bg-background transition duration-300" style={{ transform: showNavBar ? "translateY(0)" : "translateY(100%)" }} >
-        {menuItems.map((item, index) => (
+        {menuItems.map((item) => (
           <li
-            key={index}
+            key={item.path}
             className={`
             flex 
             justify-evenly 

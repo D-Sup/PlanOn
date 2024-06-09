@@ -11,10 +11,11 @@ interface LeftAndRightSliderProps {
 const LeftAndRightSlider = ({ children, className, moreAreaWidth, isSlideEnabled = true }: LeftAndRightSliderProps) => {
 
   const [startX, setStartX] = useState<number | null>(null);
+  const [startY, setStartY] = useState<number | null>(null);
   const [isSwiping, setIsSwiping] = useState<boolean>(true);
   const [isMoving, setIsMoving] = useState<boolean>(false);
   const [isOpenMore, setIsOpenMore] = useState<boolean>(false);
-  // const [isOnClick, setIsOnClick] = useState<boolean>(true);
+  const [lockScroll, setLockScroll] = useState<boolean>(false);
 
   const sliderRef = useRef<HTMLLIElement | null>(null);
 
@@ -26,37 +27,54 @@ const LeftAndRightSlider = ({ children, className, moreAreaWidth, isSlideEnabled
   const handleTouchStart = (e: React.TouchEvent) => {
     if (isSlideEnabled) {
       setStartX(e.touches[0].clientX);
-      // setIsOnClick(true)
+      setStartY(e.touches[0].clientY);
       setIsMoving(true)
     }
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    // setIsOnClick(false)
-    if (startX === null) return;
+    if (startX === null || startY === null) return;
     const currentX = e.touches[0].clientX;
-    const subtract = Math.abs(startX - currentX);
-
+    const currentY = e.touches[0].clientY;
+    const subtractX = Math.abs(startX - currentX);
+    const subtractY = Math.abs(startY - currentY);
     const sliderRefCurrent = sliderRef.current;
-    if (sliderRefCurrent) {
-      const transformPercentage = (subtract / sliderRefCurrent.clientWidth) * 100;
 
-      if (subtract > 20) {
+
+    if (subtractX < 100 && subtractY > 100) {
+      setLockScroll(true)
+      sliderRefCurrent.style.transform = `translateX(0%)`;
+      return
+    }
+
+    if (sliderRefCurrent) {
+      const transformPercentage = (subtractX / sliderRefCurrent.clientWidth) * 100;
+
+      if (subtractX > 0) {
         handleScrollLock();
       }
 
-      if (startX < currentX && subtract > 20) {
+      if (startX < currentX && subtractX > 20) {
         sliderRefCurrent.style.transform = `translateX(${isOpenMore ? `calc(${transformPercentage}% - ${moreAreaWidth}px)` : `${transformPercentage}%`})`;
-      } else if (startX > currentX && subtract > 20) {
+      } else if (startX > currentX && subtractX > 20) {
         sliderRefCurrent.style.transform = `translateX(-${transformPercentage}%)`;
       }
     }
   }
 
   const handleTouchEnd = (e: React.TouchEvent) => {
-    if (startX === null) return;
+    if (startX === null || startY === null) return;
     const endX = e.changedTouches[0].clientX;
     const subtract = Math.abs(startX - endX);
+
+    if (subtract < 100 && lockScroll) {
+      setLockScroll(false)
+      setStartX(null);
+      setStartY(null)
+      setIsSwiping(true);
+      unlock()
+      return
+    }
     const sliderRefCurrent = sliderRef.current;
 
     if (sliderRefCurrent && startX < endX && subtract > 20) {
@@ -75,6 +93,7 @@ const LeftAndRightSlider = ({ children, className, moreAreaWidth, isSlideEnabled
       }
     }
     setStartX(null);
+    setStartY(null)
     setIsSwiping(true);
     unlock()
   };
@@ -86,10 +105,7 @@ const LeftAndRightSlider = ({ children, className, moreAreaWidth, isSlideEnabled
       style={{ width: `calc(100% + ${moreAreaWidth}px)` }}
       onTouchStart={(e) => handleTouchStart(e)}
       onTouchMove={(e) => handleTouchMove(e)}
-      onTouchEnd={(e) => {
-        // isOnClick && handleFunc && handleFunc()
-        handleTouchEnd(e)
-      }}
+      onTouchEnd={(e) => handleTouchEnd(e)}
       ref={sliderRef}
     >
       {children}

@@ -13,7 +13,7 @@ const PostAuthorListUnit = ({ data, handleFunc }: { data: PostsType & { userInfo
   const { userInfo, usertags, private: isPrivate } = data
 
   return (
-    <div className="flex items-center w-full h-[40px] pl-[10px] pr-[20px] mb-[10px]">
+    <div className="flex items-center w-full h-[40px] pl-[10px] mb-[10px]">
 
       {/* {isPrivate === true && <IconLock width={15} height={15} fill={"var(--gray-old)"} className="mr-[10px]" />} */}
 
@@ -32,8 +32,8 @@ const PostAuthorListUnit = ({ data, handleFunc }: { data: PostsType & { userInfo
         {usertags.length !== 0 &&
           <div className="flex mt-[1px] ml-[3px]" onClick={handleFunc[1]}>
             {
-              data.tagUserInfo?.map((tagUser, index: number) => (
-                <div className="-ml-[3px]" key={index}>
+              data.tagUserInfo?.map((tagUser) => (
+                <div className="-ml-[3px]" key={tagUser.id}>
                   <ProfileAvatar
                     className="w-[15px] h-[15px] border-[1px] border-background-light"
                     src={tagUser.data.accountImage}
@@ -46,7 +46,7 @@ const PostAuthorListUnit = ({ data, handleFunc }: { data: PostsType & { userInfo
           </div>}
       </div>
 
-      <button className="ml-auto" type="button" onClick={handleFunc[2]}>
+      <button className="p-[20px] ml-auto" type="button" onClick={handleFunc[2]}>
         <IconMoreVertical width={4} height={15} fill={"var(--white)"} />
       </button>
     </div>

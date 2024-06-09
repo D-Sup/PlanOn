@@ -47,7 +47,7 @@ const PostCard = ({ data, isReadOnly }: { data: PostMachinedType, isReadOnly?: b
             () => {
               if (location.pathname === "/post") {
                 setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
-                navigate("/profile", { state: { direction: "next", id: postData.authorizationId } })
+                navigate(`/profile/${postData.authorizationId}`, { state: { direction: "next" } })
               }
             },
             () => {

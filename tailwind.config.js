@@ -102,7 +102,7 @@ module.exports = {
         "infinite-down": {
           from: { opacity: 0, transform: "translateY(-20px)" },
           to: { opacity: 1, transform: "translateY(0)" },
-        }
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -122,7 +122,7 @@ module.exports = {
         "quick-show-content-2": "show-content .3s ease-out 1.3s forwards",
         "quick-show-content-3": "show-content .3s ease-out 1.6s forwards",
         "quick-show-content-4": "show-content .3s ease-out 1.9s forwards",
-        "infinite-down": "infinite-down 1s ease-out 2.1s  infinite"
+        "infinite-down": "infinite-down 1s ease-out 2.1s  infinite",
       },
     },
   },

@@ -37,9 +37,17 @@ const FollowOverview = ({ closeModal, props }: FollowOverview) => {
   )
 
 
+  const goToProfile = (id: string) => {
+    closeModal()
+    setTimeout(() => {
+      setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
+      navigate(`/profile/${id}`, { state: { direction: "next" } })
+    }, 400)
+  }
+
   return (
     <div className="px-[15px] w-full">
-      {data?.map((singleData, index) => {
+      {data?.map((singleData) => {
         const isFollow = singleData.data.isFollow
         const handleFollow = () => {
           if (type === "followings" && isFollow) {
@@ -53,21 +61,17 @@ const FollowOverview = ({ closeModal, props }: FollowOverview) => {
           <>
             {isMyProfile && type === "followings" ? (
               <UserFollowListUnit
-                key={index}
+                key={singleData.id}
                 data={singleData}
                 followed={!isFollow}
-                handleFunc={handleFollow}
+                handleFunc={[() => goToProfile(singleData.id), handleFollow]}
               />
             ) : (
               <UserLinkListUnit
-                key={index}
+                key={singleData.id}
                 data={singleData.data}
                 handleFunc={() => {
-                  closeModal()
-                  setTimeout(() => {
-                    setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
-                    navigate("/profile", { state: { direction: "next", id: singleData.id } })
-                  }, 200)
+                  goToProfile(singleData.id)
                 }}
               />
             )

@@ -169,7 +169,7 @@ const ScheduleOverview = ({ postFormState, setPostFormState, isScheduleSelectabl
 
       <div className="flex flex-col gap-[15px]" ref={overViewRef}>
         {filteredSchedule?.map((schedule, index) => (
-          <ScheduleCardField key={index} label={formatDate(schedule.data.startTime, 3) !== formatDate(index === 0 ? new Date(0) : filteredSchedule[index - 1].data.startTime, 3) ? formatDate(schedule.data.startTime, 5) : ""} >
+          <ScheduleCardField key={schedule.id} label={formatDate(schedule.data.startTime, 3) !== formatDate(index === 0 ? new Date(0) : filteredSchedule[index - 1].data.startTime, 3) ? formatDate(schedule.data.startTime, 5) : ""} >
             <ScheduleCard
               data={schedule}
               handleSelectCard={handleSelectCard}

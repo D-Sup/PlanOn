@@ -18,13 +18,13 @@ const PhotoSingleViewer = () => {
       <div className="w-full h-dvh flex-center bg-background">
         <button
           type="button"
-          className="absolute top-[10px] right-[10px]"
+          className="absolute z-10 top-[10px] right-[10px]"
           onClick={() => {
             setRouteDirectionValueState(Prev => ({ ...Prev, direction: "down" }))
           }}>
           <IconCircleX width={25} height={25} fill={"var(--white)"} />
         </button>
-        <ImageFrame src={photo} alt={`photo-${photo}`} className="w-full aspect-square object-cover" />
+        <ImageFrame src={photo} alt={`photo-${photo}`} className="w-full aspect-square" />
       </div>
     </>
   )

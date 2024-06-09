@@ -1,12 +1,11 @@
-import { useEffect, useContext } from "react";
-import { UserContext } from "../organisms/UserInfoProvider"
+import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import useModalStack from "@/hooks/useModalStack";
 import useScrollBottom from "@/hooks/useScrollBottom";
 
 import { useRecoilValue, useSetRecoilState, useResetRecoilState } from "recoil";
 import { postFormValue, isPostFormModifiedSelector, paginationValue, routeDirectionValue } from "@/store";
-import { modalStack, isUnLockValue } from "@/store";
+import { modalStack } from "@/store";
 
 import PostService from "@/services/postService";
 
@@ -24,10 +23,7 @@ const PostPage = () => {
 
   const accountId = getAccountId()
 
-  const { data: userData } = useContext(UserContext);
-
   const modalStackState = useRecoilValue(modalStack);
-  const isUnLockValueState = useRecoilValue(isUnLockValue);
   const isPostFormModified = useRecoilValue(isPostFormModifiedSelector);
   const resetPostFormState = useResetRecoilState(postFormValue);
   const paginationValueState = useRecoilValue(paginationValue);
@@ -76,14 +72,6 @@ const PostPage = () => {
       }
     }
   }, [])
-
-  useEffect(() => {
-    if (userData?.data.secureNumber !== undefined && userData?.data.secureNumber !== "") {
-      if (!isUnLockValueState) {
-        navigate("/security", { state: { direction: "up" } })
-      }
-    }
-  }, [userData])
 
   useEffect(() => {
     if (currentCategory === "all-posts" && paginationValueState.allPosts.lastVisible === null) {
@@ -144,7 +132,7 @@ const PostPage = () => {
       {isPostLoading || isPostAllLoading &&
         <PostCardSkeleton repeat={2} />
       }
-      <div className="flex flex-col gap-[10px] bg-background-light">
+      <div className="flex flex-col gap-[10px] bg-background-light" >
         {filteredData?.map(singleData => (
           <PostCard data={singleData} key={singleData.id} />
         ))

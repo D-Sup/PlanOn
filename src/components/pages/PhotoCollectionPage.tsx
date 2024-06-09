@@ -25,9 +25,9 @@ const PhotoCollectionPage = () => {
       </FixedTrigger>
 
       <ul className="m-auto grid grid-cols-2 gap-1">
-        {photos?.map((photo: string, index: number) => (
+        {photos?.map((photo: string) => (
           <li
-            key={index}
+            key={photo}
             className="relative aspect-square bg-background"
             onClick={() => {
               window.scrollTo(0, 0)
