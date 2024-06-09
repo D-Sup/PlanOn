@@ -33,7 +33,7 @@ const ProfilePage = () => {
   const { ReadOtherUser } = UserService()
   const { ReadPostAll, ReadPostAllOther } = PostService()
 
-  const { data: userData, isLoading: isUserLoading, refetch } = useContext(UserContext);
+  const { data: userData, isLoading: isUserLoading } = useContext(UserContext);
   const { data: postData, isLoading: isPostLoading, refetch: refetchPost } = ReadPostAll()
 
   const { data: otherUserData, isLoading: isOtherUserLoading, refetch: refetchOtherUser } = ReadOtherUser(id)
