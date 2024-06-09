@@ -41,6 +41,7 @@ const LocalPointPanel = ({ locationInfo }: { locationInfo: any }) => {
             <ImageFrame
               className="min-w-2/5 max-w-2/5"
               src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${photos[0].photo_reference}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`}
+              alt={photos[0].photo_reference}
             />
           ) : (
             <IconPicture className="w-2/3 absolute-center" fill={"var(--white)"} />

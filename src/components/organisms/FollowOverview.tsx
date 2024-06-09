@@ -7,6 +7,7 @@ import FollowService from "@/services/followService"
 
 import Loader from "./Loader"
 import ListUnit from "./ListUnit"
+import UserLinkListUnit from "./UserLinkListUnit"
 
 interface FollowOverview {
   closeModal: () => void,
@@ -23,7 +24,7 @@ const FollowOverview = ({ closeModal, props }: FollowOverview) => {
 
   const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue)
 
-  const { UserFollowListUnit, UserLinkListUnit } = ListUnit()
+  const { UserFollowListUnit } = ListUnit()
   const { ReadFollow, UpdateFollow } = FollowService()
   const { mutate } = UpdateFollow()
   const { data, isLoading } = ReadFollow(users)

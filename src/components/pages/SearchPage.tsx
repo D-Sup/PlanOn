@@ -15,6 +15,7 @@ import SearchHistoryService from "@/services/searchHistoryService"
 import SlideTransition from "../organisms/SlideTransition"
 import CategorySlider from "../organisms/CategorySlider"
 import ListUnit from "../organisms/ListUnit"
+import UserLinkListUnit from "../organisms/UserLinkListUnit"
 import FixedTrigger from "../mocules/FixedTrigger"
 import SearchBar from "../atoms/SearchBar"
 import ListSkeleton from "../skeleton/ListSkeleton"
@@ -55,7 +56,7 @@ const SearchPage = () => {
 
   const { isInputDone, isFetching } = useDebounce(inputValueState, 1000, progress === 1 && isUserFetching || progress === 2 && isLocationFetching || progress === 3 && isTagFetching);
 
-  const { HistoryUnit, UserLinkListUnit, LocationLinkListUnit, HashTagLinkListUnit } = ListUnit();
+  const { HistoryUnit, LocationLinkListUnit, HashTagLinkListUnit } = ListUnit();
 
   useEffect(() => {
     if (isInputDone) {
@@ -142,7 +143,7 @@ const SearchPage = () => {
           <ListSkeleton repeat={8} />
         ) : (
           <>
-            {inputValueState && data?.map((singleData, index) => (
+            {inputValueState && data?.map((singleData) => (
               progress === 1 &&
               <UserLinkListUnit key={singleData.id} data={singleData.data as UsersType}
                 handleFunc={() => {
