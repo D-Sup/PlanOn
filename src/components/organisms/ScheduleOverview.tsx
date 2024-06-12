@@ -164,7 +164,7 @@ const ScheduleOverview = ({ postFormState, setPostFormState, isScheduleSelectabl
           </div>
         </FixedTrigger>
       ) : (
-        <h2 className="sticky top-0 z-10 w-screen ml-[-30px] px-[30px] py-[15px] text-lg text-white backdrop-blur-sm" style={{ background: "rgba(32, 32, 32, .8)" }}>{selectedDate.length !== 10 ? `${parseInt(selectedDate.slice(5, 7))}월 예정된 일정` : `${formatDate(selectedDate, 6)} 일정`}</h2>
+        <h2 className="sticky top-0 z-10 w-screen ml-[-30px] px-[30px] py-[15px] text-lg text-white backdrop-blur-sm">{selectedDate.length !== 10 ? `${parseInt(selectedDate.slice(5, 7))}월 예정된 일정` : `${formatDate(selectedDate, 6)} 일정`}</h2>
       )}
 
       <div className="flex flex-col gap-[15px]" ref={overViewRef}>
@@ -213,7 +213,6 @@ const ScheduleOverview = ({ postFormState, setPostFormState, isScheduleSelectabl
             <p className="text-md text-black">일정 추가</p>
           </button>
         </ScheduleCardField>
-
       </div>
     </>
   )

@@ -109,7 +109,7 @@ const ScheduleService = () => {
 
     const { data, isLoading, refetch } = useDataQuery<ReadDocumentType<SchedulesType>[], Error, ReadDocumentType<SchedulesType>[]>(
       "schedules",
-      ()=> readDocumentsSimplePaged<SchedulesType>([], "authorizationId", [accountId], "startTime", "asc", Infinity),
+      ()=> readDocumentsSimplePaged<SchedulesType>([], "authorizationId", "in", [accountId], "startTime", "asc", Infinity),
       (data) => data,
       {
         staleTime: Infinity,

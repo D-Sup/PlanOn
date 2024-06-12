@@ -58,7 +58,7 @@ const NavigationMenu = () => {
             rounded-[10px] 
             transition 
             duration-300 
-            ${location.pathname === item.path ? "bg-highlight" : "bg-background"}
+            ${location.pathname === item.path ? "bg-white" : "bg-background"}
           `}
             onClick={() => {
               item.path === "/map" && setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
@@ -73,7 +73,7 @@ const NavigationMenu = () => {
 
       </ul>
       {isVisible &&
-        <div className="w-screen min-h-[80px] bg-background"></div>
+        <div className="w-screen min-h-[80px] bg-background transition duration-300"></div>
       }
     </>
   );

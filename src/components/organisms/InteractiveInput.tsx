@@ -28,7 +28,7 @@ const InteractiveInput = ({ isCommentOnly = true, inputValue, setInputValue, pho
   const [isOpenPhotoChecker, setIsOpenPhotoChecker] = useState<boolean>(false);
   const [prevInpt, setPrevInpt] = useState<string>("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const divRef = useRef<HTMLDivElement>(null);
+  const virtualRef = useRef<HTMLDivElement>(null);
 
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.target.value);
@@ -37,15 +37,15 @@ const InteractiveInput = ({ isCommentOnly = true, inputValue, setInputValue, pho
 
   useEffect(() => {
     const textareaRefCurrent = textareaRef.current
-    const divRefCurrent = divRef.current
-    if (textareaRefCurrent && divRefCurrent) {
+    const virtualRefCurrent = virtualRef.current
+    if (textareaRefCurrent && virtualRefCurrent) {
       if (inputValue.length < prevInpt.length) {
         textareaRefCurrent.style.height = "auto";
       }
       const newHeight = textareaRefCurrent.scrollHeight;
       textareaRefCurrent.style.height = `${newHeight}px`;
       textareaRefCurrent.scrollTop = textareaRefCurrent.scrollHeight;
-      divRefCurrent.style.minHeight = `${textareaRefCurrent.scrollHeight + 32 <= 117 ? textareaRefCurrent.scrollHeight + 32 : 117}px`;
+      virtualRefCurrent.style.minHeight = `${textareaRefCurrent.scrollHeight + 32 <= 117 ? textareaRefCurrent.scrollHeight + 32 : 117}px`;
     }
   }, [inputValue])
 
@@ -73,14 +73,18 @@ const InteractiveInput = ({ isCommentOnly = true, inputValue, setInputValue, pho
   }
 
   const handleUploadClick = () => {
-    if (fileInputRef.current) {
+    if (fileInputRef.current && !isCommentOnly) {
       fileInputRef.current.click();
     }
   };
 
+
   return (
     <>
-      <div className="fixed bottom-0 px-[15px] box-border py-4 flex items-end justify-between w-full bg-background transition duration-300" style={{ transform: isOpenPhotoChecker && photoState && photoState.photos.file.length !== 0 ? "translateY(-200px)" : "translateY(0)" }}>
+      <div
+        className={`fixed bottom-0 px-[15px] box-border py-4 flex items-end justify-between w-full bg-background transition duration-300`}
+        style={{ transform: isOpenPhotoChecker && photoState && photoState.photos.file.length !== 0 ? "translateY(-200px)" : "translateY(0)" }}
+      >
         {!isLoading && <ProfileAvatar
           handleFunc={handleUploadClick}
           className="w-[44px] h-[44px]"
@@ -114,7 +118,7 @@ const InteractiveInput = ({ isCommentOnly = true, inputValue, setInputValue, pho
         </div>
       </div>
       <div className="fixed bottom-0 left-0 right-0 h-[200px] overflow-x-scroll transition duration-300 bg-background" style={{ transform: isOpenPhotoChecker && photoState?.photos.file.length !== 0 ? "translateY(0)" : "translateY(100%)" }}>
-        {photoState && setPhotoState && <PhotoChecker photoState={photoState} setPhotoState={setPhotoState} isGridAutoFlow={true} />}
+        {isOpenPhotoChecker && photoState && setPhotoState && <PhotoChecker photoState={photoState} setPhotoState={setPhotoState} isGridAutoFlow={true} />}
       </div>
       <label htmlFor="fileInput" className="a11y-hidden">fileInput</label>
       <input
@@ -126,7 +130,7 @@ const InteractiveInput = ({ isCommentOnly = true, inputValue, setInputValue, pho
         accept="image/*"
         multiple
       />
-      <div className="w-full max-h-[85px]" ref={divRef}></div>
+      <div className="w-full max-h-[85px]" ref={virtualRef}></div>
     </>
   )
 }

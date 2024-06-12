@@ -9,6 +9,7 @@ import LoadingModal from "./LoadingModal";
 import Alert from "./Alert";
 import Popup from "./Popup";
 import Modal from "./Modal";
+import PhotoSingleViewer from "../pages/PhotoSingleViewer";
 
 import { ModalStackType } from "@/store";
 
@@ -73,6 +74,8 @@ const ModalComponent = ({ modal }: { modal: ModalStackType }) => {
           <props.component closeModal={closeModal} props={props.props} />
         </Popup>
       );
+    case "PhotoView":
+      return <PhotoSingleViewer isOpen={isOpen} closeModal={closeModal} props={props} />
     default:
       return (
         <Modal isOpen={isOpen} closeModal={closeModal} props={props} isScrolledToTop={isScrolledToTop}>

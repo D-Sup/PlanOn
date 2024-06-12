@@ -55,7 +55,7 @@ const ProfilePage = () => {
     } else {
       refetchPost()
     }
-  }, [location])
+  }, [])
 
   const { DetailHeader } = Header()
 

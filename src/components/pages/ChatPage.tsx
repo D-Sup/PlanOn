@@ -15,6 +15,7 @@ import useModalStack from "@/hooks/useModalStack"
 import UserService from "@/services/userService"
 
 import Header from "../organisms/Header"
+import ChatMemberListUnit from "../organisms/ChatMemberListUnit"
 import ListUnit from "../organisms/ListUnit"
 import FixedTrigger from "../mocules/FixedTrigger"
 import SearchBar from "../atoms/SearchBar"
@@ -51,7 +52,7 @@ const ChatPage = () => {
 
   const { ChatHeader } = Header()
 
-  const { ChatMemberListUnit, ChatJoinableMemberItem } = ListUnit()
+  const { ChatJoinableMemberItem } = ListUnit()
 
   return (
     <>
@@ -77,7 +78,8 @@ const ChatPage = () => {
               <>
                 <ChatMemberListUnit data={singleData} handleFunc={[
                   () => {
-                    navigate("/chatroom", { state: { direction: "next", id: singleData.id, userInfo: singleData.userInfo.data } })
+                    setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
+                    navigate("/chatroom", { state: { direction: "next", id: singleData.id, userInfo: singleData.userInfo.data, unreadLength: singleData.unreadLength } })
                   },
                   () => {
                     openModal("Alert", "채팅방을 나가시겠습니까?", ["취소", "확인"],

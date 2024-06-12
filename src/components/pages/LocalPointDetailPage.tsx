@@ -82,7 +82,7 @@ const LocalPointDetailPage = () => {
         className="fixed top-[10px] left-[15px] z-10 w-[40px] h-[40px] rounded-[10px] flex items-center gap-[10px] bg-white backdrop-blur-sm"
         style={{ backgroundColor: "rgba(26,26,26, 0.5)" }}
       >
-        <IconArrow className="absolute-center" width={17} height={17} fill={"var(--white)"} />
+        <IconArrow className="absolute-center" width={17} height={17} fill={"#FFF"} />
       </button>
       <ImageSlider
         data={{ locationInfo }}
@@ -98,8 +98,8 @@ const LocalPointDetailPage = () => {
 
         <div className="absolute right-[15px] flex items-center gap-[10px]">
           <span className="text-sm text-white">{opening_hours ? opening_hours.open_now ? "영업중" : "영업 중이 아님" : "영업정보 없음"}</span>
-          <div className={`w-[12px] h-[12px] rounded-full ${opening_hours ? opening_hours.open_now ? "bg-[#1CCC70]" : "bg-red" : "bg-gray-old"}`}
-            style={{ boxShadow: `0 0 4px ${opening_hours ? opening_hours.open_now ? "#1CCC70" : "var(--red)" : "var(--gray-old)"}` }}></div>
+          <div className={`w-[12px] h-[12px] rounded-full ${opening_hours ? opening_hours.open_now ? "bg-green" : "bg-red" : "bg-gray-old"}`}
+            style={{ boxShadow: `0 0 4px ${opening_hours ? opening_hours.open_now ? "var(--green)" : "var(--red)" : "var(--gray-old)"}` }}></div>
         </div>
 
         <span className="text-md text-gray-old">{wordDataConverter(types[0], 1)}</span>

@@ -84,7 +84,7 @@ const UserService = () => {
     const accountId = getAccountId()
     const setPaginationValue = useSetRecoilState(paginationValue)
     const { mutate, isPending } = useDataMutation(
-      ["my-userInfo", "all-posts", "following-posts"],
+      ["my-userInfo", "all-posts", "following-posts", "like-posts"],
       async() => {
         if (data.accountImage.length !== 0) {
           const uploadedPhoto = await photoUpload("users", data.accountImage)

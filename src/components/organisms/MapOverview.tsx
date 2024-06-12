@@ -159,7 +159,7 @@ const MapOverview = ({ geometry, currentLocationRef, fetchLocationDetails, point
         type="button"
         style={{ transition: ".4s", backgroundColor: "rgba(26,26,26, 0.5)" }}
       >
-        <IconShare className="absolute-center" width={15} height={15} fill={"var(--white)"} />
+        <IconShare className="absolute-center" width={15} height={15} fill={"#FFF"} />
       </button>
     </>
   ) : <></>

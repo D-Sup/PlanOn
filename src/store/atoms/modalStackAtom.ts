@@ -10,7 +10,7 @@ export interface ComponentProps {
 }
 
 export interface ModalStackType {
-  Component: React.ComponentType<ComponentProps> | "Toast" | "Loading" | "Alert" | "Popup" | null,
+  Component: React.ComponentType<ComponentProps> | "Toast" | "Loading" | "Alert" | "Popup" | "PhotoView" | null,
   props?: any,
   selectOptions?: (null | string)[],
   actions?: (null | (() => void))[],

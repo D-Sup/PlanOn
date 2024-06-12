@@ -27,9 +27,6 @@ const ProfileOverview = ({ data, postLength, isMyProfile, chatRoomId, isFirstCha
   const { accountImage, accountName, description, followers, followings, authorizationId } = data as UsersType;
   const accountId = getAccountId()
 
-  console.log(followers);
-
-
   const { openModal } = useModalStack();
   const { UpdateFollow } = FollowService()
   const { mutate } = UpdateFollow()
@@ -44,8 +41,7 @@ const ProfileOverview = ({ data, postLength, isMyProfile, chatRoomId, isFirstCha
       <ProfileAvatar
         handleFunc={() => {
           if (accountImage !== "") {
-            setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
-            navigate("/photo", { state: { direction: "up", photo: accountImage } })
+            openModal("PhotoView", { photo: accountImage })
           }
         }}
         className="w-[100px] h-[100px]"
@@ -76,7 +72,8 @@ const ProfileOverview = ({ data, postLength, isMyProfile, chatRoomId, isFirstCha
         {accountId !== authorizationId &&
           <button
             onClick={() => {
-              navigate("/chatroom", { state: { direction: "next", userInfo: data, id: chatRoomId, isFirstChat } })
+              setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
+              navigate("/chatroom", { state: { direction: "next", userInfo: data, id: chatRoomId, unreadLength: isFirstChat ? 0 : data.chats.filter(chat => chat.id === chatRoomId)[0].unreadLength, isFirstChat } })
             }}
             className="w-4/12 h-[37px] rounded-[5px] bg-input text-md text-white"
             type="button"

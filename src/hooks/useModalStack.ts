@@ -15,7 +15,7 @@ const useModalStack = () => {
   const { Component: lastComponent } = modalStackState[modalStackState.length - 1];
   
   const openModal = (
-    Component: React.ComponentType<ComponentProps> | "Toast" | "Loading" | "Alert" | "Popup" | null,
+    Component: React.ComponentType<ComponentProps> | "Toast" | "Loading" | "Alert" | "Popup" | "PhotoView" | null,
     props?: any,
     selectOptions?: string[],
     actions?: (null | (() => void))[] ): void => {
@@ -44,7 +44,7 @@ const useModalStack = () => {
     if (lastComponent !== "Toast" && location.pathname !== "/post/detail") {
       resetInputValueState()
     }
-    if (isModalStackModified) {
+    if (isModalStackModified && modalStackState.length !== 1) {
       setModalStackState((Prev) => {
         const newModalStack = [...Prev];
         newModalStack.pop();
@@ -54,7 +54,7 @@ const useModalStack = () => {
   }
 
   const updateModal = (newProps): void => {
-    if (isModalStackModified && lastComponent !== "Alert" && lastComponent !== "Loading" && lastComponent !== "Toast") {
+    if (isModalStackModified && lastComponent !== "Alert" && lastComponent !== "Loading" && lastComponent !== "Toast" && lastComponent !== "PhotoView") {
       setModalStackState((Prev) => {
         const newModalStack = [...Prev];
         const lastIndex = newModalStack.length - 1;

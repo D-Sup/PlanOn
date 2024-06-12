@@ -1,30 +1,26 @@
-import { useSetRecoilState } from "recoil";
-import { routeDirectionValue } from "@/store";
-
 import ImageFrame from "../atoms/ImageFrame"
 import IconCircleX from "../../assets/images/icon-circle-x.svg?react";
 
-import { useLocation } from "react-router-dom"
+interface PhotoSingleViewerProps {
+  isOpen: boolean,
+  closeModal: () => void
+  props: { photo: string }
+}
 
-const PhotoSingleViewer = () => {
-  const location = useLocation()
-
-  const { photo } = location.state || {}
-
-  const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue);
+const PhotoSingleViewer = ({ isOpen, closeModal, props }: PhotoSingleViewerProps) => {
 
   return (
     <>
-      <div className="w-full h-dvh flex-center bg-background">
-        <button
-          type="button"
-          className="absolute z-10 top-[10px] right-[10px]"
-          onClick={() => {
-            setRouteDirectionValueState(Prev => ({ ...Prev, direction: "down" }))
-          }}>
-          <IconCircleX width={25} height={25} fill={"var(--white)"} />
-        </button>
-        <ImageFrame src={photo} alt={`photo-${photo}`} className="w-full aspect-square" />
+      <div className="fixed left-0 top-0 z-50 w-full flex-center bg-[#000]" style={{ transform: isOpen ? "translateY(0%)" : "translateY(100%)", transition: ".3s" }}>
+        <div className="w-full h-dvh py-[45px]">
+          <button
+            type="button"
+            className="absolute z-10 top-[10px] right-[10px]"
+            onClick={closeModal}>
+            <IconCircleX width={25} height={25} fill={"#FFF"} />
+          </button>
+          <ImageFrame src={props.photo} alt={`photo-${props.photo}`} />
+        </div>
       </div>
     </>
   )

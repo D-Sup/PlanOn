@@ -20,7 +20,7 @@ const FollowService = () => {
     const { data, isLoading } = useDataQuery<UserMachinedType[], Error, UserMachinedType[]>(
       "follow-users",
       async ()=> {
-        const readedUsers = await readDocumentsSimplePaged<UsersType>([], "authorizationId", users, "accountName", "asc", Infinity)
+        const readedUsers = await readDocumentsSimplePaged<UsersType>([], "authorizationId", "in", users, "accountName", "asc", Infinity)
         if (readedUsers) {
           const updatedUser = readedUsers.map((readedUser) => {
             return {
@@ -141,7 +141,7 @@ const FollowService = () => {
         }
       },
       // onSettled: () => {
-      //   queryClient.invalidateQueries(["all-posts", "following-posts", "other-posts", "my-posts"]);
+      //   queryClient.invalidateQueries(["all-posts", "following-posts", "like-posts", "other-posts", "my-posts"]);
       // },
     });
   }

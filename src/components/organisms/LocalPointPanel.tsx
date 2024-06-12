@@ -34,7 +34,7 @@ const LocalPointPanel = ({ locationInfo }: { locationInfo: any }) => {
   };
 
   return (
-    <div className="flex w-full h-[160px] rounded-[10px] overflow-hidden bg-white shadow-lg">
+    <div className="flex w-full h-[160px] rounded-[10px] overflow-hidden bg-[#FFF] shadow-lg">
       <div className="relative flex-shrink-0 w-2/5 object-cover bg-input">
         {photos
           ? (
@@ -52,7 +52,7 @@ const LocalPointPanel = ({ locationInfo }: { locationInfo: any }) => {
 
       <div className="relative w-3/5">
         <div className="px-[15px] py-[10px]">
-          <strong className="text-lg text-black reduce-words max-w-[80%]">{name}</strong>
+          <strong className="text-lg text-[#000] reduce-words max-w-[80%]">{name}</strong>
           <span className="mb-[5px] block h-[15px] text-xsm text-gray-old">{wordDataConverter(types[0], 1)}</span>
           <RateIndicator rating={rating} reviews={user_ratings_total} />
 
@@ -67,7 +67,7 @@ const LocalPointPanel = ({ locationInfo }: { locationInfo: any }) => {
             <IconClock width={17} height={17} fill={"var(--gray-old)"} />
             {opening_hours ?
               <>
-                <span className={`ml-[5px] reduce-words max-w-[70%] ${opening_hours.open_now ? "text-[#1CCC70]" : "text-red"}`}>{opening_hours.open_now ? "영업중" : "영업 중이 아님"}</span>
+                <span className={`ml-[5px] reduce-words max-w-[70%] ${opening_hours.open_now ? "text-green" : "text-red"}`}>{opening_hours.open_now ? "영업중" : "영업 중이 아님"}</span>
                 <span className="ml-[5px] reduce-words max-w-[70%]">{wordDataConverter(opening_hours, 3)}</span>
               </>
               : <span className="ml-[5px]">영업정보 없음</span>

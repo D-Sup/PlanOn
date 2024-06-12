@@ -32,7 +32,7 @@ const ImageFrame = ({ src, alt, ...props }) => {
         src={src}
         alt={alt}
         {...props}
-        className={`min-w-full h-full object-cover transition-opacity duration-300 ${isLoaded ? "opacity-100" : "opacity-0"}`}
+        className={`min-w-full w-full h-full object-cover transition-opacity duration-300 ${isLoaded ? "opacity-100" : "opacity-0"}`}
       />
     </div>
   );

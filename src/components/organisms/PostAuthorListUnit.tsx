@@ -35,7 +35,7 @@ const PostAuthorListUnit = ({ data, handleFunc }: { data: PostsType & { userInfo
               data.tagUserInfo?.map((tagUser) => (
                 <div className="-ml-[3px]" key={tagUser.id}>
                   <ProfileAvatar
-                    className="w-[15px] h-[15px] border-[1px] border-background-light"
+                    className="w-[15px] h-[15px] border-[1px] border-background-light rounded-full"
                     src={tagUser.data.accountImage}
                     alt="item-image"
                   />

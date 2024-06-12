@@ -10,6 +10,7 @@ import {
 	startAfter,
 	limit,
 	OrderByDirection,
+	QueryConstraint,
 	WhereFilterOp,
 	DocumentData,
 	Timestamp
@@ -58,6 +59,7 @@ const useFirestoreRead = (collectionName: string) => {
 	const readDocumentsSimplePaged = async <T>(
 		data: ReadDocumentType<T>[],
 		fieldName: string,
+    whereOperator: WhereFilterOp,
 		filterValues: string[],
 		sortFieldName: string,
 		sortOrder: OrderByDirection = "desc",
@@ -86,7 +88,7 @@ const useFirestoreRead = (collectionName: string) => {
 				if (fieldName === "id") {
 					documentSnapshots = await Promise.all(chunk.map(id => getDoc(doc(collectionRef, id))));
 				} else {
-					const q = query(collectionRef, where(fieldName, "in", chunk));
+					const q = query(collectionRef, where(fieldName, whereOperator, chunk));
 					documentSnapshots = await getDocs(q);
 				}
 	
@@ -149,15 +151,17 @@ const useFirestoreRead = (collectionName: string) => {
 				return data;
 			}
 			const collectionRef = collection(appFireStore, collectionName);
-			let q = query(collectionRef, orderBy(sortFieldName, sortOrder), limit(pageSize));
+			let q;
 			if (lastVisible) {
 				q = query(collectionRef, orderBy(sortFieldName, sortOrder), startAfter(lastVisible), limit(pageSize));
+			} else {
+				q = query(collectionRef, orderBy(sortFieldName, sortOrder), limit(pageSize));
 			}
 			const documentSnapshots = await getDocs(q);
 			const lastDocs = documentSnapshots.docs[documentSnapshots.docs.length - 1]
 			
 			if (lastDocs) {
-				handleFunc(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+				handleFunc(lastDocs);
 			} else {
 				openModal("Toast", {type: "info", message: "데이터를 모두 불러왔습니다."})
 				handleFunc(true)
@@ -217,8 +221,37 @@ const useFirestoreRead = (collectionName: string) => {
   //   }
   // };
 
+	const readSubCollection = async <T>(
+    documentId: string,
+    subCollectionName: string,
+    whereFieldName?: string,
+    whereOperator?: WhereFilterOp,
+    whereValue?: string | null
+	): Promise<undefined | ReadDocumentType<T>[]> => {
+		try {
+			const subCollectionRef = collection(appFireStore, collectionName, documentId, subCollectionName);
+			const queryConstraints: QueryConstraint[] = [];
 
-	return { readDocumentSingle, readDocumentAll, readDocumentsSimplePaged, readDocumentsPaged, readDocumentQuery };
+			if (whereFieldName) {
+				queryConstraints.push(where(whereFieldName, whereOperator, whereValue));
+			}
+
+			const q = query(subCollectionRef, ...queryConstraints);
+			const querySnapshot = await getDocs(q);
+
+			const result = querySnapshot.docs.map((doc) => ({
+				id: doc.id,
+				data: doc.data() as T,
+			}));
+
+			return result;
+		} catch (error) {
+			console.error("서브 컬렉션 데이터 조회를 실패했습니다:", error);
+			throw error;
+		}
+};
+
+	return { readDocumentSingle, readDocumentAll, readDocumentsSimplePaged, readDocumentsPaged, readDocumentQuery, readSubCollection };
 };
 
 export default useFirestoreRead;

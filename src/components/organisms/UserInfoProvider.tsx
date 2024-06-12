@@ -69,11 +69,20 @@ const UserInfoProvider = ({ children }: { children: React.ReactNode }) => {
     return unsubscribe
   }, [queryRef])
 
+
   useEffect(() => {
     if (data?.data.secureNumber !== undefined && data?.data.secureNumber !== "") {
       if (!isUnLockValueState) {
         setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
         navigate("/security", { state: { direction: "up" } })
+      }
+    }
+
+    if (data) {
+      if (data.data.isDarkMode) {
+        document.querySelector("html").setAttribute("data-theme", "dark");
+      } else {
+        document.querySelector("html").setAttribute("data-theme", "light");
       }
     }
   }, [data])

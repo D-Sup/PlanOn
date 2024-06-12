@@ -11,7 +11,7 @@ const Alert = ({ isOpen, closeModal, props, selectOptions, actions }: AlertProps
   return (
     <>
       <div className="z-50 fixed-center w-64 h-36 bg-input text-invert-color rounded-lg overflow-hidden font-lg backdrop-blur-sm" style={{ backgroundColor: "rgba(46,46,46,0.8)", opacity: `${isOpen ? 1 : 0}`, transition: ".4s" }}>
-        <p className="text-center text-white pt-10 text-lg">{props}</p>
+        <p className="text-center text-[#FFF] pt-10 text-lg">{props}</p>
         <div className="absolute bottom-0 w-full flex">
           <button
             className="flex-grow flex-basis-0 inline-block h-11 border-t border-box-shadow-color text-md text-[#068FFF] hover:bg-gray-heavy transition duration-300"

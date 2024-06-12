@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import useModalStack from "@/hooks/useModalStack";
 import useFirestoreUpdate from "@/hooks/useFirestoreUpdate";
 import ImageFrame from "./ImageFrame";
 
@@ -13,11 +13,11 @@ import { Timestamp } from "firebase/firestore";
 
 const ChatMessageBox = ({ chatRoomId, data, previousCreatedAt, nextCreatedAt }: { chatRoomId: string, data: MessagesType, previousCreatedAt: Timestamp, nextCreatedAt: Timestamp | Date }) => {
   const messageRef = useRef<HTMLLIElement | null>(null);
-  const { id, userId, text, photoURL, isRead, createdAt, isLocal } = data
+  const { id, userId, text, photoURL, link, isRead, createdAt, isLocal } = data
+
+  const { openModal } = useModalStack()
 
   const { updateFieldObject } = useFirestoreUpdate("users")
-
-  const navigate = useNavigate()
 
   const accountId = getAccountId()
 
@@ -75,67 +75,109 @@ const ChatMessageBox = ({ chatRoomId, data, previousCreatedAt, nextCreatedAt }: 
         </div>
       }
       {userId === accountId ? (
-        text ? (
-          <div
-            className="mb-[10px] mr-[10px] max-w-[80%] ml-auto flex items-end gap-[10px]"
-          >
-            {!isRead && <span className="text-xsm text-highlight">1</span>}
-            {isEqual && <span className="text-nowrap text-xsm text-white">{formatDate(createdAt, 7)}</span>}
-            {text.includes("http")
-              ? <a href={text} className="inline-block px-[10px] py-[8px] rounded-[5px] rounded-br-none bg-white text-sm text-blue-500 underline underline-offset-1 break-all" target="_blank">{text}</a>
-              : <p className="inline-block px-[10px] py-[8px] rounded-[5px] rounded-br-none bg-white text-sm text-black">{text}</p>
-            }
-          </div>
-        ) : (
-          photoURL &&
-          <div className={`${isEqual ? "mb-[20px]" : "mb-[5px]"} mr-[10px] ml-auto leading-none flex items-end gap-[10px]`}>
-            {!isRead && <span className="text-xsm text-highlight">1</span>}
-            {isEqual && <span className={"text-xsm text-white"}>{formatDate(createdAt, 7)}</span>}
-            <ul className={`grid-cols-${photoURL.length <= 3 ? (photoURL.length % 3) === 0 ? 3 : (photoURL.length % 3) === 2 ? 2 : 1 : 3} w-[250px] grid gap-1 rounded-[100px]`}>
-              {photoURL.map((url) => (
-                <li className="relative w-full aspect-square bg-background rounded-[10px] overflow-hidden"
-                  onClick={() => {
-                    window.scrollTo(0, 0)
-                    navigate("/photo", { state: { direction: "up", photo: url } })
-                  }}
-                >
-                  <ImageFrame src={url} alt={`photo-${url}`} className="w-full aspect-square object-cover" />
-                </li>
-              ))}
-            </ul >
-          </div>
-        )
+        <>
+          {text &&
+            <div
+              className="mb-[10px] mr-[10px] max-w-[80%] ml-auto flex items-end gap-[10px]"
+            >
+              {!isRead && <span className="text-xsm text-highlight">1</span>}
+              {isEqual && <span className="text-nowrap text-xsm text-white">{formatDate(createdAt, 7)}</span>}
+              {text.includes("http")
+                ? <a href={text} className="inline-block px-[10px] py-[8px] rounded-[5px] rounded-br-none bg-white text-sm text-blue-500 underline underline-offset-1 break-all" target="_blank">{text}</a>
+                : <p className="inline-block px-[10px] py-[8px] rounded-[5px] rounded-br-none bg-white text-sm text-black">{text}</p>
+              }
+            </div>
+          }
+
+          {photoURL &&
+            <div className="mb-[20px] mr-[10px] ml-auto leading-none flex items-end gap-[10px]">
+              {!isRead && <span className="text-xsm text-highlight">1</span>}
+              {isEqual && <span className={"text-xsm text-white"}>{formatDate(createdAt, 7)}</span>}
+              <ul className={`grid-cols-${photoURL.length <= 3 ? (photoURL.length % 3) === 0 ? 3 : (photoURL.length % 3) === 2 ? 2 : 1 : 3} w-[250px] grid gap-1 rounded-[100px]`}>
+                {photoURL.map((url) => (
+                  <li className="relative w-full aspect-square bg-background rounded-[10px] overflow-hidden"
+                    onClick={() => {
+                      openModal("PhotoView", { photo: url })
+                    }}
+                  >
+                    <ImageFrame src={url} alt={`photo-${url}`} />
+                  </li>
+                ))}
+              </ul >
+            </div>
+          }
+
+          {link &&
+            <a
+              href={link.url}
+              className="relative mb-[10px] mr-[10px] ml-auto w-1/2 bg-background"
+              target="_blank"
+            >
+              {link.image &&
+                <div className="h-[120px] rounded-t-md overflow-hidden">
+                  <ImageFrame src={link.image} alt={link.url} />
+                </div>
+              }
+              <div className={`p-[10px] bg-input flex flex-col justify-center text-white ${link.image ? "rounded-b-md" : "rounded-md"}`}>
+                <strong className="text-md break-all">{link.title}</strong>
+                <span className="text-xsm text-blue-500 break-all reduce-words">{link.url}</span>
+                <span className="text-xsm text-gray-old break-all">{link.description}</span>
+              </div>
+            </a>
+          }
+        </>
       ) : (
-        text ? (
-          <div
-            className="mb-[10px] ml-[10px] max-w-[80%] flex items-end gap-[10px]"
-          >
-            {text.includes("http")
-              ? <a href={text} className="inline-block px-[10px] py-[8px] rounded-[5px] rounded-bl-none bg-input text-sm text-blue-500 underline underline-offset-1 break-all" target="_blank">{text}</a>
-              : <p className="inline-block px-[10px] py-[8px] rounded-[5px] rounded-bl-none bg-input text-sm text-white">{text}</p>
-            }
-            {isEqual && <span className={"text-nowrap text-xsm text-white"}>{formatDate(createdAt, 7)}</span>}
-            {!isRead && <span className="text-xsm text-highlight">1</span>}
-          </div>
-        ) : (
-          photoURL &&
-          <div className={`${isEqual ? "mb-[20px]" : "mb-[5px]"} ml-[10px] leading-none flex items-end gap-[10px]`}>
-            <ul className={`grid-cols-${photoURL.length <= 3 ? (photoURL.length % 3) === 0 ? 3 : (photoURL.length % 3) === 2 ? 2 : 1 : 3} w-[250px] grid gap-1 rounded-[100px]`}>
-              {photoURL.map((url) => (
-                <li className="relative w-full aspect-square bg-background rounded-[10px] overflow-hidden"
-                  onClick={() => {
-                    window.scrollTo(0, 0)
-                    navigate("/photo", { state: { direction: "up", photo: url } })
-                  }}
-                >
-                  <ImageFrame src={url} alt={`photo-${url}`} className="w-full aspect-square object-cover" />
-                </li>
-              ))}
-            </ul >
-            {isEqual && <span className={"text-xsm text-white"}>{formatDate(createdAt, 7)}</span>}
-            {!isRead && <span className="text-xsm text-highlight">1</span>}
-          </div>
-        )
+        <>
+          {text &&
+            <div
+              className="mb-[10px] ml-[10px] max-w-[80%] flex items-end gap-[10px]"
+            >
+              {text.includes("http")
+                ? <a href={text} className="inline-block px-[10px] py-[8px] rounded-[5px] rounded-bl-none bg-input text-sm text-blue-500 underline underline-offset-1 break-all" target="_blank">{text}</a>
+                : <p className="inline-block px-[10px] py-[8px] rounded-[5px] rounded-bl-none bg-input text-sm text-white">{text}</p>
+              }
+              {isEqual && <span className={"text-nowrap text-xsm text-white"}>{formatDate(createdAt, 7)}</span>}
+              {!isRead && <span className="text-xsm text-highlight">1</span>}
+            </div>
+          }
+
+          {photoURL &&
+            <div className="mb-[20px] ml-[10px] leading-none flex items-end gap-[10px]">
+              <ul className={`grid-cols-${photoURL.length <= 3 ? (photoURL.length % 3) === 0 ? 3 : (photoURL.length % 3) === 2 ? 2 : 1 : 3} w-[250px] grid gap-1 rounded-[100px]`}>
+                {photoURL.map((url) => (
+                  <li className="relative w-full aspect-square bg-background rounded-[10px] overflow-hidden"
+                    onClick={() => {
+                      openModal("PhotoView", { photo: url })
+                    }}
+                  >
+                    <ImageFrame src={url} alt={`photo-${url}`} />
+                  </li>
+                ))}
+              </ul >
+              {isEqual && <span className={"text-xsm text-white"}>{formatDate(createdAt, 7)}</span>}
+              {!isRead && <span className="text-xsm text-highlight">1</span>}
+            </div>
+          }
+
+          {link &&
+            <a
+              href={link.url}
+              className="mb-[10px] ml-[10px] mr-auto w-1/2 aspect-square relative bg-background"
+              target="_blank"
+            >
+              {link.image &&
+                <div className="h-[120px] rounded-t-md overflow-hidden">
+                  <ImageFrame src={link.image} alt={link.url} />
+                </div>
+              }
+              <div className={`p-[10px] bg-input flex flex-col justify-center text-white ${link.image ? "rounded-b-md" : "rounded-md"}`}>
+                <strong className="text-md break-all">{link.title}</strong>
+                <span className="text-xsm text-blue-500 break-all reduce-words">{link.url}</span>
+                <span className="text-xsm text-gray-old break-all">{link.description}</span>
+              </div>
+            </a>
+          }
+        </>
       )}
     </li>
 

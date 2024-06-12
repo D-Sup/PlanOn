@@ -57,7 +57,7 @@ const SearchHistoryService = () => {
       }
     },
     // onSettled: () => {
-    //   queryClient.invalidateQueries(["all-posts", "following-posts", "other-posts", "my-posts"]);
+    //   queryClient.invalidateQueries(["all-posts", "following-posts", "like-posts", "other-posts", "my-posts"]);
     // },
   });
 }

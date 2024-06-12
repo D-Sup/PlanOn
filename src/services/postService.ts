@@ -40,7 +40,7 @@ const PostService =  () => {
     const { createFieldArray } = useFirestoreCreate("hashtags")
 
     const { mutate, isPending } = useDataMutation(
-      ["all-posts", "following-posts"],
+      ["all-posts", "following-posts", "like-posts"],
       async () => {
         const uploadedPhotos =  await photoUpload("posts", postFormState.photos.checked.map(index => postFormState.photos.file[index]))
         
@@ -76,14 +76,19 @@ const PostService =  () => {
             })(),
           ])
           uploadedPost && setPaginationValue(Prev => ({...Prev, 
-            allPosts : {
+            allPosts: {
               lastVisible: null,
               isDataEnd: false
             },
             followingPosts: {
               lastVisible: null,
               isDataEnd: false
-          }}))
+            },
+            likePosts: {
+              lastVisible: null,
+              isDataEnd: false
+            }
+        }))
         }
       }, 
       onSuccess, 
@@ -129,7 +134,7 @@ const PostService =  () => {
 
     const { data, isLoading } = useDataQuery<ReadDocumentType<PostsType>[], Error, ReadDocumentType<PostsType>[]>(
       "search-posts",
-      ()=> readDocumentsSimplePaged<PostsType>([], fieldName, ids, "createdAt", "asc", Infinity),
+      ()=> readDocumentsSimplePaged<PostsType>([], fieldName, "in", ids, "createdAt", "asc", Infinity),
       (data) => data,
       {
         staleTime: 0,
@@ -280,12 +285,11 @@ const PostService =  () => {
         staleTime: 26000000,
         gcTime: 520000000,
       },
-      false
     )
     return { data, isFetching, isLoading, refetch }
   }
 
-  const ReadPostPaged = () => {
+  const ReadPostFollowPaged = () => {
     const { readDocumentsSimplePaged } = useFirestoreRead("posts")
     const { readDocumentSingle: readDocumentUsers, readDocumentQuery } = useFirestoreRead("users")
     const { readDocumentSingle: readDocumentSchedules } = useFirestoreRead("schedules")
@@ -316,6 +320,7 @@ const PostService =  () => {
           const readedPosts = await readDocumentsSimplePaged<PostsType>(
             currentData, 
             "authorizationId", 
+            "in",
             readedUser.data.followings, 
             "createdAt",
             "desc",
@@ -370,7 +375,93 @@ const PostService =  () => {
         staleTime: 26000000,
         gcTime: 520000000,
       },
-      false
+    )
+    return { data, isFetching, isLoading, refetch }
+  }
+
+  const ReadPostLikePaged = () => {
+    const { readDocumentsSimplePaged } = useFirestoreRead("posts")
+    const { readDocumentQuery } = useFirestoreRead("users")
+    const { readDocumentSingle: readDocumentSchedules } = useFirestoreRead("schedules")
+
+    const queryClient = useQueryClient();
+    
+    const [paginationValueState, setPaginationValueState] = useRecoilState(paginationValue)
+    const isPaginationValueModified = useRecoilValue(isPaginationValueModifiedSelector);
+
+    const handlePaginationValueState = (data: DocumentData | boolean) => {
+      setPaginationValueState((Prev) =>
+        produce(Prev, (draft) => {
+          if (typeof data === "boolean") {
+            draft.likePosts.isDataEnd = data
+          } else {
+            draft.likePosts.lastVisible = data
+          }
+        })
+      )
+    }
+
+    const { data, isFetching, isLoading, refetch } = useDataQuery<PostMachinedType[], Error, PostMachinedType[]>(
+      "like-posts",
+      async ()=> {
+        const currentData = isPaginationValueModified ? queryClient.getQueryData<PostMachinedType[]>(["like-posts"]) || [] : [];
+        const readedPosts = await readDocumentsSimplePaged<PostsType>(
+          currentData, 
+          "likedUsers", 
+          "array-contains",
+          accountId, 
+          "createdAt",
+          "desc",
+          3,
+          handlePaginationValueState,
+          paginationValueState.likePosts.lastVisible, 
+          paginationValueState.likePosts.isDataEnd
+        )
+        if (readedPosts) {
+          const lastUpdatedPosts = readedPosts.slice(0,-3);
+          const updatedPosts = await Promise.all(readedPosts.slice(-3).map(async post => {
+          const [readedUsers, readedTaggedUsers, schedule] = await Promise.all([
+            readDocumentQuery<UsersType>("authorizationId", "==", post.data.authorizationId),
+            (()=> {
+              if (post.data.usertags.length !== 0) {
+                return readDocumentQuery<UsersType>("authorizationId", "in", post.data.usertags)
+              }
+            })(),
+            (()=> {
+              if (post.data.scheduleId !== "") {
+                return readDocumentSchedules<SchedulesType>(post.data.scheduleId)
+              }
+            })()
+          ])
+
+          const updatedPost = produce(post, (draft: PostMachinedType ) => {
+            if (readedUsers && readedTaggedUsers && schedule) {
+                draft.data.userInfo = readedUsers[0].data;
+                draft.data.tagUserInfo = readedTaggedUsers;
+                draft.data.scheduleInfo = schedule.data;
+              } else if (readedUsers && readedTaggedUsers && !schedule) {
+                draft.data.userInfo = readedUsers[0].data;
+                draft.data.tagUserInfo = readedTaggedUsers;
+              } else if (readedUsers && !readedTaggedUsers && schedule) {
+                draft.data.userInfo = readedUsers[0].data;
+                draft.data.scheduleInfo = schedule.data;
+              } else if (readedUsers && !readedTaggedUsers && !schedule)
+                draft.data.userInfo = readedUsers[0].data;
+            })
+          return updatedPost;
+          }));
+          if (readedPosts.length > 1 && updatedPosts) {
+            return [...lastUpdatedPosts, ...updatedPosts]
+          } else if (updatedPosts) {
+            return updatedPosts
+          }
+        }
+      },
+      (data) => data,
+      {
+        staleTime: 26000000,
+        gcTime: 520000000,
+      },
     )
     return { data, isFetching, isLoading, refetch }
   }
@@ -382,9 +473,8 @@ const PostService =  () => {
     const { updateField } = useFirestoreUpdate("posts");
 
     const { mutate, isPending } = useDataMutation(
-      ["all-posts", "following-posts"],
+      ["all-posts", "following-posts", "like-posts"],
       async () => {
-
         const { filteredTags, remainingTags } = data.hashtags.reduce((acc, item) => {
           if ("createTag" in item.data) {
             acc.filteredTags.push(item);
@@ -423,14 +513,19 @@ const PostService =  () => {
         ])
         if (updatedPost) {
           setPaginationValue(Prev => ({...Prev, 
-            allPosts : {
+            allPosts: {
               lastVisible: null,
               isDataEnd: false
             },
             followingPosts: {
               lastVisible: null,
               isDataEnd: false
-          }}))
+            },
+            likePosts: {
+              lastVisible: null,
+              isDataEnd: false
+            }
+          }))
         }
       }, 
       onSuccess, 
@@ -445,7 +540,7 @@ const PostService =  () => {
     const { deleteFieldArray } = useFirestoreDelete("hashtags");
     const { readDocumentQuery } = useFirestoreRead("hashtags")
     const { mutate, isPending } = useDataMutation(
-      ["all-posts", "following-posts"],
+      ["all-posts", "following-posts", "like-posts"],
       async () => {
         const deleted = await Promise.all([
           deleteDocument(id),
@@ -461,14 +556,19 @@ const PostService =  () => {
         
         if (deleted) {
           setPaginationValue(Prev => ({...Prev, 
-            allPosts : {
+            allPosts: {
               lastVisible: null,
               isDataEnd: false
             },
             followingPosts: {
               lastVisible: null,
               isDataEnd: false
-          }}))
+            },
+            likePosts: {
+              lastVisible: null,
+              isDataEnd: false
+            }
+        }))
         }
       }, 
       onSuccess, 
@@ -478,7 +578,7 @@ const PostService =  () => {
     return { mutate, isPending }
   }
 
-  return { CreatePost, ReadPostAllPaged, ReadPostPaged, ReadPostAll, ReadPostAllOther, ReadPostAllSearch, ReadOnlyPost, ReadPostSingle, UpdatePost, DeletePost }
+  return { CreatePost, ReadPostAllPaged, ReadPostFollowPaged, ReadPostLikePaged, ReadPostAll, ReadPostAllOther, ReadPostAllSearch, ReadOnlyPost, ReadPostSingle, UpdatePost, DeletePost }
 }
 
 export default PostService;

@@ -1,5 +1,3 @@
-import { useSetRecoilState } from "recoil";
-import { routeDirectionValue } from "@/store";
 import { useNavigate } from "react-router-dom";
 
 import SearchBar from "../atoms/SearchBar";
@@ -11,16 +9,8 @@ import IconLogo from "../../assets/images/icon-logo.svg?react";
 import IconPlus from "../../assets/images/icon-plus.svg?react";
 import IconCircleX from "../../assets/images/icon-circle-x.svg?react";
 import IconLocation from "../../assets/images/icon-location.svg?react";
-import IconMoreVertical from "../../assets/images/icon-more-vertical.svg?react";
-import { UsersType } from "@/types/users.type";
 
 const Header = () => {
-  const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue)
-
-  const goBack = () => {
-    setRouteDirectionValueState(Prev => ({ ...Prev, direction: "prev" }))
-  }
-
   // const SearchHeaderForModal = (): JSX.Element => {
   //   return (
   //     <header className="px-[30px] flex justify-center gap-[15px] w-screen min-h-[58px] ">
@@ -44,7 +34,7 @@ const Header = () => {
   const MapViewHeader = ({ handleFunc }: { handleFunc: (() => void)[] }): JSX.Element => {
     return (
       <header className="pl-[15px] pr-[15px] flex items-center justify-center gap-[15px] w-screen min-h-[58px]">
-        <button className="relative min-w-[38px] min-h-[38px] bg-input rounded-[10px]" type="button" onClick={handleFunc[0]}>
+        <button className="relative min-w-[38px] min-h-[38px] bg-input rounded-[10px] shadow-lg" type="button" onClick={handleFunc[0]}>
           <IconArrow className="absolute-center" width={7} height={12} fill={"var(--white)"} />
         </button>
         <div className="w-full" onFocus={handleFunc[1]}>
@@ -69,7 +59,7 @@ const Header = () => {
     return (
       <header className="flex items-center justify-evenly w-screen min-h-[60px] bg-background-light">
         <button className="relative p-[10px]" type="button" onClick={handleFunc[0]}>
-          <IconLogo width={25} height={25} fill={"var(--white)"} />
+          <IconLogo fill={"var(--white)"} width={25} height={25} />
           <IconArrowBottom width={8} height={8} fill={"var(--white)"} className="absolute bottom-[7px] right-[2px]" />
         </button>
         <div className="w-2/3 ">
@@ -90,21 +80,7 @@ const Header = () => {
     )
   }
 
-  const ChatRoomHeader = ({ data, handleFunc }: { data: UsersType, handleFunc: () => void }): JSX.Element => {
-    const { accountName, description, accountImage } = data;
 
-    return (
-      <div className="px-[30px] flex items-center w-screen min-h-[50px]" >
-        <button className="mr-[20px]" type="button" onClick={goBack}>
-          <IconArrow width={7} height={12} fill={"var(--white)"} />
-        </button>
-        <ProfileCard title={accountName} description={description} src={accountImage} />
-        <button className="ml-auto" type="button" onClick={handleFunc}>
-          <IconMoreVertical width={4} height={15} fill={"var(--white)"} />
-        </button>
-      </div>
-    )
-  }
 
   const DetailHeader = ({ title, handleFunc }: { title: string, handleFunc: () => void }): JSX.Element => {
     return (
@@ -167,7 +143,7 @@ const Header = () => {
       <header className="z-30 fixed top-0 px-[10px] flex items-center justify-between w-screen min-h-[50px] bg-black">
         <div className="flex items-center gap-[10px]">
           <div className="bg-input p-[5px] rounded-[5px]">
-            <IconLogo width={20} height={20} />
+            <IconLogo fill={"var(--white)"} width={20} height={20} />
           </div>
           <span className="text-sm text-white">플랜온 앱 추가하고 <span className="text-sm text-red">더 많은 기능 이용하기</span></span>
 
@@ -185,7 +161,7 @@ const Header = () => {
     )
   }
 
-  return { MapViewHeaderForModal, MapViewHeader, FeedHeader, ChatHeader, ChatRoomHeader, DetailHeader, ProfileUpdateHeader, WritePostHeader, ManageSchedulesHeader, DownloadSuggestHeader }
+  return { MapViewHeaderForModal, MapViewHeader, FeedHeader, ChatHeader, DetailHeader, ProfileUpdateHeader, WritePostHeader, ManageSchedulesHeader, DownloadSuggestHeader }
 
 }
 

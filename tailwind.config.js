@@ -41,6 +41,7 @@ module.exports = {
           heavy: "var(--gray-heavy)",
         },
         red: "var(--red)",
+        green: "var(--green)",
         input: "var(--input)",
         border: "hsl(var(--border))",
         ring: "hsl(var(--ring))",

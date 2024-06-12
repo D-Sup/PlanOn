@@ -6,6 +6,14 @@ export interface MessagesType {
   id?: string,
   isLocal?: boolean
   text?: string,
+  link?: LinkType
   photoURL?: string[],
   createdAt?: Timestamp,
+}
+
+export interface LinkType {
+  url: string,
+  title?: string,
+  image?: string,
+  description?: string
 }

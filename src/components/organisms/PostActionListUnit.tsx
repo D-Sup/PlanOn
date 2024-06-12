@@ -18,7 +18,7 @@ const PostActionListUnit = ({ data, handleFunc }: { data: PostsType, handleFunc:
   const [hearted, setHearted] = useState<boolean>(isLike);
 
   return (
-    <div className="pl-[10px] pr-[20px] mt-[10px] flex items-center gap-[20px]">
+    <div className="relative pl-[10px] pr-[20px] mt-[10px] flex items-center gap-[20px]">
       <button
         className="flex gap-[10px] items-center justify-center"
         type="button"
@@ -43,7 +43,7 @@ const PostActionListUnit = ({ data, handleFunc }: { data: PostsType, handleFunc:
         <IconComment width={20} height={20} fill={"var(--gray-heavy)"} />
         <span className='text-xsm text-white'>{comments.length}</span>
       </button>
-      <span className="ml-auto text-sm text-gray-old">{formatDate(createdAt, 1)}</span>
+      <span className="ml-auto text-sm text-gray-old">({formatDate(createdAt, 9)}) {formatDate(createdAt, 1)}</span>
     </div>
   )
 }

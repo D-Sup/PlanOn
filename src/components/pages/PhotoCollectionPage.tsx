@@ -1,4 +1,5 @@
-import { useNavigate, useLocation } from "react-router-dom"
+import { useLocation } from "react-router-dom"
+import useModalStack from "@/hooks/useModalStack"
 import { useSetRecoilState } from "recoil"
 import { routeDirectionValue } from "@/store"
 
@@ -10,9 +11,10 @@ const PhotoCollectionPage = () => {
 
   const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue);
 
+  const { openModal } = useModalStack()
+
   const { DetailHeader } = Header()
 
-  const navigate = useNavigate()
   const location = useLocation()
 
   const { photos } = location.state || {};
@@ -32,10 +34,10 @@ const PhotoCollectionPage = () => {
             onClick={() => {
               window.scrollTo(0, 0)
               setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, { photos }] }))
-              navigate("/photo", { state: { direction: "up", photo } })
+              openModal("PhotoView", { photo })
             }}
           >
-            <ImageFrame src={photo} alt={`photo-${photo}`} className="w-full aspect-square object-cover" />
+            <ImageFrame src={photo} alt={`photo-${photo}`} />
           </li>
         ))}
       </ul>

@@ -179,8 +179,6 @@ const ScheduleDetailPage = () => {
                   </SelectItem>
                 ))
               }
-
-              { }
             </SelectContent>
           </Select>
         </div>

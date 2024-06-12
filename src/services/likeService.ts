@@ -18,7 +18,7 @@ const LikeService = () => {
   const { updateFieldObject } = useFirestoreUpdate("posts");
   const queryClient = useQueryClient();
 
-  const queryKeys = ["all-posts", "following-posts", "single-posts"];
+  const queryKeys = ["all-posts", "following-posts", "like-posts", "single-posts"];
 
   return useMutation({
     mutationFn: async (request: { target: "post" | "comment", type: "create" | "delete" | "update", id: string, comment?: CommentsType }) => {
@@ -109,7 +109,7 @@ const LikeService = () => {
       }
     },
     // onSettled: () => {
-    //   queryClient.invalidateQueries(["all-posts", "following-posts", "other-posts", "my-posts"]);
+    //   queryClient.invalidateQueries(["all-posts", "following-posts", "like-posts", "other-posts", "my-posts"]);
     // },
   });
 };

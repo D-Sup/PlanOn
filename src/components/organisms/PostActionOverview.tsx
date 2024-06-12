@@ -12,7 +12,7 @@ import getAccountId from "@/utils/getAccountId";
 import IconEdit from "../../assets/images/icon-edit.svg?react";
 import IconLink from "../../assets/images/icon-link.svg?react";
 import IconTrash from "../../assets/images/icon-trash.svg?react";
-import IconBookmark from "../../assets/images/icon-bookmark.svg?react";
+// import IconBookmark from "../../assets/images/icon-bookmark.svg?react";
 
 import { PostMachinedType } from "@/services/postService";
 
@@ -81,38 +81,44 @@ const PostActionOverview = ({ props }: PostActionOverviewProps) => {
       <input ref={formattedAddress} className="a11y-hidden" value={`https://plan-on.vercel.app/post/detail/readonly/${id}`} readOnly />
       <ActionCard icon={IconLink} name={"공유"} handleFunc={handleCopyClipBoard} type={"collect"} />
       {isMyPost &&
-        <ActionCard icon={IconEdit} name={"수정"} handleFunc={async () => {
-          closeModal()
-          const [hashtags, usertags] = await Promise.all([
-            Promise.all(postData.hashtags.map((hashtag) => readDocumentHashTags(hashtag))),
-            Promise.all(postData.usertags.map((usertag) => readDocumentUsers(usertag)))
-          ])
-          if (hashtags && usertags) {
-            navigate("/post/update", {
-              state: {
-                direction: "next",
-                id: id,
-                data: {
-                  scheduleId: postData.scheduleId,
-                  private: postData.private,
-                  hashtags,
-                  usertags,
-                  content: postData.content
-                }
-              }
-            })
-          }
-        }} type={"collect"} />}
-      {isMyPost &&
-        <ActionCard color="red" icon={IconTrash} name={"삭제"} handleFunc={() => {
-          openModal("Alert", "게시물을 삭제하시겠습니까?", ["취소", "확인"],
-            [null, () => {
-              closeModalDirect()
-              closeModal()
-              setTimeout(() => mutate(), 400)
-            }
+        <ActionCard icon={IconEdit} name={"수정"}
+          handleFunc={async () => {
+            closeModal()
+            const [hashtags, usertags] = await Promise.all([
+              Promise.all(postData.hashtags.map((hashtag) => readDocumentHashTags(hashtag))),
+              Promise.all(postData.usertags.map((usertag) => readDocumentUsers(usertag)))
             ])
-        }} />}
+            if (hashtags && usertags) {
+              navigate("/post/update", {
+                state: {
+                  direction: "next",
+                  id: id,
+                  data: {
+                    scheduleId: postData.scheduleId,
+                    private: postData.private,
+                    hashtags,
+                    usertags,
+                    content: postData.content
+                  }
+                }
+              })
+            }
+          }}
+          type={"collect"}
+        />
+      }
+      {isMyPost &&
+        <ActionCard color="red" icon={IconTrash} name={"삭제"}
+          handleFunc={() => {
+            openModal("Alert", "게시물을 삭제하시겠습니까?", ["취소", "확인"],
+              [null, () => {
+                closeModalDirect()
+                closeModal()
+                setTimeout(() => mutate(), 400)
+              }
+              ])
+          }}
+        />}
     </div>
   )
 }

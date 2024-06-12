@@ -27,11 +27,11 @@ const ProfileAvatar = ({ src, className, alt, handleFunc }: {
   const widthAndHeight = className.match(widthAndHeightPattern);
 
   return (
-    <div className={`${widthAndHeight !== null ? widthAndHeight.join(" ") : ""} relative rounded-full overflow-hidden bg-background-light`} onClick={handleFunc}>
+    <div className={`${widthAndHeight !== null ? widthAndHeight.join(" ") : ""} relative rounded-full overflow-hidden bg-input`} onClick={handleFunc}>
       {typeof src !== "string"
         ? (
           <div className="absolute-center">
-            {React.createElement(src, { width: "20", height: "20" })}
+            {React.createElement(src, { width: "20", height: "20", fill: "var(--white)" })}
           </div>
         ) : (
           src !== ""

@@ -15,8 +15,8 @@ const CheckBox = ({ id, checked, checkedBox, handleFunc }: CheckBoxProps) => {
       <label className="absolute top-1 right-1 block text-xs font-bold text-white user-select-none shadow-outline-white rounded-full">
         {checkedBox &&
           <div
-            className={`absolute right-0 h-[25px] w-[25px] rounded-full transition duration-100 border text-sm text-center ${checked ? "text-white" : ""}`}
-            style={{ backgroundColor: checked ? "var(--black)" : "rgba(255,255,255,0.5)" }}
+            className={`absolute right-0 h-[25px] w-[25px] rounded-full transition duration-100 border text-sm text-center ${checked ? "text-[#FFF]" : ""}`}
+            style={{ backgroundColor: checked ? "#000" : "rgba(255,255,255,0.5)" }}
             onChange={(e) => {
               e.stopPropagation()
               handleFunc(id)

@@ -76,7 +76,7 @@ const DownloadGuidePage = () => {
           </div>
           <div className="absolute-center flex-center flex-col gap-[1px]">
             <div className="bg-background p-[8px] rounded-[5px]">
-              <IconLogo width={20} height={20} />
+              <IconLogo fill={"var(--white)"} width={20} height={20} />
             </div>
             <span className="text-sm">플랜온</span>
           </div>

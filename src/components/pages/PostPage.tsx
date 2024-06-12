@@ -37,13 +37,25 @@ const PostPage = () => {
 
   const location = useLocation()
 
-  const { ReadPostAllPaged, ReadPostPaged } = PostService()
-  const { data: postData, isFetching: isPostFetching, isLoading: isPostLoading, refetch: refectchPost } = ReadPostPaged()
+  const { ReadPostAllPaged, ReadPostFollowPaged, ReadPostLikePaged } = PostService()
   const { data: postAllData, isFetching: isPostAllFetching, isLoading: isPostAllLoading, refetch: refectchPostAll } = ReadPostAllPaged()
+  const { data: postFollowData, isFetching: isPostFollowFetching, isLoading: isPostFollowLoading, refetch: refectchPostFollow } = ReadPostFollowPaged()
+  const { data: postLikeData, isFetching: isPostLikeFetching, isLoading: isPostLikeLoading, refetch: refectchPostLike } = ReadPostLikePaged()
 
-  const posts = currentCategory === "all-posts" ? postAllData : postData
-  const isFetching = currentCategory === "all-posts" ? isPostAllFetching : isPostFetching
-  const isLoading = currentCategory === "all-posts" ? isPostAllLoading : isPostLoading
+  const posts =
+    currentCategory === "all-posts" && postAllData ||
+    currentCategory === "following-posts" && postFollowData ||
+    currentCategory === "like-posts" && postLikeData || []
+
+  const isFetching =
+    currentCategory === "all-posts" && isPostAllFetching ||
+    currentCategory === "following-posts" && isPostFollowFetching ||
+    currentCategory === "like-posts" && isPostLikeFetching || false
+
+  const isLoading =
+    currentCategory === "all-posts" && isPostAllLoading ||
+    currentCategory === "following-posts" && isPostFollowLoading ||
+    currentCategory === "like-posts" && isPostLikeLoading || false
 
   const filteredData = posts?.filter(singleData => singleData.data.authorizationId === accountId || singleData.data.private === false)
 
@@ -57,39 +69,45 @@ const PostPage = () => {
     if (isBottom && !isOpen) {
       if (currentCategory === "all-posts") {
         refectchPostAll()
-      } else {
-        refectchPost()
+      } else if (currentCategory === "following-posts") {
+        refectchPostFollow()
+      } else if (currentCategory === "like-posts") {
+        refectchPostLike()
       }
     }
   }, [isBottom]);
 
   useEffect(() => {
-    if (location.state?.direction === "") {
-      if (currentCategory === "all-posts") {
-        refectchPostAll()
-      } else if (currentCategory === "following-posts") {
-        refectchPost()
-      }
-    }
-  }, [])
-
-  useEffect(() => {
     if (currentCategory === "all-posts" && paginationValueState.allPosts.lastVisible === null) {
       refectchPostAll()
     } else if (currentCategory === "following-posts" && paginationValueState.followingPosts.lastVisible === null) {
-      refectchPost()
+      refectchPostFollow()
+    } else if (currentCategory === "like-posts" && paginationValueState.likePosts.lastVisible === null) {
+      refectchPostLike()
     }
   }, [paginationValueState])
 
-  useEffect(() => {
-    if (!filteredData) {
-      if (currentCategory === "all-posts") {
-        refectchPostAll()
-      } else {
-        refectchPost()
-      }
-    }
-  }, [filteredData])
+  // useEffect(() => {
+  //   if (currentCategory === "all-posts") {
+  //     refectchPostAll()
+  //   } else if (currentCategory === "following-posts") {
+  //     refectchPostFollow()
+  //   } else if (currentCategory === "like-posts") {
+  //     refectchPostLike()
+  //   }
+  // }, [currentCategory])
+
+  // useEffect(() => {
+  //   if (!filteredData) {
+  //     if (currentCategory === "all-posts") {
+  //       refectchPostAll()
+  //     } else if (currentCategory === "following-posts") {
+  //       refectchPostFollow()
+  //     } else if (currentCategory === "like-posts") {
+  //       refectchPostLike()
+  //     }
+  //   }
+  // }, [filteredData])
 
 
   return (
@@ -129,15 +147,15 @@ const PostPage = () => {
             }
           }]} />
       </FixedTrigger>
-      {isPostLoading || isPostAllLoading &&
+      {isPostAllLoading || isPostFollowLoading || isPostLikeLoading &&
         <PostCardSkeleton repeat={2} />
       }
       <div className="flex flex-col gap-[10px] bg-background-light" >
-        {filteredData?.map(singleData => (
+        {!isPostAllLoading && !isPostFollowLoading && !isPostLikeLoading && filteredData?.map(singleData => (
           <PostCard data={singleData} key={singleData.id} />
         ))
         }
-        {filteredData?.length === 0 &&
+        {!isPostAllLoading && !isPostFollowLoading && !isPostLikeLoading && filteredData?.length === 0 &&
           <span className="absolute top-[200px] left-1/2 -translate-x-1/2 text-nowrap text-md text-white">게시물이 없습니다.</span>
         }
       </div>

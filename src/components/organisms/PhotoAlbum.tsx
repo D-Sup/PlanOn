@@ -15,7 +15,7 @@ const PhotoAlbum = ({ data, handleFunc }: { data: ReadDocumentType<PostsType>[],
             handleFunc(singleData)
           }}
         >
-          <ImageFrame src={singleData.data.images[0]} alt={`photo-${singleData.id}`} className="w-full aspect-square object-cover" />
+          <ImageFrame src={singleData.data.images[0]} alt={`photo-${singleData.id}`} />
         </li>
       ))}
     </ul>

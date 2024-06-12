@@ -23,7 +23,7 @@ interface ChatActionOverviewProps {
   closeModal: () => void,
   props: {
     id: string,
-    handleFunc: () => void
+    handleFunc: (type: "gallery" | "link") => void
   }
 }
 
@@ -51,10 +51,16 @@ const ChatActionOverview = ({ closeModal, props }: ChatActionOverviewProps) => {
             closeModal()
             setTimeout(() => {
               window.scrollTo(0, 0)
-              props.handleFunc()
+              props.handleFunc("gallery")
             }, 400)
           }} type={"collect"} />
-          <ActionCard icon={IconLink} name={"링크"} handleFunc={() => { }} type={"collect"} />
+          <ActionCard icon={IconLink} name={"링크"} handleFunc={() => {
+            closeModal()
+            setTimeout(() => {
+              window.scrollTo(0, 0)
+              props.handleFunc("link")
+            }, 400)
+          }} type={"collect"} />
         </div>
 
         {/* <div className="flex flex-col gap-[10px]">

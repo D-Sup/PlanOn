@@ -1,6 +1,8 @@
 import { useContext } from "react";
 import { UserContext } from "./UserInfoProvider";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
+import { routeDirectionValue } from "@/store";
 
 import useFirestoreUpdate from "@/hooks/useFirestoreUpdate";
 import useFirestoreDelete from "@/hooks/useFirestoreDelete";
@@ -24,7 +26,11 @@ const SettingOverview = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
+  const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue)
+
   const { data: userData } = useContext(UserContext);
+
+  const adminChat = userData?.data.chats[userData?.data.chats.findIndex((chat) => chat.userId === "sAksWjNPRfMt7PJ6IDtWM0Rnunt1")]
 
   const { updateField } = useFirestoreUpdate("users")
   const { deleteDocument } = useFirestoreDelete("users")
@@ -40,7 +46,19 @@ const SettingOverview = () => {
       {userData &&
         <ul className="flex flex-col gap-[10px]">
 
-          <SettingCard icon={IconDarkmode} name={"다크모드"} handleFunc={() => { updateField(userData.id, { isDarkMode: !userData.data.isDarkMode }) }} hasSwitch={true} isChecked={userData.data.isDarkMode} />
+          <SettingCard
+            icon={IconDarkmode}
+            name={"다크모드"}
+            hasSwitch={true}
+            isChecked={userData.data.isDarkMode}
+            handleFunc={() => {
+              updateField(userData.id, { isDarkMode: !userData.data.isDarkMode })
+              if (userData.data.isDarkMode) {
+                document.querySelector("html").setAttribute("data-theme", "light");
+              } else {
+                document.querySelector("html").setAttribute("data-theme", "dark");
+              }
+            }} />
 
           <SettingCard icon={IconAlert} name={"알림"} handleFunc={() => { updateField(userData.id, { isDarkMode: !userData.data.isAlert }) }} hasSwitch={true} isChecked={userData.data.isAlert} />
 
@@ -62,6 +80,7 @@ const SettingOverview = () => {
           }} />
 
           <SettingCard icon={IconContact} name={"문의하기"} handleFunc={() => {
+            setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
             navigate("/chatroom", {
               state: {
                 direction: "next",
@@ -71,7 +90,8 @@ const SettingOverview = () => {
                   description: "최대한 신속하게 도와드리겠습니다.",
                   accountImage: ""
                 },
-                id: isFirstChat ? uuidv4() : userData?.data.chats[userData?.data.chats.findIndex((chat) => chat.userId === "sAksWjNPRfMt7PJ6IDtWM0Rnunt1")].id,
+                id: isFirstChat ? uuidv4() : adminChat.id,
+                unreadLength: isFirstChat ? 0 : adminChat.unreadLength,
                 isFirstChat
               }
             })

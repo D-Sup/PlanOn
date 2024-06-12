@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import useModalStack from "@/hooks/useModalStack";
 import { useSetRecoilState } from "recoil";
 import { routeDirectionValue } from "@/store";
 
@@ -23,6 +24,8 @@ const ImageSlider = ({ data, photos, ratio }: { data?: any, photos: string[], ra
   const sliderRef = useRef<HTMLDivElement | null>(null);
 
   const navigate = useNavigate()
+
+  const { openModal } = useModalStack()
 
   const handleScrollLock = () => {
     isSwiping && lock();
@@ -129,7 +132,7 @@ const ImageSlider = ({ data, photos, ratio }: { data?: any, photos: string[], ra
         onDoubleClick={() => {
           setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, data] }))
           if (photos.length === 1) {
-            navigate("/photo", { state: { direction: "up", photo: photos } })
+            openModal("PhotoView", { photo: photos })
           } else {
             navigate("/gallery", { state: { direction: "next", photos } })
           }
@@ -150,7 +153,7 @@ const ImageSlider = ({ data, photos, ratio }: { data?: any, photos: string[], ra
             ))
           )}
         </div>
-        <span className="absolute right-[10px] bottom-[10px] px-[10px] py-[5px] flex-center rounded-full text-xsm text-white font-bold" style={{ backgroundColor: "rgba(0,0,0, 0.5)" }}>
+        <span className="absolute right-[10px] bottom-[10px] px-[10px] py-[5px] flex-center rounded-full text-xsm text-[#FFF] font-bold" style={{ backgroundColor: "rgba(0,0,0, 0.5)" }}>
           {currentIndex + 1} / {photos.length}
         </span>
       </div>

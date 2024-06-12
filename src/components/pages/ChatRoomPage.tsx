@@ -1,73 +1,188 @@
-import { useState, useRef, useEffect, useContext } from "react";
+import { useRef, useState, useEffect, useContext } from "react";
 import { UserContext } from "../organisms/UserInfoProvider";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { modalStack, routeDirectionValue } from "@/store";
 import useModalStack from "@/hooks/useModalStack";
 import useFirestoreCreate from "@/hooks/useFirestoreCreate";
 import useFirestoreUpdate from "@/hooks/useFirestoreUpdate";
 import usePhotoUpload from "@/hooks/usePhotoUpload";
+import useScrollTop from "@/hooks/useScrollTop";
 
 import ChatActionOverview from "../organisms/ChatActionOverview";
 import InteractiveInput from "../organisms/InteractiveInput"
-import Header from "../organisms/Header";
+import ChatRoomHeader from "../organisms/ChatRoomHeader";
 import FixedTrigger from "../mocules/FixedTrigger";
 import ChatMessageBox from "../atoms/ChatMessageBox"
 
+import { produce } from "immer"
 import { db } from "@/firebase/config";
+import { DocumentData } from "firebase/firestore";
 import getAccountId from "@/utils/getAccountId";
+import { v4 as uuidv4 } from "uuid";
 
 import { MessagesType } from "@/types/messages.type";
 import { PostFormValueType } from "@/store";
 import { postFormValueDefault } from "@/store";
+import { LinkType } from "@/types/messages.type";
 
 const ChatRoomPage = () => {
 
+  const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue)
+
   const navigate = useNavigate()
   const location = useLocation()
-  const { id, userInfo, isFirstChat } = location.state || {}
+  const { id, userInfo, unreadLength, isFirstChat, docs: previousDocs, lastVisible: previousLastVisible, isDataEnd: previousIsDataEnd } = location.state || {}
 
   const { data: myInfo } = useContext(UserContext);
 
+  const modalStackState = useRecoilValue(modalStack);
+
+  const { isOpen } = modalStackState[modalStackState.length - 1];
+
+  const [firstMount, setFirstMount] = useState<boolean>(previousDocs ? false : true);
   const [inputValue, setInputValue] = useState<string>("");
-  const [docs, setDocs] = useState<MessagesType[]>([])
-  const [firstMount, setFirstMount] = useState<boolean>(true)
+  const [docs, setDocs] = useState<MessagesType[]>(previousDocs || [])
+  const [scrollPosition, setScrollPosition] = useState<number>(0)
   const [photoState, setPhotoState] = useState<PostFormValueType>(postFormValueDefault)
+  const [lastVisible, setLastVisible] = useState<null | DocumentData>(previousLastVisible || null);
+  const [isDataEnd, setIsDataEnd] = useState<boolean>(previousIsDataEnd || false);
+
   const { createFieldObject } = useFirestoreCreate("users")
   const { updateFieldObject } = useFirestoreUpdate("users")
-
+  const queryRef = useRef(null);
 
   const { photoUpload } = usePhotoUpload()
 
   const { openModal, closeModal } = useModalStack()
 
-  const accountId = getAccountId()
+  const isTop = useScrollTop()
 
-  const { ChatRoomHeader } = Header()
+  const accountId = getAccountId()
 
   const messagesRef = db.collection(`chats/messages/message-${id}`)
 
-  const queryRef = useRef(messagesRef.limit(1000))
+  const removeDuplicates = (docs: MessagesType[]) => {
+    return docs.reduce((acc, current) => {
+      const result = acc.find(item => item.id === current.id);
+      if (!result) {
+        return acc.concat([current]);
+      } else {
+        return acc;
+      }
+    }, []);
+  };
+
+  const updateIsRead = (data: MessagesType[], docs: MessagesType[]) => {
+    if (data[data.length - 1]?.isRead) {
+      docs.forEach(doc => {
+        doc.isRead = true;
+      });
+    }
+    if (docs[docs.length - 1]?.isRead !== data[data.length - 1]?.isRead) {
+      docs.forEach(doc => {
+        if (data[data.length - 1].createdAt.seconds >= doc.createdAt.seconds) {
+          doc.isRead = true;
+        }
+      });
+      return docs;
+    }
+
+    return docs;
+  };
+
+  const extractMetaTags = async (url: string): Promise<LinkType> => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_META_TAGS_API_KEY}?url=${url}`, {
+        method: "GET",
+      });
+      const data = await response.json();
+      return data
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
 
   useEffect(() => {
-    if (!queryRef?.current?.isEqual(messagesRef)) {
-      queryRef.current = messagesRef
+    if (!queryRef.current?.isEqual(messagesRef)) {
+      queryRef.current = messagesRef.orderBy("createdAt", "desc").limit(!firstMount ? 1 : unreadLength === 0 ? 1 : unreadLength);
     }
-  })
+  }, [messagesRef]);
 
   useEffect(() => {
     if (!queryRef.current) {
-      return
+      return;
     }
+
     const unsubscribe = queryRef.current.onSnapshot(querySnapshot => {
       const data = querySnapshot.docs.map(doc => ({
         ...doc.data(),
         id: doc.id,
-      })) as MessagesType[]
-      setDocs(data)
-    })
+      })) as MessagesType[];
+      const updatedData = data.filter(
+        singleData => !docs.some(doc => doc.id === singleData.id)
+      );
+      setDocs(prevDocs => {
+        const newDocs = [...updateIsRead(data, prevDocs), ...updatedData];
+        return removeDuplicates(newDocs);
+      });
+      firstMount && setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1])
+      setTimeout(() => {
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "smooth",
+        });
+      }, 0)
+    });
 
-    return unsubscribe
-  }, [queryRef])
+    return () => unsubscribe();
+  }, [queryRef]);
+
+
+  const loadMoreMessages = async () => {
+
+    const query = messagesRef.orderBy("createdAt", "desc").startAfter(lastVisible).limit(20);
+
+    const documentSnapshots = await query.get();
+    const newMessages = documentSnapshots.docs.map(doc => ({
+      ...doc.data(),
+      id: doc.id,
+    })) as MessagesType[];
+
+    if (newMessages.length > 0) {
+      setDocs(prevDocs => {
+        const newDocs = [...newMessages, ...prevDocs];
+        return removeDuplicates(newDocs);
+      })
+      const lastDocs = documentSnapshots.docs[documentSnapshots.docs.length - 1]
+      setLastVisible(lastDocs);
+      setScrollPosition(document.body.scrollHeight)
+      setFirstMount(false)
+    } else {
+      setIsDataEnd(true)
+    }
+  };
+
+  useEffect(() => {
+    if (scrollPosition !== 0) {
+      const newScrollHeight = document.body.scrollHeight;
+
+      window.scrollTo({
+        top: newScrollHeight - scrollPosition,
+        behavior: "auto"
+      });
+
+      setScrollPosition(0);
+    }
+  }, [scrollPosition]);
+
+  useEffect(() => {
+    if ((isTop && !isOpen && !isDataEnd)) {
+      loadMoreMessages();
+    }
+  }, [isTop]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -75,20 +190,8 @@ const ChatRoomPage = () => {
         top: document.body.scrollHeight,
         behavior: "smooth"
       })
-      setFirstMount(false)
-    }, 350)
+    }, 500)
   }, []);
-
-
-  useEffect(() => {
-    if (!firstMount) {
-      window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: "smooth"
-      })
-    }
-  }, [docs]);
-
 
   const handleSubmit = async () => {
     let uploadedPhotos
@@ -102,19 +205,43 @@ const ChatRoomPage = () => {
     const now = new Date()
     if (uploadedPhotos) {
       messagesRef.add({
+        id: uuidv4(),
         userId: accountId,
         photoURL: uploadedPhotos,
         isRead: false,
         createdAt: now,
       });
+      setInputValue("");
     } else {
       messagesRef.add({
+        id: uuidv4(),
         userId: accountId,
         text: inputValue,
         isRead: false,
         createdAt: now,
       });
+      setInputValue("");
     }
+
+    if (inputValue.includes("http")) {
+      const result = await extractMetaTags(inputValue)
+      if (result) {
+        const { title, image, description } = result
+        messagesRef.add({
+          id: uuidv4(),
+          userId: accountId,
+          link: {
+            url: inputValue,
+            title,
+            image,
+            description
+          },
+          isRead: true,
+          createdAt: new Date(now.getTime() + 1000),
+        });
+      }
+    }
+
     if (isFirstChat) {
       await Promise.all([
         createFieldObject(
@@ -143,15 +270,8 @@ const ChatRoomPage = () => {
           }
         )
       ])
-      setInputValue("");
       if (uploadedPhotos) {
         closeModal()
-        setTimeout(() => {
-          window.scrollTo({
-            top: document.body.scrollHeight,
-            behavior: "smooth"
-          })
-        }, 500)
       }
       const { ...newState } = location.state;
       navigate("/chatroom", { state: { ...newState, isFirstChat: false }, replace: true });
@@ -178,23 +298,21 @@ const ChatRoomPage = () => {
           }
         )
       ])
-      setInputValue("");
       if (uploadedPhotos) {
         closeModal()
-        setTimeout(() => {
-          window.scrollTo({
-            top: document.body.scrollHeight,
-            behavior: "smooth"
-          })
-        }, 500)
       }
     }
   }
 
-  const handleNavigate = () => {
-    navigate("/chatroom/gallery", { state: { direction: "next", data: docs } })
+  const handleNavigate = (type: "gallery" | "link") => {
+    setRouteDirectionValueState(prev =>
+      produce(prev, draft => {
+        draft.previousPageUrl.push(location.pathname);
+        draft.data.push({ id, userInfo, unreadLength, isFirstChat, docs, lastVisible, isDataEnd });
+      })
+    );
+    navigate(`/chatroom/${type}`, { state: { direction: "next", id } })
   }
-
 
   return (
     <>
@@ -209,13 +327,13 @@ const ChatRoomPage = () => {
       </FixedTrigger>
       <div className="mt-[20px]">
         {(() => {
-          const sortedMessages = docs?.sort((first, second) =>
+          const sortedMessages = docs?.slice().sort((first, second) =>
             first?.createdAt?.seconds <= second?.createdAt?.seconds ? -1 : 1
           );
-          return sortedMessages.map((message, index) => (
+          return sortedMessages?.map((message, index) => (
             <ChatMessageBox
               chatRoomId={id}
-              key={message.id}
+              key={index}
               data={message}
               previousCreatedAt={
                 sortedMessages[

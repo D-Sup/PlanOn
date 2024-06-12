@@ -1,52 +1,25 @@
-import { useState } from "react";
-
-import LeftAndRightSlider from "../mocules/LeftAndRightSlider";
 import ProfileCard from "../mocules/ProfileCard";
 import ToggleButton from "../atoms/ToggleButton";
-import ProfileAvatar from "../atoms/ProfileAvatar";
 
 import formatDate from "@/utils/formatDate";
-import getAccountId from "@/utils/getAccountId";
 
-import IconCirclePlus from "../../assets/images/icon-circle-plus.svg?react";
-import IconHeart from "../../assets/images/icon-heart.svg?react";
-import IconMoreVertical from "../../assets/images/icon-more-vertical.svg?react";
 import IconArrow from "../../assets/images/icon-arrow-right.svg?react";
 import IconMap from "../../assets/images/icon-map.svg?react";
-import IconExit from "../../assets/images/icon-exit.svg?react";
-import IconComment from "../../assets/images/icon-comment.svg?react";
 import IconHash from "../../assets/images/icon-hash.svg?react";
 import IconLocation from "../../assets/images/icon-location.svg?react";
 import IconUser from "../../assets/images/icon-user.svg?react";
 import IconCircleX from "../../assets/images/icon-circle-x.svg?react";
 
 import { ReadDocumentType } from "@/hooks/useFirestoreRead";
-import { ChatsType, SearchHistoryType, UsersType } from "@/types/users.type";
+import { SearchHistoryType, UsersType } from "@/types/users.type";
 import { HashtagsType } from "@/types/hashtags.type";
 
 import { PostsType } from "@/types/posts.type";
 import { SchedulesType } from "@/types/schedules.type";
 
-// interface ListUnitTypes {
-//   PostAuthorListUnit: ({ handleFunc }: { handleFunc: (() => void)[] }) => JSX.Element,
-//   PostScheduleListUnit: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element,
-//   PostContentListUnit: ({ data }: { data: any }) => JSX.Element,
-//   PostActionListUnit: ({ data, handleFunc }: { data: any, handleFunc: (() => void)[] }) => JSX.Element,
-//   CommentListUnit: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element,
-//   HashTagLinkListUnit: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element,
-//   HashTagPickerListUnit: ({ data, handleFunc }: { data: any, handleFunc: (boolean: boolean) => void }) => JSX.Element,
-//   LocationLinkListUnit: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element,
-//   LocationDetailLinkListUnit: ({ data, handleFunc }: { data: any, handleFunc: (() => void)[] }) => JSX.Element,
-//   UserTagPickerListUnit: ({ data, selected, handleFunc }: { data: any, selected: boolean, handleFunc: (id: string) => void }) => JSX.Element,
-//   UserLinkListUnit: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element,
-//   ChatMemberListUnit: ({ data, handleFunc }: { data: any, handleFunc: (() => void)[] }) => JSX.Element,
-//   ChatJoinableMemberItem: ({ data, handleFunc }: { data: any, handleFunc: () => void }) => JSX.Element,
-// }
-
 const ListUnit = () => {
 
   const PostScheduleListUnit = ({ data, handleFunc }: { data: PostsType & { scheduleInfo: SchedulesType }, handleFunc: () => void }): JSX.Element => {
-
     const { scheduleInfo } = data
 
     return (
@@ -200,29 +173,6 @@ const ListUnit = () => {
     )
   }
 
-  const ChatMemberListUnit = ({ data, handleFunc }: { data: ChatsType, handleFunc: (() => void)[] }): JSX.Element => {
-    const { id, userId, userInfo, lastReceive, lastMessageCreatedAt, unreadLength } = data
-
-    return (
-      <LeftAndRightSlider className="max-w-full h-[34px]" moreAreaWidth={60}>
-        <div className="flex items-center justify-between" onClick={handleFunc[0]}>
-          {userInfo && <ProfileCard title={userInfo.data.accountName} description={lastReceive} src={userInfo.data.accountImage} />}
-          <div className="h-[34px] flex items-end justify-start flex-col gap-[7px]">
-            <span className="text-xsm text-gray-heavy leading-none">{formatDate(lastMessageCreatedAt, 9) === "오늘" ? formatDate(lastMessageCreatedAt, 7) : formatDate(lastMessageCreatedAt, 9)}</span>
-            {unreadLength !== 0 &&
-              <div className="px-[5px] py-[2px] min-w-[13px] h-[13px] rounded-full bg-white">
-                <span className="block text-center text-[6px] font-bold text-black">{unreadLength > 100 ? "100+" : unreadLength}</span>
-              </div>
-            }
-          </div>
-        </div >
-        <button className="absolute top-1/2 right-[-50px] -translate-y-1/2" type="button" onClick={handleFunc[1]}>
-          <IconExit width={17} height={17} fill={"var(--red)"} />
-        </button>
-      </LeftAndRightSlider>
-    )
-  }
-
   const ChatJoinableMemberItem = ({ data, handleFunc }: { data: UsersType, handleFunc: () => void }): JSX.Element => {
     const { accountName, description, accountImage } = data
 
@@ -234,7 +184,7 @@ const ListUnit = () => {
   }
 
 
-  return { PostScheduleListUnit, PostHashtagListUnit, HashTagLinkListUnit, HashTagPickerListUnit, LocationLinkListUnit, LocationDetailLinkListUnit, UserFollowListUnit, UserTagPickerListUnit, HistoryUnit, ChatMemberListUnit, ChatJoinableMemberItem }
+  return { PostScheduleListUnit, PostHashtagListUnit, HashTagLinkListUnit, HashTagPickerListUnit, LocationLinkListUnit, LocationDetailLinkListUnit, UserFollowListUnit, UserTagPickerListUnit, HistoryUnit, ChatJoinableMemberItem }
 }
 
 export default ListUnit

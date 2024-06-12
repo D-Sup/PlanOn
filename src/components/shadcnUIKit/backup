@@ -1,530 +1,369 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useRef, useState, useEffect, useContext } from "react";
+import { UserContext } from "../organisms/UserInfoProvider";
+import { useLocation, useNavigate } from "react-router-dom";
+
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { modalStack, routeDirectionValue } from "@/store";
 import useModalStack from "@/hooks/useModalStack";
-import { useRecoilValue, useRecoilState, useResetRecoilState } from "recoil";
-import { newScheduleFormValue, updateScheduleFormValue, isScheduleFormModifiedSelector } from "@/store";
+import useFirestoreCreate from "@/hooks/useFirestoreCreate";
+import useFirestoreUpdate from "@/hooks/useFirestoreUpdate";
+import usePhotoUpload from "@/hooks/usePhotoUpload";
+import useScrollTop from "@/hooks/useScrollTop";
 
-import ScheduleService from "@/services/scheduleService";
-
+import ChatActionOverview from "../organisms/ChatActionOverview";
+import InteractiveInput from "../organisms/InteractiveInput"
+import ChatRoomHeader from "../organisms/ChatRoomHeader";
 import FixedTrigger from "../mocules/FixedTrigger";
-import Header from "../organisms/Header"
-import SlideTransition from "../organisms/SlideTransition";
-import ScheduleForm from "../organisms/ScheduleForm"
-import ScheduleCardField from "../mocules/ScheduleCardField";
-import ScheduleCard from "../atoms/ScheduleCard";
+import ChatMessageBox from "../atoms/ChatMessageBox"
 
 import { produce } from "immer"
-import formatDate from "@/utils/formatDate";
+import { db } from "@/firebase/config";
+import { DocumentData } from "firebase/firestore";
+import getAccountId from "@/utils/getAccountId";
+import { v4 as uuidv4 } from "uuid";
 
-import IconCirclePlus from "../../assets/images/icon-circle-plus.svg?react";
+import { MessagesType } from "@/types/messages.type";
+import { PostFormValueType } from "@/store";
+import { postFormValueDefault } from "@/store";
+import { LinkType } from "@/types/messages.type";
 
-import { ScheduleFormValueType } from "@/store";
+const ChatRoomPage = () => {
 
-const AddSchedulePage = () => {
+  const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue)
 
-  const location = useLocation();
-  const {
-    id: scheduleId,
-    data: scheduleData,
-    isAddSchedule,
-    isAddingScheduleDetail: isAddScheduleDetail,
-    inProgressFormNumber,
-    scheduleLocation,
-    isScheduleFormModified: isFormModified
-  } = location.state || {};
-  const isAddingLocation = inProgressFormNumber === 0 || inProgressFormNumber
-
-  // const isAddingScheduleDetail
-
-  const resetScheduleFormState = useResetRecoilState(newScheduleFormValue);
-  const isScheduleFormModified = useRecoilValue(isScheduleFormModifiedSelector);
-  const [newScheduleFormValueState, setNewScheduleFormValueState] = useRecoilState(newScheduleFormValue);
-  const [updateScheduleFormValueState, setUpdateScheduleFormValueState] = useRecoilState(updateScheduleFormValue);
-
-  const [scheduleFormValueSnapshot, setScheduleFormValueSnapshot] = useState(scheduleData ? scheduleData as ScheduleFormValueType : newScheduleFormValueState);
-  const [preUploadFormData, setPreUploadFormData] = useState(scheduleFormValueSnapshot)
-  const [isEditingScheduleDetail, setIsEditingScheduleDetail] = useState<boolean>(false);
-  const [isAddingScheduleDetail, setIsAddingScheduleDetail] = useState<boolean>(false);
-  const [addScheduleDate, setAddScheduleDate] = useState<string>("");
-  const [editScheduleIndex, setEditScheduleIndex] = useState<number>(inProgressFormNumber);
-  const [isFetching, setIsFetching] = useState<boolean>(true);
-  const [progress, setProgress] = useState<number>(isAddingLocation ? 1 : 0);
-  const [direction, setDirection] = useState<"next" | "prev">("next");
-
-  const { openModal, closeModal, closeModalDirect } = useModalStack()
-  const navigate = useNavigate();
-
-  const { ManageSchedulesHeader } = Header();
-
-  const scheduleState = isAddSchedule ? newScheduleFormValueState : scheduleFormValueSnapshot
-  const setScheduleState = isAddSchedule ? setNewScheduleFormValueState : setScheduleFormValueSnapshot
-
-  const { startTime, endTime, scheduleName, scheduleDetails } = scheduleState;
-
-  const { CreateSchedule, UpdateSchedule, DeleteSchedule } = ScheduleService()
-  const { mutate: createScheduleMutate, isPending: createScheduleIsPending } = CreateSchedule(
-    () => {
-      onFetchComplete("일정이 추가되었습니다.")
-      resetScheduleFormState()
-    }, () => {
-      onFetchComplete("일정 추가를 실패했습니다.")
-      resetScheduleFormState()
-    })
-
-  const { mutate: updateScheduleMutate, isPending: UpdateScheduleIsPending } = UpdateSchedule(
-    { id: scheduleId, data: scheduleState },
-    () => {
-      onFetchComplete("일정이 수정되었습니다.")
-    }, () => {
-      onFetchComplete("일정 수정을 실패했습니다.")
-    })
-
-  const { mutate: DeleteScheduleMutate, isPending: DeleteScheduleIsPending } = DeleteSchedule(scheduleId,
-    () => {
-      onFetchComplete("일정이 삭제되었습니다.")
-    },
-    () => {
-      onFetchComplete("일정 삭제를 실패했습니다.")
-    }
-  )
-
-  const onFetchComplete = (message: string) => {
-    setIsFetching(true)
-    closeModal();
-    setTimeout(() => {
-      openModal("Toast", { isFail: message.includes("실패"), message });
-    }, 500)
-    navigate("/schedule", {
-      state: { direction: "prev" },
-    })
-  }
-
-  if (createScheduleIsPending && isFetching) {
-    openModal("Loading", { isLoader: false, message: "일정 추가 중..." });
-    setIsFetching(false)
-  }
-
-  if (UpdateScheduleIsPending && isFetching) {
-    openModal("Loading", { isLoader: false, message: "일정 수정 중..." });
-    setIsFetching(false)
-  }
-
-  if (DeleteScheduleIsPending && isFetching) {
-    openModal("Loading", { isLoader: false, message: "일정 삭제 중..." });
-    setIsFetching(false)
-  }
-
-  const handlePreviousProgress = () => {
-    if (progress === 0 && isScheduleFormModified && isAddSchedule) {
-      openModal("Alert", "임시저장을 하시겠습니까?", ["삭제", "확인"],
-        [
-          () => {
-            closeModal()
-            navigate("/schedule", {
-              state: { direction: "prev" },
-            })
-            resetScheduleFormState()
-          },
-          () => {
-            closeModal()
-            navigate("/schedule", {
-              state: { direction: "prev" },
-            })
-          }
-        ])
-    } else if (progress === 1) {
-      setIsEditingScheduleDetail(false)
-      setIsAddingScheduleDetail(false)
-      setProgress(0)
-      setDirection("prev")
-      isAddingScheduleDetail ? deleteScheduleDetail() : cancelEditScheduleDetail()
-    } else {
-      navigate("/schedule/detail", {
-        state: {
-          direction: "prev",
-          id: scheduleId,
-          data: scheduleData,
-        },
-      })
-    }
-  }
-
-  const handleNextProgress = () => {
-    if (progress === 0 && isAddSchedule) {
-      openModal("Alert", "일정을 추가하시겠습니까?", ["취소", "확인"],
-        [null,
-          () => {
-            closeModalDirect()
-            createScheduleMutate()
-          }
-        ])
-    } else if (progress === 0 && !isAddSchedule) {
-      openModal("Alert", "일정을 수정하시겠습니까?", ["취소", "확인"],
-        [null,
-          () => {
-            closeModalDirect()
-            updateScheduleMutate()
-          }
-        ])
-    } else {
-      setIsEditingScheduleDetail(false)
-      setIsAddingScheduleDetail(false)
-      setProgress(0)
-      setDirection("prev")
-      addScheduleDetail()
-    }
-  }
-
-  const addScheduleDetailDefault = (time: string) => {
-    setIsAddingScheduleDetail(true)
-    setAddScheduleDate(time)
-    setProgress(1)
-    setDirection("next")
-    const newScheduleFormValueState = produce(preUploadFormData, (draft) => {
-      draft.scheduleDetails.push({
-        selectedDay: time,
-        startTime: "00:00",
-        endTime: "00:00",
-        scheduleName: "",
-        scheduleLocation: {
-          placeName: "",
-          placeAddress: "",
-          placeId: "",
-          lat: 0,
-          lng: 0,
-        },
-        memoContent: ""
-      })
-    })
-    setPreUploadFormData(newScheduleFormValueState)
-  }
-
-  const addScheduleDetail = () => {
-    if (isEditingScheduleDetail) {
-      const newScheduleFormValueState = produce(scheduleState, (draft) => {
-        draft.scheduleDetails[editScheduleIndex] = preUploadFormData.scheduleDetails[editScheduleIndex]
-        draft.scheduleDetails.sort((a, b) => new Date(`${a.selectedDay} ${a.startTime}`).getTime() - new Date(`${b.selectedDay} ${b.startTime}`).getTime());
-      })
-      setScheduleState(newScheduleFormValueState);
-    }
-    else {
-      const newScheduleFormValueState = produce(scheduleState, (draft) => {
-        draft.scheduleDetails.push(preUploadFormData.scheduleDetails[preUploadFormData.scheduleDetails.length - 1]);
-        draft.scheduleDetails.sort((a, b) => new Date(`${a.selectedDay} ${a.startTime}`).getTime() - new Date(`${b.selectedDay} ${b.startTime}`).getTime());
-      });
-      setScheduleState(newScheduleFormValueState);
-    }
-  }
-
-  const cancelEditScheduleDetail = () => {
-    if (isEditingScheduleDetail) {
-      const newScheduleFormValueState = produce(preUploadFormData, (draft) => {
-        draft.scheduleDetails[editScheduleIndex] = scheduleState.scheduleDetails[editScheduleIndex]
-      })
-      setPreUploadFormData(newScheduleFormValueState);
-    }
-  }
-
-  const deleteScheduleDetail = () => {
-    setIsEditingScheduleDetail(false)
-    setProgress(0)
-    setDirection("prev")
-    if (isEditingScheduleDetail) {
-      const newScheduleFormValueState = produce(scheduleState, (draft) => {
-        draft.scheduleDetails.splice(editScheduleIndex, 1);
-      })
-      setPreUploadFormData(newScheduleFormValueState);
-      setScheduleState(newScheduleFormValueState);
-    }
-  }
-
-  const getDatesBetween = (startDate: string, endDate: string) => {
-    const dates = [];
-    const startDateArray = startDate.split("-");
-    const currentDate = new Date(Date.UTC(+startDateArray[0], +startDateArray[1] - 1, +startDateArray[2]));
-    const endDateArray = endDate.split("-");
-    const end = new Date(Date.UTC(+endDateArray[0], +endDateArray[1] - 1, +endDateArray[2]));
-
-    while (currentDate <= end) {
-      dates.push(new Date(currentDate));
-      currentDate.setUTCDate(currentDate.getUTCDate() + 1);
-    }
-
-    return dates.map(date => date.toISOString().split("T")[0]);
-  };
-
-  useEffect(() => {
-    if (!isAddSchedule && JSON.stringify(scheduleData) !== JSON.stringify(scheduleState)) {
-      const { ...newState } = location.state;
-      navigate("/schedule/update", { state: { ...newState, isScheduleFormModified: true }, replace: true });
-    }
-  }, [scheduleState])
-
-  useEffect(() => {
-    if (isAddingLocation) {
-      const newScheduleFormValueState = produce(scheduleData as ScheduleFormValueType, (draft) => {
-        draft.scheduleDetails[inProgressFormNumber].scheduleLocation = scheduleLocation
-      })
-      setPreUploadFormData(newScheduleFormValueState)
-      setIsEditingScheduleDetail(true)
-      isAddScheduleDetail && setIsAddingScheduleDetail(true)
-      setEditScheduleIndex(inProgressFormNumber)
-    }
-
-    if (isFormModified) {
-      navigate("/schedule", {
-        state: { direction: "prev" },
-      })
-    }
-  }, [])
-
-  return (
-    <>
-      <FixedTrigger className="z-20 top-0" height={40} enableAnimation={false}>
-        <ManageSchedulesHeader
-          handleFunc={[handlePreviousProgress, handleNextProgress]}
-          isEdit={isAddSchedule ? (isAddingScheduleDetail ? "추가" : isEditingScheduleDetail ? "수정" : "추가") : (isAddingScheduleDetail ? "추가" : isEditingScheduleDetail ? "수정" : "수정")}
-          title={
-            progress === 0
-              ? isAddSchedule ? "일정 추가" : "일정 수정"
-              : `${formatDate(addScheduleDate ? addScheduleDate : preUploadFormData.scheduleDetails[editScheduleIndex].selectedDay, 5).slice(1)} 일정 ${isAddSchedule ? (isAddingScheduleDetail ? "추가" : isEditingScheduleDetail ? "수정" : "추가") : (isAddingScheduleDetail ? "추가" : isEditingScheduleDetail ? "수정" : "수정")}`
-          }
-          isRequired={
-            progress === 0 && (scheduleName !== "" && startTime !== "" && endTime !== "") ||
-            progress === 1 && preUploadFormData.scheduleDetails[preUploadFormData.scheduleDetails.length - 1].scheduleName !== ""
-          }
-        />
-      </FixedTrigger>
-
-      <SlideTransition className="mt-[30px] px-[30px]" progress={progress} direction={direction} >
-        {progress === 1 &&
-          <>
-            <ScheduleForm
-              isAddSchedule={isAddSchedule}
-              isAddingScheduleDetail={isAddingScheduleDetail}
-              scheduleId={scheduleId}
-              formData={preUploadFormData}
-              setFormData={setPreUploadFormData}
-              isPrimarySchedule={false}
-              detailedScheduleId={isEditingScheduleDetail ? editScheduleIndex : preUploadFormData.scheduleDetails.length - 1}
-            />
-
-            {isEditingScheduleDetail &&
-              <button className="mt-[30px] w-full h-[60px] rounded-[10px] flex-center gap-[10px] bg-input" type="button"
-                onClick={deleteScheduleDetail}>
-                <p className="text-md text-red">일정 삭제</p>
-              </button>
-            }
-          </>
-        }
-
-        {progress === 0 &&
-          <>
-            <ScheduleForm
-              formData={scheduleState}
-              setFormData={setScheduleState}
-            />
-
-            <div className={`mt-[30px] pb-[20px] flex flex-col gap-[15px] transition duration-300 ${startTime && endTime && new Date(startTime) <= new Date(endTime) ? "opacity-100" : "opacity-0"}`}>
-              <h2 className="text-lg text-white">세부 일정</h2>
-
-              {scheduleDetails.map((scheduleDetail, index) =>
-                <ScheduleCardField key={index} label={formatDate(new Date(scheduleDetail.selectedDay), 5)} >
-                  <ScheduleCard
-                    data={scheduleDetail}
-                    handleFunc={() => {
-                      setIsEditingScheduleDetail(true)
-                      setProgress(1)
-                      setDirection("next")
-                      setEditScheduleIndex(index)
-                      setAddScheduleDate(scheduleDetail.selectedDay)
-                    }}
-                    isSlideEnabled={false}
-                    onAddress={true} />
-                </ScheduleCardField>
-              )}
-
-              {getDatesBetween(startTime, endTime).map((time, index) => (
-                <ScheduleCardField key={index} label={formatDate(time, 5)} >
-                  <button className="w-full h-[70px] rounded-[10px] flex-center gap-[10px] bg-white" type="button"
-                    onClick={() => { addScheduleDetailDefault(time) }}>
-                    <IconCirclePlus width={20} height={20} fill={"var(--black)"} />
-                    <p className="text-md text-black">일정 추가</p>
-                  </button>
-                </ScheduleCardField>
-              ))}
-
-              {!isAddSchedule &&
-                <button className="mt-[30px] w-full h-[60px] rounded-[10px] flex-center gap-[10px] bg-input" type="button"
-                  onClick={() => {
-                    openModal("Alert", "일정을 삭제하시겠습니까?", ["취소", "확인"],
-                      [null,
-                        () => {
-                          closeModalDirect()
-                          DeleteScheduleMutate()
-                        }
-                      ])
-                  }}>
-                  <p className="text-md text-red">일정 삭제</p>
-                </button>
-              }
-            </div>
-          </>
-        }
-      </SlideTransition >
-    </>
-  )
-}
-
-export default AddSchedulePage
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-=======================
-
-
-
-
-
-
-import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import useModalStack from "@/hooks/useModalStack";
-
-import { useRecoilValue, useRecoilState, useResetRecoilState } from "recoil";
-import { postFormValue } from "@/store";
-import { isPostFormModifiedSelector } from "@/store";
-
-import FixedTrigger from "../mocules/FixedTrigger";
-import SlideTransition from "../organisms/SlideTransition";
-
-import Header from "../organisms/Header";
-import PostForm from "../organisms/PostForm";
-import PhotoSelector from "../organisms/PhotoSelector";
-import ScheduleOverview from "../organisms/ScheduleOverview";
-import PostProgressIndicator from "../organisms/PostProgressIndicator";
-
-import PostService from "@/services/postService";
-import { PostMachinedType } from "@/services/postService";
-
-const PostUpdatePage = () => {
-
+  const navigate = useNavigate()
   const location = useLocation()
-  const editData = location.state?.data as PostMachinedType;
-  const navigate = useNavigate();
+  const { id, userInfo, unreadLength, isFirstChat, docs: previousDocs, lastVisible: previousLastVisible, isDataEnd: previousIsDataEnd } = location.state || {}
 
-  const [postFormState, setPostFormState] = useRecoilState(postFormValue);
-  const resetPostFormState = useResetRecoilState(postFormValue);
-  const isPostFormModified = useRecoilValue(isPostFormModifiedSelector);
-  const [progress, setProgress] = useState<number>(0);
-  const [direction, setDirection] = useState<"next" | "prev">("next");
-  const [isFetching, setIsFetching] = useState<boolean>(true);
+  const { data: myInfo } = useContext(UserContext);
 
-  const { WritePostHeader } = Header();
+  const modalStackState = useRecoilValue(modalStack);
 
-  const { openModal, closeModal, closeModalDirect } = useModalStack()
-  const { CreatePost } = PostService();
-  const { mutate: photoUploadMutate, isPending } = CreatePost(
-    () => {
-      closeModal()
-      setTimeout(() => {
-        openModal("Toast", { message: "업로드를 완료했습니다." });
-      }, 800)
-      navigate("/post", {
-        state: { direction: "prev" },
-      })
-      resetPostFormState()
-    },
-    () => {
-      closeModal();
-      setTimeout(() => {
-        openModal("Alert", "이미지 업로드를 실패했습니다.", ["확인"], [null])
-      }, 800)
-      setDirection("prev")
-      setProgress(0)
-      setPostFormState(Prev => ({
-        ...Prev,
-        photos: { checked: [], file: [], preview: [] },
-      }));
-    }
-  )
+  const { isOpen } = modalStackState[modalStackState.length - 1];
 
-  const handlePreviousProgress = () => {
-    if (progress >= 1) {
-      setDirection("prev");
-      setProgress((progress - 1));
-    } else if (progress === 0 && isPostFormModified) {
-      openModal("Alert", "임시저장을 하시겠습니까?", ["삭제", "확인"],
-        [
-          () => {
-            closeModal()
-            navigate("/post", {
-              state: { direction: "prev" },
-            })
-            resetPostFormState()
-          },
-          () => {
-            closeModal()
-            navigate("/post", {
-              state: { direction: "prev" },
-            })
+  // const [firstMount, setFirstMount] = useState<boolean>(previousDocs ? false : true);
+  const [firstMount, setFirstMount] = useState<boolean>(true);
+  const [inputValue, setInputValue] = useState<string>("");
+  const [docs, setDocs] = useState<MessagesType[]>(previousDocs || [])
+  const [scrollPosition, setScrollPosition] = useState<number>(0)
+  const [photoState, setPhotoState] = useState<PostFormValueType>(postFormValueDefault)
+  const [lastVisible, setLastVisible] = useState<null | DocumentData>(previousLastVisible || null);
+  const [isDataEnd, setIsDataEnd] = useState<boolean>(previousIsDataEnd || false);
+
+  const { createFieldObject } = useFirestoreCreate("users")
+  const { updateFieldObject } = useFirestoreUpdate("users")
+  const queryRef = useRef(null);
+
+  const { photoUpload } = usePhotoUpload()
+
+  const { openModal, closeModal } = useModalStack()
+
+  const isTop = useScrollTop()
+
+  const accountId = getAccountId()
+
+  const messagesRef = db.collection(`chats/messages/message-${id}`)
+
+  const removeDuplicates = (docs: MessagesType[]) => {
+    return docs.reduce((acc, current) => {
+      const result = acc.find(item => item.id === current.id);
+      if (!result) {
+        return acc.concat([current]);
+      } else {
+        return acc;
+      }
+    }, []);
+  };
+
+  const updateIsRead = (data: MessagesType[], docs: MessagesType[]) => {
+    data.map(aItem => {
+      if (aItem.isRead) {
+        docs.map(bItem => {
+          if (aItem.id === bItem.id) {
+            bItem.isRead = true;
           }
-        ])
+        });
+      }
+    });
+    return docs;
+  };
+
+  const extractMetaTags = async (url: string): Promise<LinkType> => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_META_TAGS_API_KEY}?url=${url}`, {
+        method: "GET",
+      });
+
+      const data = await response.json();
+      return data
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    if (!queryRef.current?.isEqual(messagesRef)) {
+      queryRef.current = messagesRef.orderBy("createdAt", "desc").limit(!firstMount ? 1 : unreadLength === 0 ? 1 : unreadLength);
+    }
+  }, [messagesRef]);
+
+  useEffect(() => {
+    if (!queryRef.current) {
+      return;
+    }
+
+    const unsubscribe = queryRef.current.onSnapshot(querySnapshot => {
+      const data = querySnapshot.docs.map(doc => ({
+        ...doc.data(),
+        id: doc.id,
+      })) as MessagesType[];
+      const updatedData = data.filter(
+        singleData => !docs.some(doc => doc.id === singleData.id)
+      );
+      setDocs(prevDocs => {
+        const newDocs = [...updateIsRead(data, prevDocs), ...updatedData];
+        return removeDuplicates(newDocs);
+      });
+      firstMount && setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1])
+      // setFirstMount(false)
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth",
+      });
+    });
+
+    return () => unsubscribe();
+  }, [queryRef]);
+
+
+  const loadMoreMessages = async () => {
+    // let query
+    // if (lastVisible) {
+    //   query = messagesRef.orderBy("createdAt", "desc").startAfter(lastVisible).limit(20);
+    // } else {
+    //   query = messagesRef.orderBy("createdAt", "desc").limit(20);
+    // }
+    const query = messagesRef.orderBy("createdAt", "desc").startAfter(lastVisible).limit(15);
+
+
+    const documentSnapshots = await query.get();
+    const newMessages = documentSnapshots.docs.map(doc => ({
+      ...doc.data(),
+      id: doc.id,
+    })) as MessagesType[];
+
+    if (newMessages.length > 0) {
+      setDocs(prevDocs => [...newMessages, ...prevDocs])
+      // setDocs(prevDocs => {
+      //   const newDocs = [...newMessages, ...prevDocs];
+      //   return removeDuplicates(newDocs);
+      // })
+      const lastDocs = documentSnapshots.docs[documentSnapshots.docs.length - 1]
+      setLastVisible(lastDocs);
+      setScrollPosition(document.body.scrollHeight)
+      setTimeout(() => setFirstMount(false), 500)
+      // setFirstMount(false)
     } else {
-      navigate("/post", {
-        state: { direction: "prev" },
+      setIsDataEnd(true)
+    }
+  };
+
+  useEffect(() => {
+    if (scrollPosition !== 0) {
+      const newScrollHeight = document.body.scrollHeight;
+
+      window.scrollTo({
+        top: newScrollHeight - scrollPosition,
+        behavior: "auto"
+      });
+
+      setScrollPosition(0);
+    }
+  }, [scrollPosition]);
+
+  useEffect(() => {
+    if ((!firstMount && isTop && !isOpen && !isDataEnd)) {
+      loadMoreMessages();
+    }
+  }, [isTop]);
+
+  useEffect(() => {
+    if (firstMount && lastVisible !== null) {
+      loadMoreMessages();
+    }
+  }, [lastVisible])
+
+  useEffect(() => {
+    setTimeout(() => {
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth"
       })
-    }
-  };
+    }, 500)
+  }, []);
 
-  const handleNextProgress = () => {
-    if (progress < 2) {
-      setDirection("next");
-      setProgress((progress + 1));
+  const handleSubmit = async () => {
+    let uploadedPhotos
+    if (inputValue || photoState.photos.checked.length !== 0) {
+      if (photoState.photos.checked.length !== 0) {
+        openModal("Loading", { isLoader: true, message: "전송 중 ..." });
+        uploadedPhotos = await photoUpload("chats", photoState.photos.checked.map(index => photoState.photos.file[index]))
+        setPhotoState(postFormValueDefault)
+      }
+    }
+    const now = new Date()
+    if (uploadedPhotos) {
+      messagesRef.add({
+        id: uuidv4(),
+        userId: accountId,
+        photoURL: uploadedPhotos,
+        isRead: false,
+        createdAt: now,
+      });
+      setInputValue("");
     } else {
-      openModal("Alert", "작성을 완료하시겠습니까?", ["취소", "확인"], [null, () => {
-        photoUploadMutate()
-      }]);
+      messagesRef.add({
+        id: uuidv4(),
+        userId: accountId,
+        text: inputValue,
+        isRead: false,
+        createdAt: now,
+      });
+      setInputValue("");
     }
-  };
 
-  if (isPending && isFetching) {
-    closeModalDirect()
-    openModal("Loading", { isLoader: true, message: "전 중 ..." });
-    setIsFetching(false)
+    if (inputValue.includes("http")) {
+      const result = await extractMetaTags(inputValue)
+      if (result) {
+        const { title, image, description } = result
+        messagesRef.add({
+          id: uuidv4(),
+          userId: accountId,
+          link: {
+            url: inputValue,
+            title,
+            image,
+            description
+          },
+          isRead: true,
+          createdAt: new Date(now.getTime() + 1000),
+        });
+      }
+    }
+
+    if (isFirstChat) {
+      await Promise.all([
+        createFieldObject(
+          accountId,
+          "chats",
+          {
+            id,
+            userId: userInfo.authorizationId,
+            lastReceive: uploadedPhotos ? "사진" : inputValue,
+            lastMessageCreatedAt: now,
+            unreadLength: 0,
+            isLocal: false,
+          }
+        ),
+        createFieldObject(
+          userInfo.authorizationId,
+          "chats",
+          {
+            id,
+            userId: accountId,
+            userName: myInfo?.data.accountName,
+            lastReceive: uploadedPhotos ? "사진" : inputValue,
+            lastMessageCreatedAt: now,
+            unreadLength: docs.filter(message => !message.isRead).length + 1,
+            isLocal: false,
+          }
+        )
+      ])
+      if (uploadedPhotos) {
+        closeModal()
+      }
+      const { ...newState } = location.state;
+      navigate("/chatroom", { state: { ...newState, isFirstChat: false }, replace: true });
+    } else {
+      await Promise.all([
+        updateFieldObject(
+          accountId,
+          "chats",
+          { id },
+          {
+            lastReceive: uploadedPhotos ? "사진" : inputValue,
+            lastMessageCreatedAt: now,
+          }
+        ),
+        updateFieldObject(
+          userInfo.authorizationId,
+          "chats",
+          { id },
+          {
+            userName: myInfo?.data.accountName,
+            lastReceive: uploadedPhotos ? "사진" : inputValue,
+            lastMessageCreatedAt: now,
+            unreadLength: docs.filter(message => !message.isRead).length + 1,
+          }
+        )
+      ])
+      if (uploadedPhotos) {
+        closeModal()
+      }
+    }
+  }
+
+  const handleNavigate = (type: "gallery" | "link") => {
+    setRouteDirectionValueState(prev =>
+      produce(prev, draft => {
+        draft.previousPageUrl.push(location.pathname);
+        draft.data.push({ id, userInfo, unreadLength, isFirstChat, docs, lastVisible, isDataEnd });
+      })
+    );
+    navigate(`/chatroom/${type}`, { state: { direction: "next", id } })
   }
 
   return (
     <>
-      <FixedTrigger className="z-20 top-0" height={155} enableAnimation={false}>
-        <WritePostHeader isRequired={progress === 0 ? postFormState.photos.checked.length !== 0 ? true : false : true} handleFunc={[handlePreviousProgress, handleNextProgress]} />
-        <div className="mx-[30px] my-[30px]">
-          <PostProgressIndicator progress={progress} />
+      <FixedTrigger className="top-0" height={50} enableAnimation={false}>
+        <div style={{ boxShadow: "0 1px var(--gray-heavy)" }}>
+          <ChatRoomHeader
+            data={userInfo}
+            handleFunc={() => {
+              openModal(ChatActionOverview, { isHeightAuto: true, handleFunc: handleNavigate, id })
+            }} />
         </div>
       </FixedTrigger>
+      <div className="mt-[20px]">
+        {(() => {
 
-      <SlideTransition className="px-[30px] pb-[20px]" progress={progress} direction={direction} >
-        {progress === 0 && <PhotoSelector />}
-        {progress === 1 && <ScheduleOverview isSlideEnabled={false} onAddress={false} />}
-        {progress === 2 && <PostForm />}
-      </SlideTransition>
+          const sortedMessages = docs?.slice().sort((first, second) =>
+            first?.createdAt?.seconds <= second?.createdAt?.seconds ? -1 : 1
+          );
+          return sortedMessages?.map((message, index) => (
+            <ChatMessageBox
+              chatRoomId={id}
+              key={index}
+              data={message}
+              previousCreatedAt={
+                sortedMessages[
+                  index === 0
+                    ? index
+                    : index - 1
+                ].createdAt}
+              nextCreatedAt={
+                index === sortedMessages.length - 1
+                  ? new Date(0)
+                  : sortedMessages[index + 1].createdAt
+              }
+            />
+          ));
+        })()}
+      </div>
+      <InteractiveInput inputValue={inputValue} setInputValue={setInputValue} photoState={photoState} setPhotoState={setPhotoState} handleFunc={handleSubmit} isCommentOnly={false} />
     </>
-  )
+  );
 }
 
-export default PostUpdatePage
-
+export default ChatRoomPage

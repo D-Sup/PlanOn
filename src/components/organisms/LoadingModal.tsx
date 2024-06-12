@@ -20,7 +20,7 @@ const LoadingModal = ({ isOpen, props }: AlertProps) => {
             </div>
           </div>
         }
-        <p className="px-10 py-5 text-center text-white text-lg">{props.message}</p>
+        <p className="px-10 py-5 text-center text-[#FFF] text-lg">{props.message}</p>
       </div >
       <div className={`z-40 fixed top-0 left-0 h-dvh w-screen bg-black ${isOpen ? "ease-out" : "ease-in"}`} style={{ transition: ".4s", opacity: `${isOpen ? .4 : 0}` }} ></div>
     </>

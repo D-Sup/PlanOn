@@ -24,6 +24,8 @@ const RouteTransition = ({ location, children }: RouteTransitionProps) => {
 
   // const pastDirection = useRef<RouteState["state"]["direction"] | null>(null);
 
+  // console.log(routeDirectionValueState);
+
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -31,7 +33,7 @@ const RouteTransition = ({ location, children }: RouteTransitionProps) => {
       const previousPageUrl = routeDirectionValueState.previousPageUrl
       const data = routeDirectionValueState.data
       if (previousPageUrl.length !== 0) {
-        navigate(previousPageUrl[previousPageUrl.length - 1], { state: data[data.length - 1] })
+        navigate(previousPageUrl[previousPageUrl.length - 1], { state: data[data.length - 1] ? JSON.parse(JSON.stringify(data[data.length - 1])) : {} })
       } else {
         navigate(-1)
       }
