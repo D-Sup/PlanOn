@@ -30,6 +30,12 @@ const InteractiveInput = ({ isCommentOnly = true, inputValue, setInputValue, pho
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const virtualRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    if (inputValue === "") {
+      setPrevInpt("")
+    }
+  }, [inputValue])
+
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.target.value);
     setPrevInpt(inputValue)

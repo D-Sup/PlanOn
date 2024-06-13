@@ -117,7 +117,7 @@ const ProfileUpdatePage = () => {
               />
               {accountImage.length === 0 &&
                 <div className="absolute top-0 w-[150px] h-[150px] rounded-full" style={{ backgroundColor: "rgba(0,0,0,0.3)" }}>
-                  <span className="absolute-center text-white">{accountImagePreview[0] === "" ? "프로필 추가" : "프로필 수정"}</span>
+                  <span className="absolute-center text-[#FFF]">{accountImagePreview[0] === "" ? "프로필 추가" : "프로필 수정"}</span>
                 </div>
               }
               {accountImagePreview[0] !== "" &&

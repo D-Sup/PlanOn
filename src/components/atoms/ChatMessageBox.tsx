@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import useModalStack from "@/hooks/useModalStack";
 import useFirestoreUpdate from "@/hooks/useFirestoreUpdate";
 import ImageFrame from "./ImageFrame";
@@ -14,6 +14,8 @@ import { Timestamp } from "firebase/firestore";
 const ChatMessageBox = ({ chatRoomId, data, previousCreatedAt, nextCreatedAt }: { chatRoomId: string, data: MessagesType, previousCreatedAt: Timestamp, nextCreatedAt: Timestamp | Date }) => {
   const messageRef = useRef<HTMLLIElement | null>(null);
   const { id, userId, text, photoURL, link, isRead, createdAt, isLocal } = data
+
+  // const [isRead, setIsRead] = useState<boolean>()
 
   const { openModal } = useModalStack()
 
@@ -31,6 +33,7 @@ const ChatMessageBox = ({ chatRoomId, data, previousCreatedAt, nextCreatedAt }: 
             db.collection(`chats/messages/message-${chatRoomId}`).doc(id).update({
               isRead: true,
             });
+
           }
         });
         if (isRead === false && userId !== accountId) {

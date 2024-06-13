@@ -43,7 +43,7 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       <UserInfoProvider>
         <div id="wrapper" className="flex flex-col bg-background w-screen h-dvh transition duration-300">
           <RouteTransition location={location}>

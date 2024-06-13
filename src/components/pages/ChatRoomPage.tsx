@@ -9,6 +9,7 @@ import useFirestoreCreate from "@/hooks/useFirestoreCreate";
 import useFirestoreUpdate from "@/hooks/useFirestoreUpdate";
 import usePhotoUpload from "@/hooks/usePhotoUpload";
 import useScrollTop from "@/hooks/useScrollTop";
+import useScrollBottom from "@/hooks/useScrollBottom";
 
 import ChatActionOverview from "../organisms/ChatActionOverview";
 import InteractiveInput from "../organisms/InteractiveInput"
@@ -58,6 +59,7 @@ const ChatRoomPage = () => {
   const { openModal, closeModal } = useModalStack()
 
   const isTop = useScrollTop()
+  const isBottom = useScrollBottom()
 
   const accountId = getAccountId()
 
@@ -74,29 +76,12 @@ const ChatRoomPage = () => {
     }, []);
   };
 
-  const updateIsRead = (data: MessagesType[], docs: MessagesType[]) => {
-    if (data[data.length - 1]?.isRead) {
-      docs.forEach(doc => {
-        doc.isRead = true;
-      });
-    }
-    if (docs[docs.length - 1]?.isRead !== data[data.length - 1]?.isRead) {
-      docs.forEach(doc => {
-        if (data[data.length - 1].createdAt.seconds >= doc.createdAt.seconds) {
-          doc.isRead = true;
-        }
-      });
-      return docs;
-    }
-
-    return docs;
-  };
-
   const extractMetaTags = async (url: string): Promise<LinkType> => {
     try {
       const response = await fetch(`${process.env.REACT_APP_META_TAGS_API_KEY}?url=${url}`, {
         method: "GET",
       });
+
       const data = await response.json();
       return data
     } catch (error) {
@@ -107,7 +92,8 @@ const ChatRoomPage = () => {
 
   useEffect(() => {
     if (!queryRef.current?.isEqual(messagesRef)) {
-      queryRef.current = messagesRef.orderBy("createdAt", "desc").limit(!firstMount ? 1 : unreadLength === 0 ? 1 : unreadLength);
+      queryRef.current = messagesRef.orderBy("createdAt", "desc").limit(firstMount ? unreadLength <= 20 ? 20 : unreadLength : 1);
+      // queryRef.current = messagesRef.orderBy("createdAt", "desc").limit(firstMount ? 20 : unreadLength === 0 ? 1 : unreadLength);
     }
   }, [messagesRef]);
 
@@ -121,29 +107,32 @@ const ChatRoomPage = () => {
         ...doc.data(),
         id: doc.id,
       })) as MessagesType[];
-      const updatedData = data.filter(
-        singleData => !docs.some(doc => doc.id === singleData.id)
-      );
+
+      const isRead = data[0].isRead
+      if (isRead === true) {
+        setDocs(prevDocs => (
+          prevDocs.map(doc => ({
+            ...doc,
+            isRead: true
+          }))
+        ));
+      }
+
       setDocs(prevDocs => {
-        const newDocs = [...updateIsRead(data, prevDocs), ...updatedData];
+        const newDocs = [...prevDocs, ...data];
         return removeDuplicates(newDocs);
       });
       firstMount && setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1])
-      setTimeout(() => {
-        window.scrollTo({
-          top: document.body.scrollHeight,
-          behavior: "smooth",
-        });
-      }, 0)
+      setTimeout(() => setFirstMount(false), 500)
     });
 
     return () => unsubscribe();
-  }, [queryRef]);
+  }, [queryRef.current]);
 
 
   const loadMoreMessages = async () => {
 
-    const query = messagesRef.orderBy("createdAt", "desc").startAfter(lastVisible).limit(20);
+    const query = messagesRef.orderBy("createdAt", "desc").startAfter(lastVisible).limit(15);
 
     const documentSnapshots = await query.get();
     const newMessages = documentSnapshots.docs.map(doc => ({
@@ -179,10 +168,18 @@ const ChatRoomPage = () => {
   }, [scrollPosition]);
 
   useEffect(() => {
-    if ((isTop && !isOpen && !isDataEnd)) {
+    if (!firstMount && isTop && !isOpen && !isDataEnd) {
       loadMoreMessages();
     }
   }, [isTop]);
+
+  useEffect(() => {
+    if (isBottom)
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth"
+      })
+  }, [docs]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -204,7 +201,7 @@ const ChatRoomPage = () => {
     }
     const now = new Date()
     if (uploadedPhotos) {
-      messagesRef.add({
+      await messagesRef.add({
         id: uuidv4(),
         userId: accountId,
         photoURL: uploadedPhotos,
@@ -212,8 +209,12 @@ const ChatRoomPage = () => {
         createdAt: now,
       });
       setInputValue("");
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth"
+      })
     } else {
-      messagesRef.add({
+      await messagesRef.add({
         id: uuidv4(),
         userId: accountId,
         text: inputValue,
@@ -221,13 +222,17 @@ const ChatRoomPage = () => {
         createdAt: now,
       });
       setInputValue("");
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth"
+      })
     }
 
     if (inputValue.includes("http")) {
       const result = await extractMetaTags(inputValue)
       if (result) {
         const { title, image, description } = result
-        messagesRef.add({
+        await messagesRef.add({
           id: uuidv4(),
           userId: accountId,
           link: {
@@ -236,9 +241,13 @@ const ChatRoomPage = () => {
             image,
             description
           },
-          isRead: true,
+          isRead: false,
           createdAt: new Date(now.getTime() + 1000),
         });
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "smooth"
+        })
       }
     }
 
@@ -327,6 +336,7 @@ const ChatRoomPage = () => {
       </FixedTrigger>
       <div className="mt-[20px]">
         {(() => {
+
           const sortedMessages = docs?.slice().sort((first, second) =>
             first?.createdAt?.seconds <= second?.createdAt?.seconds ? -1 : 1
           );
