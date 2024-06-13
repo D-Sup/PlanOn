@@ -54,25 +54,23 @@ const LinkHistoryCollectionPage = () => {
                 <div className="w-full h-[1px] bg-gray-old"></div>
               </div>
             }
-
-            <ul className="mb-[10px] grid grid-cols-2 gap-[10px]" key={singleData.id}>
-              <a
-                href={singleData.link.url}
-                className="relative aspect-square bg-background w-full"
-                target="_blank"
-              >
-                {singleData.link.image &&
-                  <div className="h-1/2 rounded-t-md overflow-hidden">
-                    <ImageFrame src={singleData.link.image} alt={`photo-${index}`} />
-                  </div>
-                }
-                <div className={`min-h-[50%] p-[10px] bg-input flex flex-col justify-center text-white ${singleData.link.image ? "rounded-b-md" : "rounded-md"}`}>
-                  <strong className="text-md break-all">{singleData.link.title}</strong>
-                  <span className="text-xsm text-blue-500 break-all reduce-words">{singleData.link.url}</span>
-                  <span className="text-xsm text-gray-old break-all">{singleData.link.description}</span>
+            <a
+              key={singleData.id}
+              href={singleData.link.url}
+              className="aspect-square bg-background inline-block w-1/2 p-[8px]"
+              target="_blank"
+            >
+              {singleData.link.image &&
+                <div className="h-1/2 rounded-t-md overflow-hidden">
+                  <ImageFrame src={singleData.link.image} alt={`photo-${index}`} />
                 </div>
-              </a>
-            </ul>
+              }
+              <div className={`min-h-[50%] p-[10px] bg-input flex flex-col justify-center text-white ${singleData.link.image ? "rounded-b-md" : "rounded-md"}`}>
+                <strong className="text-md break-all">{singleData.link.title}</strong>
+                <span className="text-xsm text-blue-500 break-all reduce-words">{singleData.link.url}</span>
+                <span className="text-xsm text-gray-old break-all">{singleData.link.description}</span>
+              </div>
+            </a>
           </>
         ))}
         {filteredData.length === 0 &&

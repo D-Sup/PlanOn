@@ -57,19 +57,17 @@ const PhotoHistoryCollectionPage = () => {
               <div className="w-full h-[1px] bg-gray-old"></div>
             </div>
           }
-
-          <ul className="m-auto grid grid-cols-3 gap-1" key={singleData.id}>
-            {singleData.data.photoURL.map((photo) => (
-              <li
-                className="relative aspect-square bg-background"
-                onClick={() => {
-                  openModal("PhotoView", { photo })
-                }}
-              >
-                <ImageFrame src={photo} alt={`photo-${index}`} />
-              </li>
-            ))}
-          </ul>
+          {singleData.data.photoURL.map((photo) => (
+            <li
+              key={singleData.id}
+              className="aspect-square inline-block bg-background w-1/3 align-top p-[4px]"
+              onClick={() => {
+                openModal("PhotoView", { photo })
+              }}
+            >
+              <ImageFrame src={photo} alt={`photo-${index}`} />
+            </li>
+          ))}
         </>
       ))}
       {filteredData.length === 0 &&
