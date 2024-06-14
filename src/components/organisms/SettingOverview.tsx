@@ -60,7 +60,7 @@ const SettingOverview = () => {
               }
             }} />
 
-          <SettingCard icon={IconAlert} name={"알림"} handleFunc={() => { updateField(userData.id, { isDarkMode: !userData.data.isAlert }) }} hasSwitch={true} isChecked={userData.data.isAlert} />
+          <SettingCard icon={IconAlert} name={"알림"} handleFunc={() => { updateField(userData.id, { isAlert: !userData.data.isAlert }) }} hasSwitch={true} isChecked={userData.data.isAlert} />
 
           <SettingCard icon={IconLock} name={"잠금설정"}
             handleFunc={() => {

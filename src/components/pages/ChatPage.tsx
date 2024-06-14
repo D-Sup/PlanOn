@@ -36,7 +36,7 @@ const ChatPage = () => {
   const { deleteFieldObject } = useFirestoreDelete("users");
   const { deleteSubcollection } = useFirestoreDelete("chats");
 
-  const { isInputDone, isFetching } = useDebounce(inputValueState, 1000, isUserFetching);
+  const { isInputDone, isFetching } = useDebounce(inputValueState, 500, isUserFetching);
 
   const { openModal, closeModal } = useModalStack();
 

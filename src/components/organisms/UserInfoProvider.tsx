@@ -48,7 +48,7 @@ const UserInfoProvider = ({ children }: { children: React.ReactNode }) => {
     if (!queryRef?.current?.isEqual(messagesRef)) {
       queryRef.current = messagesRef
     }
-  })
+  }, [messagesRef])
 
   useEffect(() => {
     if (!queryRef.current) {
@@ -67,7 +67,7 @@ const UserInfoProvider = ({ children }: { children: React.ReactNode }) => {
     })
 
     return unsubscribe
-  }, [queryRef])
+  }, [queryRef.current])
 
 
   useEffect(() => {

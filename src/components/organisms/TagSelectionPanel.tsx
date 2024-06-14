@@ -39,7 +39,7 @@ const TagSelectionPanel = ({ selectedTagData, handleSelectTag, handleSubmit }: T
             </li>
           ))}
         </ul>
-        <button className="w-full min-h-[50px] rounded-[5px] bg-white text-lg font-bold" type="button" onClick={handleSubmit}>선택완료</button>
+        <button className="w-full min-h-[50px] rounded-[5px] bg-white text-lg font-bold text-black" type="button" onClick={handleSubmit}>선택완료</button>
       </div>
       <div className={`w-screen bg-background ${selectedTagData !== undefined && selectedTagData.length > 0 ? "min-h-[150px]" : "min-h-[94px]"}`}></div>
     </>

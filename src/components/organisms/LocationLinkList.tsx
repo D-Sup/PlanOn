@@ -28,7 +28,7 @@ const LocationLinkList = ({ handleFunc, handleScroll, isSearchable = true }: Loc
   const { SearchLocation } = LocationService()
   const { data, isFetching: isFetchingSearchLocation, refetch } = SearchLocation()
 
-  const { isInputDone, isFetching } = useDebounce(inputValueState, 1000, isFetchingSearchLocation);
+  const { isInputDone, isFetching } = useDebounce(inputValueState, 500, isFetchingSearchLocation);
 
   const { LocationDetailLinkListUnit } = ListUnit()
 

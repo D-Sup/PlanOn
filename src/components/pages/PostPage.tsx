@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { UserContext } from "../organisms/UserInfoProvider"
 import { useNavigate, useLocation } from "react-router-dom";
 import useModalStack from "@/hooks/useModalStack";
 import useScrollBottom from "@/hooks/useScrollBottom";
@@ -8,18 +9,22 @@ import { postFormValue, isPostFormModifiedSelector, paginationValue, routeDirect
 import { modalStack } from "@/store";
 
 import PostService from "@/services/postService";
+import useFirestoreUpdate from "@/hooks/useFirestoreUpdate";
 
-import FixedTrigger from "../mocules/FixedTrigger";
 import Header from "../organisms/Header";
 import PostCard from "../organisms/PostCard";
 import PostCategory from "../organisms/PostCategory";
+import Loader from "../organisms/Loader";
+import FixedTrigger from "../mocules/FixedTrigger";
 import PostCardSkeleton from "../skeleton/PostCardSkeleton";
 
 import getAccountId from "@/utils/getAccountId";
 
-import Loader from "../organisms/Loader";
+import { PostFormValueType } from "@/store";
 
 const PostPage = () => {
+
+  const { data: userData } = useContext(UserContext);
 
   const accountId = getAccountId()
 
@@ -29,7 +34,7 @@ const PostPage = () => {
   const paginationValueState = useRecoilValue(paginationValue);
   const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue)
 
-  const currentCategory = paginationValueState.currentCategory
+  const currentCategory = userData?.data.selectedFilter || paginationValueState.currentCategory
 
   const { isOpen } = modalStackState[modalStackState.length - 1];
 
@@ -37,25 +42,33 @@ const PostPage = () => {
 
   const location = useLocation()
 
-  const { ReadPostAllPaged, ReadPostFollowPaged, ReadPostLikePaged } = PostService()
-  const { data: postAllData, isFetching: isPostAllFetching, isLoading: isPostAllLoading, refetch: refectchPostAll } = ReadPostAllPaged()
-  const { data: postFollowData, isFetching: isPostFollowFetching, isLoading: isPostFollowLoading, refetch: refectchPostFollow } = ReadPostFollowPaged()
-  const { data: postLikeData, isFetching: isPostLikeFetching, isLoading: isPostLikeLoading, refetch: refectchPostLike } = ReadPostLikePaged()
+  const [postFormState, setPostFormState] = useState<Pick<PostFormValueType, "hashtags">>({ hashtags: [{ id: "", data: {} }] });
+
+  const { ReadPostAllPaged, ReadPostFollowPaged, ReadPostLikePaged, ReadPostTagPaged } = PostService()
+  const { data: postAllData, isFetching: isPostAllFetching, isLoading: isPostAllLoading, refetch: refetchPostAll, reset: resetPostAll } = ReadPostAllPaged()
+  const { data: postFollowData, isFetching: isPostFollowFetching, isLoading: isPostFollowLoading, refetch: refetchPostFollow, reset: resetPostFollow } = ReadPostFollowPaged()
+  const { data: postLikeData, isFetching: isPostLikeFetching, isLoading: isPostLikeLoading, refetch: refetchPostLike, reset: resetPostLike } = ReadPostLikePaged()
+  const { data: postTagData, isFetching: isPostTagFetching, isLoading: isPostTagLoading, refetch: refetchPostTag, reset: resetPostTag } = ReadPostTagPaged(postFormState.hashtags.map(tag => tag.id))
+  const { updateField } = useFirestoreUpdate("users")
 
   const posts =
     currentCategory === "all-posts" && postAllData ||
     currentCategory === "following-posts" && postFollowData ||
-    currentCategory === "like-posts" && postLikeData || []
+    currentCategory === "like-posts" && postLikeData ||
+    currentCategory === "tag-posts" && postTagData || []
 
   const isFetching =
     currentCategory === "all-posts" && isPostAllFetching ||
     currentCategory === "following-posts" && isPostFollowFetching ||
-    currentCategory === "like-posts" && isPostLikeFetching || false
+    currentCategory === "like-posts" && isPostLikeFetching ||
+    currentCategory === "tag-posts" && isPostTagFetching || false
+
 
   const isLoading =
     currentCategory === "all-posts" && isPostAllLoading ||
     currentCategory === "following-posts" && isPostFollowLoading ||
-    currentCategory === "like-posts" && isPostLikeLoading || false
+    currentCategory === "like-posts" && isPostLikeLoading ||
+    currentCategory === "tag-posts" && isPostTagLoading || false
 
   const filteredData = posts?.filter(singleData => singleData.data.authorizationId === accountId || singleData.data.private === false)
 
@@ -66,48 +79,49 @@ const PostPage = () => {
   const isBottom = useScrollBottom();
 
   useEffect(() => {
+    if (userData) {
+      setPostFormState({ hashtags: userData.data.filterTags.map(tag => ({ id: tag, data: {} })) })
+    }
+  }, [userData])
+
+  useEffect(() => {
+    if (currentCategory === "all-posts" && posts.length === 0) {
+      refetchPostAll()
+    } else if (currentCategory === "following-posts" && posts.length === 0) {
+      refetchPostFollow()
+    } else if (currentCategory === "like-posts" && posts.length === 0) {
+      refetchPostLike()
+    } else if (currentCategory === "tag-posts" && posts.length === 0 && postFormState.hashtags[0].id !== "") {
+      refetchPostTag()
+    }
+  }, [posts])
+
+  useEffect(() => {
     if (isBottom && !isOpen) {
       if (currentCategory === "all-posts") {
-        refectchPostAll()
+        refetchPostAll()
       } else if (currentCategory === "following-posts") {
-        refectchPostFollow()
+        refetchPostFollow()
       } else if (currentCategory === "like-posts") {
-        refectchPostLike()
+        refetchPostLike()
+      } else if (currentCategory === "tag-posts") {
+        refetchPostTag()
       }
     }
   }, [isBottom]);
 
+
   useEffect(() => {
     if (currentCategory === "all-posts" && paginationValueState.allPosts.lastVisible === null) {
-      refectchPostAll()
+      resetPostAll()
     } else if (currentCategory === "following-posts" && paginationValueState.followingPosts.lastVisible === null) {
-      refectchPostFollow()
+      resetPostFollow()
     } else if (currentCategory === "like-posts" && paginationValueState.likePosts.lastVisible === null) {
-      refectchPostLike()
+      resetPostLike()
+    } else if (currentCategory === "tag-posts" && paginationValueState.likePosts.lastVisible === null) {
+      resetPostTag()
     }
   }, [paginationValueState])
-
-  // useEffect(() => {
-  //   if (currentCategory === "all-posts") {
-  //     refectchPostAll()
-  //   } else if (currentCategory === "following-posts") {
-  //     refectchPostFollow()
-  //   } else if (currentCategory === "like-posts") {
-  //     refectchPostLike()
-  //   }
-  // }, [currentCategory])
-
-  // useEffect(() => {
-  //   if (!filteredData) {
-  //     if (currentCategory === "all-posts") {
-  //       refectchPostAll()
-  //     } else if (currentCategory === "following-posts") {
-  //       refectchPostFollow()
-  //     } else if (currentCategory === "like-posts") {
-  //       refectchPostLike()
-  //     }
-  //   }
-  // }, [filteredData])
 
 
   return (
@@ -115,7 +129,7 @@ const PostPage = () => {
       <FixedTrigger className="top-0" height={60} hasReachedTop={false}>
         <FeedHeader handleFunc={[
           () => {
-            openModal(PostCategory, { isHeightAuto: true })
+            openModal(PostCategory, { isHeightAuto: true, postFormState, setPostFormState, handleFunc: () => { updateField(userData.id, { filterTags: postFormState.hashtags.map(tag => tag.id) }) } })
           },
           () => {
             setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
@@ -147,15 +161,15 @@ const PostPage = () => {
             }
           }]} />
       </FixedTrigger>
-      {isPostAllLoading || isPostFollowLoading || isPostLikeLoading &&
+      {isLoading || isFetching &&
         <PostCardSkeleton repeat={2} />
       }
       <div className="flex flex-col gap-[10px] bg-background-light" >
-        {!isPostAllLoading && !isPostFollowLoading && !isPostLikeLoading && filteredData?.map(singleData => (
+        {!isLoading && !isFetching && filteredData?.map(singleData => (
           <PostCard data={singleData} key={singleData.id} />
         ))
         }
-        {!isPostAllLoading && !isPostFollowLoading && !isPostLikeLoading && filteredData?.length === 0 &&
+        {!isLoading && !isFetching && filteredData?.length === 0 &&
           <span className="absolute top-[200px] left-1/2 -translate-x-1/2 text-nowrap text-md text-white">게시물이 없습니다.</span>
         }
       </div>

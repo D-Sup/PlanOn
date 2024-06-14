@@ -31,7 +31,7 @@ const ProfileAvatar = ({ src, className, alt, handleFunc }: {
       {typeof src !== "string"
         ? (
           <div className="absolute-center">
-            {React.createElement(src, { width: "20", height: "20", fill: "var(--white)" })}
+            {React.createElement(src, { width: "20", height: "20", fill: "var(--gray-old)" })}
           </div>
         ) : (
           src !== ""

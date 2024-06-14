@@ -54,7 +54,7 @@ const SearchPage = () => {
   const { SearchHashTag } = HashtagService()
   const { data: tagSearchData, isFetching: isTagFetching, refetch: refetchTag } = SearchHashTag()
 
-  const { isInputDone, isFetching } = useDebounce(inputValueState, 1000, progress === 1 && isUserFetching || progress === 2 && isLocationFetching || progress === 3 && isTagFetching);
+  const { isInputDone, isFetching } = useDebounce(inputValueState, 500, progress === 1 && isUserFetching || progress === 2 && isLocationFetching || progress === 3 && isTagFetching);
 
   const { HistoryUnit, LocationLinkListUnit, HashTagLinkListUnit } = ListUnit();
 

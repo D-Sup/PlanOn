@@ -47,7 +47,7 @@ const CommentService = () => {
     const { openModal } = useModalStack();
 
     const queryClient = useQueryClient();
-    const queryKeys = ["all-posts", "following-posts", "like-posts", "single-posts"];
+    const queryKeys = ["all-posts", "following-posts", "like-posts", "tag-posts", "single-posts"];
 
     return useMutation({
       mutationFn: async (request: { type: "create" | "delete", id: string, comment: CommentsType | CommentMachinedType }) => {
@@ -120,7 +120,7 @@ const CommentService = () => {
         }
       },
       // onSettled: () => {
-      //   queryClient.invalidateQueries(["all-posts", "following-posts", "like-posts", "other-posts", "my-posts"]);
+      //   queryClient.invalidateQueries(["all-posts", "following-posts", "like-posts", "tag-posts", "other-posts", "my-posts"]);
       // },
     });
   }

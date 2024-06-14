@@ -33,6 +33,7 @@ interface ToggleTagListProps {
     type: "userSearch" | "hashtagSearch",
     postFormState: PostFormValueType,
     setPostFormState: SetterOrUpdater<PostFormValueType> | React.Dispatch<React.SetStateAction<PostFormValueType>>,
+    handleFunc: (hashtags: Pick<PostFormValueType, "hashtags">) => void
   }
 }
 
@@ -54,7 +55,7 @@ const ToggleTagList = ({ closeModal, handleScroll, props }: ToggleTagListProps) 
   const { SearchHashTag } = HashtagService()
   const { data: tagSearchData, isFetching: isTagFetching, refetch: refetchTag } = SearchHashTag()
 
-  const { isInputDone, isFetching } = useDebounce(inputValueState, 1000, props.type === "userSearch" ? isUserFetching : isTagFetching);
+  const { isInputDone, isFetching } = useDebounce(inputValueState, 500, props.type === "userSearch" ? isUserFetching : isTagFetching);
 
   const handleSelectTag = (tag: ReadDocumentType<UsersType> | ReadDocumentType<HashtagsType> | { id: string, data: { createTag: boolean } }) => {
     setPrePostFormState(
@@ -81,6 +82,7 @@ const ToggleTagList = ({ closeModal, handleScroll, props }: ToggleTagListProps) 
       })
     )
     closeModal()
+    props.handleFunc && setTimeout(() => props.handleFunc(prePostFormState), 500)
   }
 
   useEffect(() => {

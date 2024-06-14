@@ -62,7 +62,9 @@ const useSignUp = (): SignUpResponse => {
 				isDarkMode: true,
 				isAlert: false,
 				isFirstEntry: true,
-				secureNumber: ""
+				secureNumber: "",
+				selectedFilter: "all-posts",
+				filterTags: []
 				// postIds: [],
 				// scheduleIds: []
 			};

@@ -16,7 +16,9 @@ export interface UsersType {
   isDarkMode: boolean,
   isAlert: boolean,
   isFirstEntry: boolean,
-  secureNumber: string
+  secureNumber: string,
+  selectedFilter: "all-posts" | "following-posts" | "like-posts" | "tag-posts",
+  filterTags: string[]
   // postIds: string[],
   // scheduleIds: string[]
 }
