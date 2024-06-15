@@ -32,7 +32,7 @@ const LoginPage = () => {
     if (isLoginSuccess) {
       setTimeout(() => {
         openModal("Toast", { message: "로그인에 성공했습니다." })
-      }, 600)
+      }, 1000)
     }
   }, [isLoginSuccess])
 
@@ -40,7 +40,7 @@ const LoginPage = () => {
     if (isSignupSuccess) {
       setTimeout(() => {
         openModal("Toast", { message: "회원가입에 성공했습니다." })
-      }, 600)
+      }, 1000)
     }
   }, [isSignupSuccess])
 
