@@ -54,28 +54,28 @@ const SettingPage = () => {
         </div>
 
         <div className=" bottom-[100px] px-[30px] w-full">
-          {!isLoading && userData &&
-            <button
-              className="w-full h-[50px] rounded-md bg-input text-md text-red"
-              type="button"
-              onClick={() => {
-                openModal("Alert", "로그아웃 하시겠습니까?", ["취소", "확인"],
-                  [null, () => {
-                    closeModal()
+          {/* {!isLoading && userData && */}
+          <button
+            className="w-full h-[50px] rounded-md bg-input text-md text-red"
+            type="button"
+            onClick={() => {
+              openModal("Alert", "로그아웃 하시겠습니까?", ["취소", "확인"],
+                [null, () => {
+                  closeModal()
+                  setTimeout(() => {
+                    logoutService()
+                    resetAuthUserState()
                     setTimeout(() => {
-                      logoutService()
-                      resetAuthUserState()
-                      setTimeout(() => {
-                        openModal("Toast", { message: "로그아웃 되었습니다." })
-                      }, 600)
-                    }, 500)
-                  }
-                  ])
-              }}
-            >
-              로그아웃
-            </button>
-          }
+                      openModal("Toast", { message: "로그아웃 되었습니다." })
+                    }, 600)
+                  }, 500)
+                }
+                ])
+            }}
+          >
+            로그아웃
+          </button>
+          {/* } */}
         </div>
       </div>
     </ScrollRefreshContainer>

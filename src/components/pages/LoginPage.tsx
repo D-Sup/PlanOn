@@ -8,11 +8,9 @@ import Loader from "../organisms/Loader";
 import { Checkbox } from "../shadcnUIKit/checkbox";
 
 import IconGoogle from "../../assets/images/icon-google.svg?react";
-import IconKakao from "../../assets/images/icon-kakao.svg?react";
+import IconGithub from "../../assets/images/icon-github.svg?react";
 
 const LoginPage = () => {
-
-
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isError, setIsError] = useState<boolean>(true);
@@ -20,7 +18,7 @@ const LoginPage = () => {
 
   const navigate = useNavigate()
 
-  const { error, isSuccess, isPending, login } = useLogin(isChecked);
+  const { error, isLoginSuccess, isSignupSuccess, isPending, login, googleLogin, gitHubLogin } = useLogin(isChecked);
 
   const { openModal } = useModalStack()
 
@@ -30,11 +28,21 @@ const LoginPage = () => {
     }
   }, [error])
 
-  if (isSuccess) {
-    setTimeout(() => {
-      openModal("Toast", { message: "로그인에 성공했습니다." })
-    }, 600)
-  }
+  useEffect(() => {
+    if (isLoginSuccess) {
+      setTimeout(() => {
+        openModal("Toast", { message: "로그인에 성공했습니다." })
+      }, 600)
+    }
+  }, [isLoginSuccess])
+
+  useEffect(() => {
+    if (isSignupSuccess) {
+      setTimeout(() => {
+        openModal("Toast", { message: "회원가입에 성공했습니다." })
+      }, 600)
+    }
+  }, [isSignupSuccess])
 
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -112,13 +120,13 @@ const LoginPage = () => {
       </div>
 
       <div className="w-full px-[30px] absolute bottom-[40px]">
-        <span className="mb-[15px] block text-center text-sm text-gray-old">SNS 계정으로 로그인</span>
+        <span className="mb-[15px] block text-center text-sm text-gray-old">SNS 계정으로 시작하기</span>
         <div className="w-full flex gap-[15px]">
           <button
             type="button"
             className="w-full h-[50px] rounded-[10px] bg-input relative"
             onClick={() => {
-              openModal("Toast", { type: "info", message: "아직 준비 중인 서비스입니다." })
+              googleLogin()
             }}
           >
             <IconGoogle width={20} height={20} fill={"var(--white)"} className="absolute-center" />
@@ -127,10 +135,10 @@ const LoginPage = () => {
             type="button"
             className="w-full h-[50px] rounded-[10px] bg-input relative"
             onClick={() => {
-              openModal("Toast", { type: "info", message: "아직 준비 중인 서비스입니다." })
+              gitHubLogin()
             }}
           >
-            <IconKakao width={20} height={20} fill={"var(--white)"} className="absolute-center" />
+            <IconGithub width={20} height={20} fill={"var(--white)"} className="absolute-center" />
           </button>
         </div>
       </div>

@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { UserContext } from "./UserInfoProvider";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
-import { routeDirectionValue } from "@/store";
+import { useSetRecoilState, useResetRecoilState } from "recoil";
+import { routeDirectionValue, authUser } from "@/store";
 import useModalStack from "@/hooks/useModalStack";
 
 import useFirestoreUpdate from "@/hooks/useFirestoreUpdate";
@@ -29,6 +29,7 @@ const SettingOverview = () => {
   const location = useLocation()
 
   const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue)
+  const resetAuthUserState = useResetRecoilState(authUser)
 
   const { data: userData } = useContext(UserContext);
 
@@ -111,6 +112,7 @@ const SettingOverview = () => {
                   await deleteDocument(userData.id)
                   appAuth.currentUser.delete().then(async function () {
                     logoutService()
+                    resetAuthUserState()
                     navigate("/login", { state: { direction: "prev" } })
                     openModal("Toast", { message: "계정이 삭제되었습니다." })
                   }).catch(function () {
