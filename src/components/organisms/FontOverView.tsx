@@ -26,6 +26,8 @@ const FontOverView = ({ closeModal, handleScroll, props }: FontOverViewProps) =>
     { fontFamily: "var(--Ownglyph-meetme-Rg)", fontName: "밑미체" },
     { fontFamily: "var(--omyu-pretty)", fontName: "오뮤 다예쁨체" },
     { fontFamily: "var(--GangwonEdu-OTFBoldA)", fontName: "강원교육모두체" },
+    { fontFamily: "var(--ONE-Mobile-POP)", fontName: "모바일POP체" },
+    { fontFamily: "var(--HSSanTokki20-Regular)", fontName: "산토끼체" },
   ];
 
   return (

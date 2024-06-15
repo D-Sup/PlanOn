@@ -43,7 +43,9 @@ const UserInfoProvider = ({ children }: { children: React.ReactNode }) => {
   const queryRef = useRef(messagesRef)
 
   useEffect(() => {
-    refetch()
+    if (accountId) {
+      refetch()
+    }
   }, [accountId])
 
   useEffect(() => {
@@ -63,30 +65,32 @@ const UserInfoProvider = ({ children }: { children: React.ReactNode }) => {
           if (new Date().getTime() - chat.lastMessageCreatedAt.toDate().getTime() < 1000 && chat.unreadLength > 0) {
             openModal("Toast", { type: "message", title: chat.userName, message: chat.lastReceive })
           }
-          refetch()
         })
+        refetch()
       }
     })
 
-    return unsubscribe
+    return () => unsubscribe();
   }, [queryRef.current])
 
   useEffect(() => {
-    if (data?.data.secureNumber !== undefined && data?.data.secureNumber !== "") {
-      if (!isUnLockValueState) {
-        setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
-        navigate("/security", { state: { direction: "up" } })
+    if (data) {
+      if (data.data.secureNumber !== undefined && data?.data.secureNumber !== "") {
+        if (!isUnLockValueState) {
+          setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
+          navigate("/security", { state: { direction: "up" } })
+        }
       }
-    }
 
-    if (data?.data.isDarkMode) {
-      document.querySelector("html").setAttribute("data-theme", "dark");
-    } else {
-      document.querySelector("html").setAttribute("data-theme", "light");
-    }
+      if (data.data.isDarkMode) {
+        document.querySelector("html").setAttribute("data-theme", "dark");
+      } else {
+        document.querySelector("html").setAttribute("data-theme", "light");
+      }
 
-    if (data?.data.isFirstEntry) {
-      navigate("/tutorial", { state: { direction: "up" } })
+      if (data.data.isFirstEntry) {
+        navigate("/tutorial", { state: { direction: "up" } })
+      }
     }
   }, [data])
 
@@ -95,6 +99,8 @@ const UserInfoProvider = ({ children }: { children: React.ReactNode }) => {
     { fontFamily: "var(--Ownglyph-meetme-Rg)", fontName: "밑미체" },
     { fontFamily: "var(--omyu-pretty)", fontName: "오뮤 다예쁨체" },
     { fontFamily: "var(--GangwonEdu-OTFBoldA)", fontName: "강원교육모두체" },
+    { fontFamily: "var(--ONE-Mobile-POP)", fontName: "모바일POP체" },
+    { fontFamily: "var(--HSSanTokki20-Regular)", fontName: "산토끼체" },
   ];
 
 
