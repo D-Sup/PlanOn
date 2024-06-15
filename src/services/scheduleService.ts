@@ -107,7 +107,7 @@ const ScheduleService = () => {
   const ReadSchedule = () => {
     const { readDocumentsSimplePaged } = useFirestoreRead("schedules")
 
-    const { data, isLoading, refetch } = useDataQuery<ReadDocumentType<SchedulesType>[], Error, ReadDocumentType<SchedulesType>[]>(
+    const { data, isLoading, isFetching, refetch } = useDataQuery<ReadDocumentType<SchedulesType>[], Error, ReadDocumentType<SchedulesType>[]>(
       "schedules",
       ()=> readDocumentsSimplePaged<SchedulesType>([], "authorizationId", "in", [accountId], "startTime", "asc", Infinity),
       (data) => data,
@@ -116,7 +116,7 @@ const ScheduleService = () => {
         gcTime: Infinity,
       },
     )
-    return { data, isLoading, refetch }
+    return { data, isLoading, isFetching, refetch }
   }
 
   const UpdateSchedule = (data: ReadDocumentType<ScheduleFormValueType> , onSuccess: () => void, onError: () => void) => {

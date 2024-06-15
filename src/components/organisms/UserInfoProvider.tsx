@@ -13,14 +13,16 @@ import { ReadDocumentType } from "@/hooks/useFirestoreRead";
 import { UsersType, ChatsType } from "@/types/users.type";
 
 interface UserContextType {
-  data: ReadDocumentType<UsersType> | undefined;
-  isLoading: boolean;
-  refetch: () => void;
+  data: ReadDocumentType<UsersType> | undefined,
+  isLoading: boolean,
+  isFetching: boolean,
+  refetch: () => void
 }
 
 const UserContext = createContext<UserContextType>({
   data: undefined,
   isLoading: true,
+  isFetching: true,
   refetch: () => { }
 });
 
@@ -29,7 +31,7 @@ const UserInfoProvider = ({ children }: { children: React.ReactNode }) => {
   const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue)
 
   const { ReadUser } = UserService();
-  const { data, isLoading, refetch } = ReadUser();
+  const { data, isLoading, isFetching, refetch } = ReadUser();
 
   const navigate = useNavigate()
   const { openModal } = useModalStack()
@@ -69,7 +71,6 @@ const UserInfoProvider = ({ children }: { children: React.ReactNode }) => {
     return unsubscribe
   }, [queryRef.current])
 
-
   useEffect(() => {
     if (data?.data.secureNumber !== undefined && data?.data.secureNumber !== "") {
       if (!isUnLockValueState) {
@@ -78,19 +79,34 @@ const UserInfoProvider = ({ children }: { children: React.ReactNode }) => {
       }
     }
 
-    if (data) {
-      if (data.data.isDarkMode) {
-        document.querySelector("html").setAttribute("data-theme", "dark");
-      } else {
-        document.querySelector("html").setAttribute("data-theme", "light");
-      }
+    if (data?.data.isDarkMode) {
+      document.querySelector("html").setAttribute("data-theme", "dark");
+    } else {
+      document.querySelector("html").setAttribute("data-theme", "light");
+    }
+
+    if (data?.data.isFirstEntry) {
+      navigate("/tutorial", { state: { direction: "up" } })
     }
   }, [data])
 
+  const fontData = [
+    { fontFamily: "var(--Pretendard-Regular)", fontName: "프리텐다드체" },
+    { fontFamily: "var(--Ownglyph-meetme-Rg)", fontName: "밑미체" },
+    { fontFamily: "var(--omyu-pretty)", fontName: "오뮤 다예쁨체" },
+    { fontFamily: "var(--GangwonEdu-OTFBoldA)", fontName: "강원교육모두체" },
+  ];
+
 
   return (
-    <UserContext.Provider value={{ data, isLoading, refetch }}>
-      {children}
+    <UserContext.Provider value={{ data, isLoading, isFetching, refetch }}>
+      <div
+        id="wrapper"
+        className="flex flex-col bg-background w-screen h-dvh transition duration-300"
+        style={{ fontFamily: fontData[fontData.findIndex((singleData) => singleData.fontName === data?.data.selectedFont)]?.fontFamily }}
+      >
+        {children}
+      </div>
     </UserContext.Provider>
   );
 };

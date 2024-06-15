@@ -1,11 +1,4 @@
-import { useState, useEffect, useRef } from "react";
-
-import { useLocation } from "react-router-dom";
-
-
-import { useRecoilValue, useResetRecoilState } from "recoil";
-import { inputValue } from "@/store";
-import { modalStack } from "@/store";
+import { useState, useRef } from "react";
 
 interface ModalProps {
   isOpen: boolean,
@@ -17,10 +10,6 @@ interface ModalProps {
 
 const Modal = ({ isOpen, props, closeModal, isScrolledToTop, children }: ModalProps) => {
 
-  const location = useLocation()
-
-  const modalStackState = useRecoilValue(modalStack)
-  const resetInputValueState = useResetRecoilState(inputValue)
   const [startY, setStartY] = useState<number | null>(null);
   const [isMoving, setIsMoving] = useState<boolean>(false);
   const [isOpenMore, setIsOpenMore] = useState<boolean>(false);
@@ -96,12 +85,6 @@ const Modal = ({ isOpen, props, closeModal, isScrolledToTop, children }: ModalPr
     }
   }
 
-  // useEffect(() => {
-  //   const { Component } = modalStackState[modalStackState.length - 1];
-  //   if (Component !== "Toast" && location.pathname !== "/post/detail") {
-  //     resetInputValueState()
-  //   }
-  // }, [modalStackState])
 
   return (
     <div className="z-40 fixed left-0 top-0 h-full w-screen">

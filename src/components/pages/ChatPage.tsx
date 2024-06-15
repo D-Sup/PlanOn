@@ -7,13 +7,14 @@ import useFirestoreCreate from "@/hooks/useFirestoreCreate"
 import useFirestoreUpdate from "@/hooks/useFirestoreUpdate";
 import useFirestoreDelete from "@/hooks/useFirestoreDelete";
 
-import { useRecoilValue, useSetRecoilState } from "recoil"
+import { useRecoilValue, useSetRecoilState, useResetRecoilState } from "recoil"
 import { inputValue, routeDirectionValue } from "@/store"
 
 import useModalStack from "@/hooks/useModalStack"
 
 import UserService from "@/services/userService"
 
+import ScrollRefreshContainer from "../organisms/ScrollRefreshContainer"
 import Header from "../organisms/Header"
 import ChatMemberListUnit from "../organisms/ChatMemberListUnit"
 import ListUnit from "../organisms/ListUnit"
@@ -25,11 +26,12 @@ import getAccountId from "@/utils/getAccountId"
 
 const ChatPage = () => {
   const inputValueState = useRecoilValue(inputValue);
+  const resetInputValueState = useResetRecoilState(inputValue);
   const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue)
 
   const { SearchUser } = UserService()
   const { data: userSearchData, isFetching: isUserFetching, refetch: refetchUser } = SearchUser()
-  const { data: userData, isLoading } = useContext(UserContext);
+  const { data: userData, isLoading, isFetching: isFetchingUserData, refetch } = useContext(UserContext);
 
   const { createSubcollection } = useFirestoreCreate("chats");
   const { updateFieldObject } = useFirestoreUpdate("users");
@@ -55,7 +57,10 @@ const ChatPage = () => {
   const { ChatJoinableMemberItem } = ListUnit()
 
   return (
-    <>
+    <ScrollRefreshContainer isLoading={isFetchingUserData} refetch={() => {
+      resetInputValueState()
+      refetch()
+    }}>
       <FixedTrigger height={138} enableAnimation={false}>
         <div className="mt-[30px]">
           <ChatHeader title={"메시지"} />
@@ -66,8 +71,7 @@ const ChatPage = () => {
         </div>
       </FixedTrigger>
 
-      <div className="flex flex-col gap-[20px] pt-[10px] px-[30px] w-full">
-
+      <div className="flex flex-col gap-[20px] pt-[10px] px-[30px] w-full min-h-[calc(100dvh-218px)]">
         {isLoading && !inputValueState ? (
           Array(8).fill(0).map((_, index) => (
             <ListUnitSkeleton isNotBoxShadow={true} key={index} />
@@ -132,7 +136,7 @@ const ChatPage = () => {
           }
         </>
       </div>
-    </>
+    </ScrollRefreshContainer>
 
   )
 }

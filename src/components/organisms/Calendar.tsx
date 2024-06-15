@@ -26,7 +26,6 @@ import {
 const Calendar = () => {
 
   const { ReadSchedule } = ScheduleService()
-  // const { data: scheduleData, isLoading } = ReadSchedule()
   const { data: scheduleData, isLoading, refetch } = ReadSchedule()
 
   const colStartClasses = [

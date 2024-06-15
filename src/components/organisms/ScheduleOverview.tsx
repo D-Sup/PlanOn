@@ -61,7 +61,6 @@ const ScheduleOverview = ({ postFormState, setPostFormState, isScheduleSelectabl
 
   const { ReadSchedule, DeleteSchedule } = ScheduleService()
   const { data: scheduleData, isLoading, refetch } = ReadSchedule()
-  // const { data: scheduleData, isLoading } = ReadSchedule()
   const { mutate, isPending } = DeleteSchedule(targetDeleteSchedule,
     () => {
       closeModal();

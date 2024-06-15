@@ -64,7 +64,8 @@ const useSignUp = (): SignUpResponse => {
 				isFirstEntry: true,
 				secureNumber: "",
 				selectedFilter: "all-posts",
-				filterTags: []
+				filterTags: [],
+				selectedFont: "프리텐다드체"
 				// postIds: [],
 				// scheduleIds: []
 			};

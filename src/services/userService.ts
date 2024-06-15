@@ -52,7 +52,7 @@ const UserService = () => {
   const ReadUser = () => {
     const { readDocumentSingle } = useFirestoreRead("users")
     const accountId = getAccountId()
-    const { data, isLoading, refetch } = useDataQuery<ReadDocumentType<UsersType>, Error, ReadDocumentType<UsersType>>(
+    const { data, isLoading, isFetching, refetch } = useDataQuery<ReadDocumentType<UsersType>, Error, ReadDocumentType<UsersType>>(
       "my-userInfo",
       async () => {
         const readedUser = await readDocumentSingle<UsersType>(accountId);
@@ -75,7 +75,7 @@ const UserService = () => {
         gcTime: Infinity,
       },
     )
-    return { data, isLoading, refetch }
+    return { data, isLoading, isFetching, refetch }
   }
 
   const UpdateUser = (data: { isDefaultImage: boolean, accountImage: File[] | [], accountName: string, description: string }, onSuccess: () => void, onError: () => void) => {

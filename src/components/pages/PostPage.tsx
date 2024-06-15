@@ -4,13 +4,14 @@ import { useNavigate, useLocation } from "react-router-dom";
 import useModalStack from "@/hooks/useModalStack";
 import useScrollBottom from "@/hooks/useScrollBottom";
 
-import { useRecoilValue, useSetRecoilState, useResetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState, useResetRecoilState } from "recoil";
 import { postFormValue, isPostFormModifiedSelector, paginationValue, routeDirectionValue } from "@/store";
 import { modalStack } from "@/store";
 
 import PostService from "@/services/postService";
 import useFirestoreUpdate from "@/hooks/useFirestoreUpdate";
 
+import ScrollRefreshContainer from "../organisms/ScrollRefreshContainer";
 import Header from "../organisms/Header";
 import PostCard from "../organisms/PostCard";
 import PostCategory from "../organisms/PostCategory";
@@ -31,7 +32,7 @@ const PostPage = () => {
   const modalStackState = useRecoilValue(modalStack);
   const isPostFormModified = useRecoilValue(isPostFormModifiedSelector);
   const resetPostFormState = useResetRecoilState(postFormValue);
-  const paginationValueState = useRecoilValue(paginationValue);
+  const [paginationValueState, setPaginationValueState] = useRecoilState(paginationValue);
   const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue)
 
   const currentCategory = userData?.data.selectedFilter || paginationValueState.currentCategory
@@ -125,61 +126,83 @@ const PostPage = () => {
 
 
   return (
-    <div className="relative">
-      <FixedTrigger className="top-0" height={60} hasReachedTop={false}>
-        <FeedHeader handleFunc={[
-          () => {
-            openModal(PostCategory, { isHeightAuto: true, postFormState, setPostFormState, handleFunc: () => { updateField(userData.id, { filterTags: postFormState.hashtags.map(tag => tag.id) }) } })
-          },
-          () => {
-            setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
-            navigate("/search", {
-              state: { direction: "next" },
-            })
-          },
-          () => {
-            if (isPostFormModified) {
-              openModal("Alert", "이전에 작성하던 내용이 있습니다.", ["새로 작성", "이어서 작성"], [
-                () => {
-                  closeModal()
-                  resetPostFormState()
-                  navigate("/post/update", {
-                    state: { direction: "next" },
-                  })
-                },
-                () => {
-                  closeModal()
-                  navigate("/post/update", {
-                    state: { direction: "next" },
-                  })
-                }
-              ])
-            } else {
-              navigate("/post/update", {
+    <ScrollRefreshContainer isLoading={isFetching} refetch={() => {
+      setPaginationValueState({
+        currentCategory,
+        allPosts: {
+          lastVisible: null,
+          isDataEnd: false
+        },
+        followingPosts: {
+          lastVisible: null,
+          isDataEnd: false
+        },
+        likePosts: {
+          lastVisible: null,
+          isDataEnd: false
+        },
+        tagPosts: {
+          lastVisible: null,
+          isDataEnd: false,
+          filterTags: { hashtags: [{ id: "", data: {} }] }
+        }
+      })
+    }}>
+      <div className="relative">
+        <FixedTrigger className="top-0" height={60} hasReachedTop={false}>
+          <FeedHeader handleFunc={[
+            () => {
+              openModal(PostCategory, { isHeightAuto: true, postFormState, setPostFormState, handleFunc: () => { updateField(userData.id, { filterTags: postFormState.hashtags.map(tag => tag.id) }) } })
+            },
+            () => {
+              setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
+              navigate("/search", {
                 state: { direction: "next" },
               })
-            }
-          }]} />
-      </FixedTrigger>
-      {isLoading &&
-        <PostCardSkeleton repeat={2} />
-      }
-      <div className="flex flex-col gap-[10px] bg-background-light" >
-        {!isLoading && filteredData?.map(singleData => (
-          <PostCard data={singleData} key={singleData.id} />
-        ))
+            },
+            () => {
+              if (isPostFormModified) {
+                openModal("Alert", "이전에 작성하던 내용이 있습니다.", ["새로 작성", "이어서 작성"], [
+                  () => {
+                    closeModal()
+                    resetPostFormState()
+                    navigate("/post/update", {
+                      state: { direction: "next" },
+                    })
+                  },
+                  () => {
+                    closeModal()
+                    navigate("/post/update", {
+                      state: { direction: "next" },
+                    })
+                  }
+                ])
+              } else {
+                navigate("/post/update", {
+                  state: { direction: "next" },
+                })
+              }
+            }]} />
+        </FixedTrigger>
+        {isLoading &&
+          <PostCardSkeleton repeat={2} />
         }
-        {!isLoading && filteredData?.length === 0 &&
-          <span className="absolute top-[200px] left-1/2 -translate-x-1/2 text-nowrap text-md text-white">게시물이 없습니다.</span>
-        }
-      </div>
-      <div className={`fixed bottom-[80px] left-1/2 -translate-x-1/2 w-[150px] h-[80px] rounded-lg transition duration-300 backdrop-blur-sm ${isBottom && isFetching && !isLoading ? "opacity-1" : "opacity-0"}`} style={{ pointerEvents: "none" }}>
-        <div className="absolute-center w-[100px]">
-          <Loader />
+        <div className="flex flex-col gap-[10px] bg-background-light" >
+          {!isLoading && filteredData?.map(singleData => (
+            <PostCard data={singleData} key={singleData.id} />
+          ))
+          }
+          {!isLoading && filteredData?.length === 0 &&
+            <span className="absolute top-[200px] left-1/2 -translate-x-1/2 text-nowrap text-md text-white">게시물이 없습니다.</span>
+          }
+        </div>
+        <div className={`fixed bottom-[80px] left-1/2 -translate-x-1/2 w-[150px] h-[80px] rounded-lg transition duration-300 backdrop-blur-sm ${isBottom && isFetching && !isLoading ? "opacity-1" : "opacity-0"}`} style={{ pointerEvents: "none" }}>
+          <div className="absolute-center w-[100px]">
+            <Loader />
+          </div>
         </div>
       </div>
-
-    </div>
+    </ScrollRefreshContainer>
   )
 }
 

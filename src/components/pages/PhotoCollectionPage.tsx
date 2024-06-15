@@ -32,8 +32,6 @@ const PhotoCollectionPage = () => {
             key={photo}
             className="relative aspect-square bg-background"
             onClick={() => {
-              window.scrollTo(0, 0)
-              setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, { photos }] }))
               openModal("PhotoView", { photo })
             }}
           >

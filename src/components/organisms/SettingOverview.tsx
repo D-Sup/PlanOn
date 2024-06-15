@@ -3,12 +3,13 @@ import { UserContext } from "./UserInfoProvider";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { routeDirectionValue } from "@/store";
+import useModalStack from "@/hooks/useModalStack";
 
 import useFirestoreUpdate from "@/hooks/useFirestoreUpdate";
 import useFirestoreDelete from "@/hooks/useFirestoreDelete";
 import logoutService from "@/services/logoutService";
 
-import useModalStack from "@/hooks/useModalStack";
+import FontOverView from "./FontOverView";
 import SettingCard from "../mocules/SettingCard";
 
 import { v4 as uuidv4 } from "uuid";
@@ -20,6 +21,7 @@ import IconLock from "../../assets/images/icon-lock.svg?react";
 import IconInfo from "../../assets/images/icon-info.svg?react";
 import IconContact from "../../assets/images/icon-contact.svg?react";
 import IconUnsubscribe from "../../assets/images/icon-unsubscribe.svg?react";
+import IconFont from "../../assets/images/icon-font.svg?react";
 
 const SettingOverview = () => {
 
@@ -75,8 +77,12 @@ const SettingOverview = () => {
             hasSwitch={true}
             isChecked={updateOption || userData.data.secureNumber !== ""} />
 
+          <SettingCard icon={IconFont} name={"글씨체"} handleFunc={() => {
+            openModal(FontOverView, { selectedFont: userData.data.selectedFont })
+          }} />
+
           <SettingCard icon={IconInfo} name={"앱 튜토리얼"} handleFunc={() => {
-            openModal("Toast", { type: "info", message: "아직 준비 중인 서비스입니다." })
+            navigate("/tutorial", { state: { direction: "up" } })
           }} />
 
           <SettingCard icon={IconContact} name={"문의하기"} handleFunc={() => {

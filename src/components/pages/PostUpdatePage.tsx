@@ -36,6 +36,12 @@ const PostUpdatePage = () => {
   const postState = editData ? updatePostFormState : postFormState
   const setPostState = editData ? setUpdatePostFormState : setPostFormState
 
+  const steps = [
+    { progressCheck: 0, description: "사진선택" },
+    { progressCheck: 1, description: "일정선택" },
+    { progressCheck: 2, description: "내용선택" },
+  ];
+
   const { WritePostHeader } = Header();
 
   const { openModal, closeModal, closeModalDirect } = useModalStack()
@@ -159,7 +165,7 @@ const PostUpdatePage = () => {
       <FixedTrigger className="z-20 top-0" height={155} enableAnimation={false}>
         <WritePostHeader title={editData ? "게시물 수정" : "게시물 작성"} isRequired={progress === 0 ? editData || postFormState.photos?.checked.length !== 0 ? true : false : true} handleFunc={[handlePreviousProgress, handleNextProgress]} />
         <div className="mx-[30px] my-[30px]">
-          <PostProgressIndicator progress={progress} />
+          <PostProgressIndicator progress={progress} steps={steps} />
         </div>
       </FixedTrigger>
 

@@ -72,7 +72,7 @@ const PostCategory = ({ closeModal, props }: PostCategoryProps) => {
           setTimeout(() => resetPosts("all-posts"), 400)
         }}
         >
-          <IconAll width={15} height={15} fill={`var(--${selected === "all-posts" ? "black" : "white"})`} />
+          <IconAll width={20} height={20} fill={`var(--${selected === "all-posts" ? "black" : "white"})`} />
           모든 게시물
         </button>
         <button className={`flex-center flex-col gap-[10px] w-full min-h-[100px] rounded-tr-lg bg-input text-md ${selected === "following-posts" ? "bg-white text-black" : "bg-input text-white"}`} type="button" onClick={() => {
@@ -81,7 +81,7 @@ const PostCategory = ({ closeModal, props }: PostCategoryProps) => {
           setTimeout(() => resetPosts("following-posts"), 400)
         }}
         >
-          <IconUser width={15} height={15} fill={`var(--${selected === "following-posts" ? "black" : "white"})`} />
+          <IconUser width={20} height={20} fill={`var(--${selected === "following-posts" ? "black" : "white"})`} />
           팔로잉
         </button>
         <button className={`flex-center flex-col gap-[10px] w-full min-h-[100px] rounded-bl-lg bg-input text-md ${selected === "like-posts" ? "bg-white text-black" : "bg-input text-white"}`} type="button" onClick={() => {
@@ -90,7 +90,7 @@ const PostCategory = ({ closeModal, props }: PostCategoryProps) => {
           setTimeout(() => resetPosts("like-posts"), 400)
         }}
         >
-          <IconHeart width={15} height={15} fill={`var(--${selected === "like-posts" ? "black" : "white"})`} />
+          <IconHeart width={20} height={20} fill={`var(--${selected === "like-posts" ? "black" : "white"})`} />
           좋아요
         </button>
         <button className={`flex-center flex-col gap-[10px] w-full min-h-[100px] rounded-br-lg bg-input text-md ${selected === "tag-posts" ? "bg-white text-black" : "bg-input text-white"}`} type="button" onClick={() => {
@@ -108,7 +108,7 @@ const PostCategory = ({ closeModal, props }: PostCategoryProps) => {
           }, 500)
         }}
         >
-          <IconHash width={15} height={15} fill={`var(--${selected === "tag-posts" ? "black" : "white"})`} />
+          <IconHash width={20} height={20} fill={`var(--${selected === "tag-posts" ? "black" : "white"})`} />
           해시태그
         </button>
       </div>

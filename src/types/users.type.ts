@@ -18,7 +18,8 @@ export interface UsersType {
   isFirstEntry: boolean,
   secureNumber: string,
   selectedFilter: "all-posts" | "following-posts" | "like-posts" | "tag-posts",
-  filterTags: string[]
+  filterTags: string[],
+  selectedFont: string
   // postIds: string[],
   // scheduleIds: string[]
 }
