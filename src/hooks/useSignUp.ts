@@ -65,9 +65,8 @@ const useSignUp = (): SignUpResponse => {
 				secureNumber: "",
 				selectedFilter: "all-posts",
 				filterTags: [],
-				selectedFont: "프리텐다드체"
-				// postIds: [],
-				// scheduleIds: []
+				selectedFont: "프리텐다드체",
+				deviceToken: ""
 			};
 
 			const unsubscribe = onAuthStateChanged(appAuth, async (user) => {

@@ -23,6 +23,8 @@ import IconContact from "../../assets/images/icon-contact.svg?react";
 import IconUnsubscribe from "../../assets/images/icon-unsubscribe.svg?react";
 import IconFont from "../../assets/images/icon-font.svg?react";
 
+import NotificationPermission from "@/utils/notificationPermission";
+
 const SettingOverview = () => {
 
   const navigate = useNavigate()
@@ -63,7 +65,11 @@ const SettingOverview = () => {
               }
             }} />
 
-          <SettingCard icon={IconAlert} name={"알림"} handleFunc={() => { updateField(userData.id, { isAlert: !userData.data.isAlert }) }} hasSwitch={true} isChecked={userData.data.isAlert} />
+          <SettingCard icon={IconAlert} name={"알림"} handleFunc={() => {
+            NotificationPermission()
+            updateField(userData.id, { isAlert: !userData.data.isAlert })
+          }} hasSwitch={true} isChecked={userData.data.isAlert}
+          />
 
           <SettingCard icon={IconLock} name={"잠금설정"}
             handleFunc={() => {

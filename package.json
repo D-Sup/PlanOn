@@ -28,7 +28,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "date-fns": "^3.6.0",
-    "firebase": "^10.9.0",
+    "firebase": "^10.12.2",
     "immer": "^10.0.4",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.343.0",

@@ -30,17 +30,13 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (isLoginSuccess) {
-      setTimeout(() => {
-        openModal("Toast", { message: "로그인에 성공했습니다." })
-      }, 1000)
+      openModal("Toast", { message: "로그인에 성공했습니다." })
     }
   }, [isLoginSuccess])
 
   useEffect(() => {
     if (isSignupSuccess) {
-      setTimeout(() => {
-        openModal("Toast", { message: "회원가입에 성공했습니다." })
-      }, 1000)
+      openModal("Toast", { message: "회원가입에 성공했습니다." })
     }
   }, [isSignupSuccess])
 

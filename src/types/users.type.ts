@@ -19,7 +19,8 @@ export interface UsersType {
   secureNumber: string,
   selectedFilter: "all-posts" | "following-posts" | "like-posts" | "tag-posts",
   filterTags: string[],
-  selectedFont: string
+  selectedFont: string,
+  deviceToken: string
   // postIds: string[],
   // scheduleIds: string[]
 }

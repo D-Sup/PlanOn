@@ -4,7 +4,7 @@ import RouteTransition from "./components/organisms/RouteTransition";
 import { ModalStack } from "./components/organisms/ModalStack";
 import { NonLoginProtectedRoute, LoginProtectedRoute } from "./routes/ProtectedRoute";
 
-// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import NavigationMenu from "./components/organisms/NavigationMenu";
 import LocalPointDetailPage from "./components/pages/LocalPointDetailPage";
@@ -43,55 +43,58 @@ const App = () => {
   const location = useLocation();
 
   return (
-    <QueryClientProvider client={queryClient}>
-      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-      <UserInfoProvider>
-        <RouteTransition location={location}>
-          <Routes location={location}>
+    <>
 
-            <Route path="/*" element={<Navigate to='/splash' replace />} />
-            {/* <Route path='/404page' element={<Page404 />} /> */}
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <UserInfoProvider>
+          <RouteTransition location={location}>
+            <Routes location={location}>
 
-            <Route element={<NonLoginProtectedRoute />}>
-              <Route path="/splash/*" element={<SplashPage />} />
-              <Route path="/introduce/*" element={<IntroducePage />} />
-              <Route path="/login/*" element={<LoginPage />} />
-              <Route path="/signup/*" element={<SignUpPage />} />
-            </Route>
+              <Route path="/*" element={<Navigate to='/splash' replace />} />
+              {/* <Route path='/404page' element={<Page404 />} /> */}
 
-            <Route element={<LoginProtectedRoute />}>
-              <Route path="/post/*" element={<PostPage />} />
-              <Route path="/post/update/*" element={<PostUpdatePage />} />
-              <Route path="/search/*" element={<SearchPage />} />
-              <Route path="/post/collection/*" element={<PostCollectionPage />} />
-              <Route path="/schedule/*" element={<SchedulePage />} />
-              <Route path="/schedule/update/*" element={<ScheduleUpdatePage />} />
-              <Route path="/profile/*" element={<ProfilePage />} />
-              <Route path="/profile/update/*" element={<ProfileUpdatePage />} />
-              <Route path="/chat/*" element={<ChatPage />} />
-              <Route path="/chatroom/*" element={<ChatRoomPage />} />
-              <Route path="/chatroom/gallery/*" element={<PhotoHistoryCollectionPage />} />
-              <Route path="/chatroom/link/*" element={<LinkHistoryCollectionPage />} />
-              <Route path="/gallery/*" element={<PhotoCollectionPage />} />
-              <Route path="/setting/*" element={<SettingPage />} />
-              <Route path="/security/*" element={<SecurityUnlockPage />} />
-              <Route path="/tutorial/*" element={<TutorialPage />} />
-            </Route>
+              <Route element={<NonLoginProtectedRoute />}>
+                <Route path="/splash/*" element={<SplashPage />} />
+                <Route path="/introduce/*" element={<IntroducePage />} />
+                <Route path="/login/*" element={<LoginPage />} />
+                <Route path="/signup/*" element={<SignUpPage />} />
+              </Route>
 
-            <Route path="/download/*" element={<DownloadGuidePage />} />
-            <Route path="/post/detail/*" element={<PostDetailPage />} />
-            <Route path="/post/detail/readonly/*" element={<PostDetailPageReadOnlyPage />} />
-            <Route path="/schedule/detail/*" element={<ScheduleDetailPage />} />
-            <Route path="/schedule/detail/readonly/*" element={<ScheduleDetailReadOnlyPage />} />
-            <Route path="/map/*" element={<MapViewerPage />} />
-            <Route path="/map/details/*" element={<LocalPointDetailPage />} />
+              <Route element={<LoginProtectedRoute />}>
+                <Route path="/post/*" element={<PostPage />} />
+                <Route path="/post/update/*" element={<PostUpdatePage />} />
+                <Route path="/search/*" element={<SearchPage />} />
+                <Route path="/post/collection/*" element={<PostCollectionPage />} />
+                <Route path="/schedule/*" element={<SchedulePage />} />
+                <Route path="/schedule/update/*" element={<ScheduleUpdatePage />} />
+                <Route path="/profile/*" element={<ProfilePage />} />
+                <Route path="/profile/update/*" element={<ProfileUpdatePage />} />
+                <Route path="/chat/*" element={<ChatPage />} />
+                <Route path="/chatroom/*" element={<ChatRoomPage />} />
+                <Route path="/chatroom/gallery/*" element={<PhotoHistoryCollectionPage />} />
+                <Route path="/chatroom/link/*" element={<LinkHistoryCollectionPage />} />
+                <Route path="/gallery/*" element={<PhotoCollectionPage />} />
+                <Route path="/setting/*" element={<SettingPage />} />
+                <Route path="/security/*" element={<SecurityUnlockPage />} />
+                <Route path="/tutorial/*" element={<TutorialPage />} />
+              </Route>
 
-          </Routes>
-        </RouteTransition>
-        <NavigationMenu />
-        <ModalStack />
-      </UserInfoProvider>
-    </QueryClientProvider >
+              <Route path="/download/*" element={<DownloadGuidePage />} />
+              <Route path="/post/detail/*" element={<PostDetailPage />} />
+              <Route path="/post/detail/readonly/*" element={<PostDetailPageReadOnlyPage />} />
+              <Route path="/schedule/detail/*" element={<ScheduleDetailPage />} />
+              <Route path="/schedule/detail/readonly/*" element={<ScheduleDetailReadOnlyPage />} />
+              <Route path="/map/*" element={<MapViewerPage />} />
+              <Route path="/map/details/*" element={<LocalPointDetailPage />} />
+
+            </Routes>
+          </RouteTransition>
+          <NavigationMenu />
+          <ModalStack />
+        </UserInfoProvider>
+      </QueryClientProvider >
+    </>
   )
 }
 

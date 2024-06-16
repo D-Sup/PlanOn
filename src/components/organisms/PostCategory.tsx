@@ -33,30 +33,17 @@ const PostCategory = ({ closeModal, props }: PostCategoryProps) => {
   const postFormState = props.postFormState
   const setPostFormState = props.setPostFormState
 
-  const [selected, setSelected] = useState<"all-posts" | "following-posts" | "like-posts" | "tag-posts">(userData?.data.selectedFilter || paginationValueState.currentCategory);
+  const [selected, setSelected] = useState<"all-posts" | "following-posts" | "like-posts" | "tag-posts" | "">(paginationValueState.currentCategory);
 
   const { openModal } = useModalStack()
 
   const resetPosts = (currentCategory: "all-posts" | "following-posts" | "like-posts" | "tag-posts") => {
     setPaginationValueState({
       currentCategory,
-      allPosts: {
+      posts: {
         lastVisible: null,
         isDataEnd: false
       },
-      followingPosts: {
-        lastVisible: null,
-        isDataEnd: false
-      },
-      likePosts: {
-        lastVisible: null,
-        isDataEnd: false
-      },
-      tagPosts: {
-        lastVisible: null,
-        isDataEnd: false,
-        filterTags: { hashtags: [{ id: "", data: {} }] }
-      }
     })
     updateField(userData.id, { selectedFilter: currentCategory })
   }

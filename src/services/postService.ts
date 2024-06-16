@@ -218,9 +218,9 @@ const PostService =  () => {
       setPaginationValueState((Prev) =>
         produce(Prev, (draft) => {
           if (typeof data === "boolean") {
-            draft.allPosts.isDataEnd = data
+            draft.posts.isDataEnd = data
           } else {
-            draft.allPosts.lastVisible = data
+            draft.posts.lastVisible = data
           }
         })
       )
@@ -236,8 +236,8 @@ const PostService =  () => {
           "desc", 
           3, 
           handlePaginationValueState, 
-          paginationValueState.allPosts.lastVisible, 
-          paginationValueState.allPosts.isDataEnd
+          paginationValueState.posts.lastVisible, 
+          paginationValueState.posts.isDataEnd
         )
         if (readedPosts) {
           const lastUpdatedPosts = readedPosts.slice(0,-3);
@@ -309,9 +309,9 @@ const PostService =  () => {
       setPaginationValueState((Prev) =>
         produce(Prev, (draft) => {
           if (typeof data === "boolean") {
-            draft.followingPosts.isDataEnd = data
+            draft.posts.isDataEnd = data
           } else {
-            draft.followingPosts.lastVisible = data
+            draft.posts.lastVisible = data
           }
         })
       )
@@ -332,8 +332,8 @@ const PostService =  () => {
             "desc",
             3,
             handlePaginationValueState,
-            paginationValueState.followingPosts.lastVisible, 
-            paginationValueState.followingPosts.isDataEnd
+            paginationValueState.posts.lastVisible, 
+            paginationValueState.posts.isDataEnd
           )
           if (readedPosts) {
             const lastUpdatedPosts = readedPosts.slice(0,-3);
@@ -405,9 +405,9 @@ const PostService =  () => {
       setPaginationValueState((Prev) =>
         produce(Prev, (draft) => {
           if (typeof data === "boolean") {
-            draft.likePosts.isDataEnd = data
+            draft.posts.isDataEnd = data
           } else {
-            draft.likePosts.lastVisible = data
+            draft.posts.lastVisible = data
           }
         })
       )
@@ -426,8 +426,8 @@ const PostService =  () => {
           "desc",
           3,
           handlePaginationValueState,
-          paginationValueState.likePosts.lastVisible, 
-          paginationValueState.likePosts.isDataEnd
+          paginationValueState.posts.lastVisible, 
+          paginationValueState.posts.isDataEnd
         )
         if (readedPosts) {
           const lastUpdatedPosts = readedPosts.slice(0,-3);
@@ -498,9 +498,9 @@ const PostService =  () => {
       setPaginationValueState((Prev) =>
         produce(Prev, (draft) => {
           if (typeof data === "boolean") {
-            draft.likePosts.isDataEnd = data
+            draft.posts.isDataEnd = data
           } else {
-            draft.likePosts.lastVisible = data
+            draft.posts.lastVisible = data
           }
         })
       )
@@ -519,8 +519,8 @@ const PostService =  () => {
           "desc",
           3,
           handlePaginationValueState,
-          paginationValueState.likePosts.lastVisible, 
-          paginationValueState.likePosts.isDataEnd
+          paginationValueState.posts.lastVisible, 
+          paginationValueState.posts.isDataEnd
         )
         if (readedPosts) {
           const lastUpdatedPosts = readedPosts.slice(0,-3);

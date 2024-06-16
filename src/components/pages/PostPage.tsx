@@ -35,7 +35,7 @@ const PostPage = () => {
   const [paginationValueState, setPaginationValueState] = useRecoilState(paginationValue);
   const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue)
 
-  const currentCategory = userData?.data.selectedFilter || paginationValueState.currentCategory
+  const currentCategory = paginationValueState.currentCategory
 
   const { isOpen } = modalStackState[modalStackState.length - 1];
 
@@ -82,18 +82,29 @@ const PostPage = () => {
   useEffect(() => {
     if (userData) {
       setPostFormState({ hashtags: userData.data.filterTags.map(tag => ({ id: tag, data: {} })) })
+      if (currentCategory === "") {
+        setPaginationValueState({
+          currentCategory: userData?.data.selectedFilter,
+          posts: {
+            lastVisible: null,
+            isDataEnd: false
+          },
+        })
+      }
     }
   }, [userData])
 
   useEffect(() => {
-    if (currentCategory === "all-posts" && posts.length === 0) {
-      refetchPostAll()
-    } else if (currentCategory === "following-posts" && posts.length === 0) {
-      refetchPostFollow()
-    } else if (currentCategory === "like-posts" && posts.length === 0) {
-      refetchPostLike()
-    } else if (currentCategory === "tag-posts" && posts.length === 0 && postFormState.hashtags[0].id !== "") {
-      refetchPostTag()
+    if (posts.length === 0) {
+      if (currentCategory === "all-posts") {
+        refetchPostAll()
+      } else if (currentCategory === "following-posts") {
+        refetchPostFollow()
+      } else if (currentCategory === "like-posts") {
+        refetchPostLike()
+      } else if (currentCategory === "tag-posts" && postFormState.hashtags[0].id !== "") {
+        refetchPostTag()
+      }
     }
   }, [posts])
 
@@ -113,14 +124,16 @@ const PostPage = () => {
 
 
   useEffect(() => {
-    if (currentCategory === "all-posts" && paginationValueState.allPosts.lastVisible === null) {
-      resetPostAll()
-    } else if (currentCategory === "following-posts" && paginationValueState.followingPosts.lastVisible === null) {
-      resetPostFollow()
-    } else if (currentCategory === "like-posts" && paginationValueState.likePosts.lastVisible === null) {
-      resetPostLike()
-    } else if (currentCategory === "tag-posts" && paginationValueState.likePosts.lastVisible === null) {
-      resetPostTag()
+    if (paginationValueState.posts.lastVisible === null) {
+      if (currentCategory === "all-posts") {
+        resetPostAll()
+      } else if (currentCategory === "following-posts") {
+        resetPostFollow()
+      } else if (currentCategory === "like-posts") {
+        resetPostLike()
+      } else if (currentCategory === "tag-posts") {
+        resetPostTag()
+      }
     }
   }, [paginationValueState])
 
@@ -129,23 +142,10 @@ const PostPage = () => {
     <ScrollRefreshContainer isLoading={isFetching} refetch={() => {
       setPaginationValueState({
         currentCategory,
-        allPosts: {
+        posts: {
           lastVisible: null,
           isDataEnd: false
         },
-        followingPosts: {
-          lastVisible: null,
-          isDataEnd: false
-        },
-        likePosts: {
-          lastVisible: null,
-          isDataEnd: false
-        },
-        tagPosts: {
-          lastVisible: null,
-          isDataEnd: false,
-          filterTags: { hashtags: [{ id: "", data: {} }] }
-        }
       })
     }}>
       <div className="relative">

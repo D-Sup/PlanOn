@@ -5,6 +5,7 @@ import "firebase/compat/database";
 import "firebase/compat/storage";
 
 import { initializeApp } from "firebase/app";
+import { getMessaging } from "firebase/messaging";
 import { getAuth } from "firebase/auth";
 import { getFirestore, Timestamp } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
@@ -26,7 +27,8 @@ const app = initializeApp(firebaseConfig);
 const appAuth = getAuth(app);
 const appFireStore = getFirestore(app);
 const storage = getStorage(app);
+const messaging = getMessaging(app);
 const auth = firebase.auth();
 const timestamp = Timestamp;
 
-export { db, appAuth, appFireStore, auth, timestamp, storage };
+export { db, appAuth, appFireStore, auth, timestamp, storage, messaging };

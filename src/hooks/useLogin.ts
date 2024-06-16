@@ -48,7 +48,7 @@ const useLogin = (isChecked: boolean): LoginResponse => {
           if (response && "data" in response) { 
             const { accountId } = response.data;
             setIsLoginSuccess(true)
-            setTimeout(() => setAuthUserState({accountId}), 0)
+            setTimeout(() => setAuthUserState({accountId}), 100)
             console.log("로그인을 성공하였습니다.", data.user);
           } else {
             throw new Error("응답에 문제가 있습니다.");
@@ -75,7 +75,8 @@ const useLogin = (isChecked: boolean): LoginResponse => {
                 secureNumber: "",
                 selectedFilter: "all-posts",
                 filterTags: [],
-                selectedFont: "프리텐다드체"
+                selectedFont: "프리텐다드체",
+                deviceToken: ""
               }    
               await setDoc(docRef, {
                 ...newUserDocument,
