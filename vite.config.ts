@@ -19,6 +19,7 @@ export default defineConfig(({ mode }) => {
           manifest: {
             name: "플랜온",
             short_name: "플랜온",
+            display: "standalone",
             theme_color: "#1A1A1A",
             icons: [
                 {

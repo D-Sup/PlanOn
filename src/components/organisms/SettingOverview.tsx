@@ -27,6 +27,8 @@ import NotificationPermission from "@/utils/notificationPermission";
 
 const SettingOverview = () => {
 
+  const { requestPermission } = NotificationPermission()
+
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -66,7 +68,9 @@ const SettingOverview = () => {
             }} />
 
           <SettingCard icon={IconAlert} name={"알림"} handleFunc={() => {
-            NotificationPermission()
+            requestPermission()
+            console.log("실행");
+
             updateField(userData.id, { isAlert: !userData.data.isAlert })
           }} hasSwitch={true} isChecked={userData.data.isAlert}
           />

@@ -6,25 +6,55 @@ import useModalStack from "@/hooks/useModalStack";
 import useFirestoreUpdate from "@/hooks/useFirestoreUpdate";
 import getAccountId from "./getAccountId";
 
-const NotificationPermission = async () => {
+const NotificationPermission = () => {
+  const accountId = getAccountId();
+  const { openModal } = useModalStack();
+  const { updateField } = useFirestoreUpdate("users");
 
-  const accountId = getAccountId()
+  const requestPermission = async () => {
+    try {
+      console.log("실행");
 
-  const { openModal } = useModalStack()
-  const { updateField } = useFirestoreUpdate("users")
-  const permission = await Notification.requestPermission();
+      // 사용자 인터랙션을 통해 요청해야 합니다.
+      const permission = await Notification.requestPermission();
+      console.log(permission);
 
-  if (permission === "granted") {
-    const token = await getToken(messaging, {
-      vapidKey: process.env.REACT_APP_VAPID_KEY,
-    });
-    openModal("Toast", {message: "알림을 활성하였습니다."})
-    updateField(accountId, { deviceToken: token})
-  } else if (permission === "denied") {
-    openModal("Toast", {message: "알림을 비활성화하였습니다."})
-    updateField(accountId, { deviceToken: "" })
-  }
+      if (permission === "granted") {
+        const token = await getToken(messaging, {
+          vapidKey: process.env.REACT_APP_VAPID_KEY,
+        });
+        openModal("Toast", { message: "알림을 활성하였습니다." });
+        updateField(accountId, { deviceToken: token });
+      } else if (permission === "denied") {
+        openModal("Toast", { message: "알림을 비활성화하였습니다." });
+        updateField(accountId, { deviceToken: "" });
+      }
+    } catch (error) {
+      console.error("알림 권한 요청 중 오류 발생:", error);
+    }
+  };
+
+  return { requestPermission }
 }
+
+// async function requestPermission() {
+//   const permission = await Notification.requestPermission();
+//   console.log(permission);
+
+//   if (permission === "granted") {
+//     const token = await getToken(messaging, {
+//       vapidKey: process.env.REACT_APP_VAPID_KEY,
+//     });
+//     //We can send token to server
+//     console.log("Token generated : ", token);
+//   } else if (permission === "denied") {
+//     //notifications are blocked
+//   }
+// }
+
+// useEffect(() => {
+//   requestPermission();
+// }, []);
 
 export default NotificationPermission;
 
