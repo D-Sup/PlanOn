@@ -184,15 +184,15 @@ const PostPage = () => {
               }
             }]} />
         </FixedTrigger>
-        {isLoading && isFetching &&
+        {isLoading &&
           <PostCardSkeleton repeat={2} />
         }
         <div className="flex flex-col gap-[10px] bg-background-light" >
-          {!isLoading && !isFetching && filteredData?.map(singleData => (
+          {!isLoading && filteredData?.map(singleData => (
             <PostCard data={singleData} key={singleData.id} />
           ))
           }
-          {!isLoading && !isFetching && filteredData?.length === 0 &&
+          {!isLoading && filteredData?.length === 0 &&
             <span className="absolute top-[200px] left-1/2 -translate-x-1/2 text-nowrap text-md text-white">게시물이 없습니다.</span>
           }
         </div>
