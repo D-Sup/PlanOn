@@ -4,7 +4,7 @@ import RouteTransition from "./components/organisms/RouteTransition";
 import { ModalStack } from "./components/organisms/ModalStack";
 import { NonLoginProtectedRoute, LoginProtectedRoute } from "./routes/ProtectedRoute";
 
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import NavigationMenu from "./components/organisms/NavigationMenu";
 import LocalPointDetailPage from "./components/pages/LocalPointDetailPage";
@@ -46,7 +46,7 @@ const App = () => {
     <>
 
       <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         <UserInfoProvider>
           <RouteTransition location={location}>
             <Routes location={location}>

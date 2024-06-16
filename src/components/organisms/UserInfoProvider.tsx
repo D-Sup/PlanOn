@@ -45,10 +45,6 @@ const UserInfoProvider = ({ children }: { children: React.ReactNode }) => {
   const queryRef = useRef(messagesRef)
 
   useEffect(() => {
-    requestPermission()
-  }, [])
-
-  useEffect(() => {
     if (accountId) {
       refetch()
     }
@@ -97,6 +93,11 @@ const UserInfoProvider = ({ children }: { children: React.ReactNode }) => {
       if (data.data.isFirstEntry) {
         navigate("/tutorial", { state: { direction: "up" } })
       }
+
+      if (data.data.deviceToken) {
+        requestPermission()
+      }
+
     }
   }, [data])
 
