@@ -6,6 +6,7 @@ import { isUnLockValue, routeDirectionValue } from "@/store";
 
 import UserService from "@/services/userService";
 
+import NotificationPermission from "@/utils/notificationPermission";
 import { db } from "@/firebase/config";
 import getAccountId from "@/utils/getAccountId";
 
@@ -35,12 +36,17 @@ const UserInfoProvider = ({ children }: { children: React.ReactNode }) => {
 
   const navigate = useNavigate()
   const { openModal } = useModalStack()
+  const { requestPermission } = NotificationPermission(true)
 
   const accountId = getAccountId()
 
   const messagesRef = db.collection("users").doc(accountId)
 
   const queryRef = useRef(messagesRef)
+
+  useEffect(() => {
+    requestPermission()
+  }, [])
 
   useEffect(() => {
     if (accountId) {

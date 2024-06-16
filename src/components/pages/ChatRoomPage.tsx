@@ -78,12 +78,23 @@ const ChatRoomPage = () => {
 
   const extractMetaTags = async (url: string): Promise<LinkType> => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_META_TAGS_API_KEY}?url=${url}`, {
+      const response = await fetch(`${process.env.REACT_APP_META_TAGS_API_URL}?url=${url}`, {
         method: "GET",
       });
 
       const data = await response.json();
       return data
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  const sendMessage = (title: string, body: string, token: string) => {
+    try {
+      fetch(`${process.env.REACT_APP_SEND_MESSAGE_API_URL}?title=${title}&body=${body}&token=${token}`, {
+        method: "POST",
+      });
     } catch (error) {
       console.error(error);
       throw error;
@@ -208,6 +219,7 @@ const ChatRoomPage = () => {
         isRead: false,
         createdAt: now,
       });
+      sendMessage(myInfo?.data.accountName, "사진", userInfo.deviceToken)
       setInputValue("");
       window.scrollTo({
         top: document.body.scrollHeight,
@@ -221,6 +233,7 @@ const ChatRoomPage = () => {
         isRead: false,
         createdAt: now,
       });
+      sendMessage(myInfo?.data.accountName, inputValue, userInfo.deviceToken)
       setInputValue("");
       window.scrollTo({
         top: document.body.scrollHeight,

@@ -46,8 +46,6 @@ const SettingOverview = () => {
 
   const isFirstChat = userData && !userData.data.chats.some((chat) => chat.userId === "sAksWjNPRfMt7PJ6IDtWM0Rnunt1")
 
-  const { updateOption } = location.state || {}
-
   return (
     <>
       {userData &&
@@ -67,15 +65,24 @@ const SettingOverview = () => {
               }
             }} />
 
-          <SettingCard icon={IconAlert} name={"알림"} handleFunc={() => {
-            requestPermission()
-            console.log("실행");
-
-            updateField(userData.id, { isAlert: !userData.data.isAlert })
-          }} hasSwitch={true} isChecked={userData.data.isAlert}
+          <SettingCard
+            icon={IconAlert}
+            name={"알림"}
+            isSafeUpdate={true}
+            handleFunc={() => {
+              requestPermission()
+              if (userData.data.deviceToken !== "") {
+                openModal("Toast", { message: "디바이스 설정에서 알림 권한을 설정해주세요." });
+              }
+            }}
+            hasSwitch={true}
+            isChecked={userData.data.isAlert}
           />
 
-          <SettingCard icon={IconLock} name={"잠금설정"}
+          <SettingCard
+            icon={IconLock}
+            name={"잠금설정"}
+            isSafeUpdate={true}
             handleFunc={() => {
               if (userData.data.secureNumber !== "") {
                 updateField(userData.id, {
@@ -86,7 +93,7 @@ const SettingOverview = () => {
               }
             }}
             hasSwitch={true}
-            isChecked={updateOption || userData.data.secureNumber !== ""} />
+            isChecked={!!userData.data.secureNumber} />
 
           <SettingCard icon={IconFont} name={"글씨체"} handleFunc={() => {
             openModal(FontOverView, { selectedFont: userData.data.selectedFont })

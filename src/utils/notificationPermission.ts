@@ -1,33 +1,24 @@
 import { getToken } from "firebase/messaging";
 import { messaging } from "@/firebase/config";
 
-import useModalStack from "@/hooks/useModalStack";
-
 import useFirestoreUpdate from "@/hooks/useFirestoreUpdate";
 import getAccountId from "./getAccountId";
 
-const NotificationPermission = () => {
+const NotificationPermission = (isUpdateToken? : boolean) => {
   const accountId = getAccountId();
-  const { openModal } = useModalStack();
   const { updateField } = useFirestoreUpdate("users");
 
   const requestPermission = async () => {
     try {
-      console.log("실행");
-
-      // 사용자 인터랙션을 통해 요청해야 합니다.
       const permission = await Notification.requestPermission();
-      console.log(permission);
 
       if (permission === "granted") {
         const token = await getToken(messaging, {
           vapidKey: process.env.REACT_APP_VAPID_KEY,
         });
-        openModal("Toast", { message: "알림을 활성하였습니다." });
-        updateField(accountId, { deviceToken: token });
-      } else if (permission === "denied") {
-        openModal("Toast", { message: "알림을 비활성화하였습니다." });
-        updateField(accountId, { deviceToken: "" });
+        updateField(accountId, { deviceToken: token, isAlert: true });
+      } else if (permission === "denied" && !isUpdateToken) {
+        updateField(accountId, { deviceToken: "off", isAlert: false });
       }
     } catch (error) {
       console.error("알림 권한 요청 중 오류 발생:", error);
@@ -37,65 +28,4 @@ const NotificationPermission = () => {
   return { requestPermission }
 }
 
-// async function requestPermission() {
-//   const permission = await Notification.requestPermission();
-//   console.log(permission);
-
-//   if (permission === "granted") {
-//     const token = await getToken(messaging, {
-//       vapidKey: process.env.REACT_APP_VAPID_KEY,
-//     });
-//     //We can send token to server
-//     console.log("Token generated : ", token);
-//   } else if (permission === "denied") {
-//     //notifications are blocked
-//   }
-// }
-
-// useEffect(() => {
-//   requestPermission();
-// }, []);
-
 export default NotificationPermission;
-
-// export function registerServiceWorker() {
-//   navigator.serviceWorker
-//     .register("firebase-messaging-sw.js")
-//     .then(function (registration) {
-//       console.log("Service Worker 등록 성공:", registration);
-//     })
-//     .catch(function (error) {
-//       console.log("Service Worker 등록 실패:", error);
-//     });
-// }
-
-// import { getToken } from "firebase/messaging";
-// import { sendTokenToServer } from "./api";
-// import { messaging } from "@/firebase/config";
-// // import { registerServiceWorker } from "./registerServiceWorker";
-
-// export async function handleAllowNotification() {
-//     registerServiceWorker(); // 나중에 설명
-//     try {
-//         const permission = await Notification.requestPermission();
-
-//         if (permission === "granted") {
-//             const token = await getToken(messaging, {
-//                 vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY
-//             });
-//             if (token) {
-//                 sendTokenToServer(token);// (토큰을 서버로 전송하는 로직)
-//             } else {
-//                 alert(
-//                     "토큰 등록이 불가능 합니다. 생성하려면 권한을 허용해주세요"
-//                 );
-//             }
-//         } else if (permission === "denied") {
-//             alert(
-//                 "web push 권한이 차단되었습니다. 알림을 사용하시려면 권한을 허용해주세요"
-//             );
-//         }
-//     } catch (error) {
-//         console.error("푸시 토큰 가져오는 중에 에러 발생", error);
-//     }
-// }

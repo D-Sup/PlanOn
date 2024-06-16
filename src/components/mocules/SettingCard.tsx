@@ -7,10 +7,11 @@ interface SettingCardProps {
   name: string,
   handleFunc: () => void,
   hasSwitch?: boolean
-  isChecked?: boolean
+  isChecked?: boolean,
+  isSafeUpdate?: boolean
 }
 
-const SettingCard = ({ icon: Icon, name, handleFunc, hasSwitch, isChecked }: SettingCardProps) => {
+const SettingCard = ({ icon: Icon, name, handleFunc, hasSwitch, isChecked, isSafeUpdate }: SettingCardProps) => {
 
   const [isSwitchOn, setIsSwitchOn] = useState(isChecked);
 
@@ -21,7 +22,7 @@ const SettingCard = ({ icon: Icon, name, handleFunc, hasSwitch, isChecked }: Set
         <p className="text-md text-white">{name}</p>
       </div>
       {hasSwitch &&
-        <Switch checked={isSwitchOn} onCheckedChange={setIsSwitchOn} onClick={handleFunc} />}
+        <Switch checked={isSafeUpdate ? isChecked : isSwitchOn} onCheckedChange={setIsSwitchOn} onClick={handleFunc} />}
     </li>
 
   )

@@ -27,7 +27,7 @@ const SecurityUnlockPage = () => {
         secureNumber: value
       })
       setIsUnLockValueState(true)
-      navigate("/setting", { state: { direction: "down", updateOption: true } })
+      navigate("/setting", { state: { direction: "down" } })
     } else if (value.length === 4 && value === secureNumber) {
       setIsUnLockValueState(true)
       setRouteDirectionValueState(Prev => ({ ...Prev, direction: "down" }))
