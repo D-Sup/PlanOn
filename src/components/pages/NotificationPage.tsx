@@ -59,6 +59,10 @@ const NotificationPage = () => {
               <ListUnitSkeleton isNotBoxShadow={true} />
             </li>
           ))}
+
+          {userData?.data.notificationHistory.length === 0 &&
+            <span className="mt-[150px] block text-center text-nowrap text-md text-white">알림기록이 없습니다.</span>
+          }
         </div>
 
       </div>
