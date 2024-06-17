@@ -37,14 +37,14 @@ const SettingOverview = () => {
 
   const { data: userData } = useContext(UserContext);
 
-  const adminChat = userData?.data.chats[userData?.data.chats.findIndex((chat) => chat.userId === "sAksWjNPRfMt7PJ6IDtWM0Rnunt1")]
+  const adminChat = userData?.data.chats[userData?.data.chats.findIndex((chat) => chat.userId === process.env.REACT_APP_Admin_ID)]
 
   const { updateField } = useFirestoreUpdate("users")
   const { deleteDocument } = useFirestoreDelete("users")
 
   const { openModal, closeModal } = useModalStack()
 
-  const isFirstChat = userData && !userData.data.chats.some((chat) => chat.userId === "sAksWjNPRfMt7PJ6IDtWM0Rnunt1")
+  const isFirstChat = userData && !userData.data.chats.some((chat) => chat.userId === process.env.REACT_APP_Admin_ID)
 
   return (
     <>
@@ -109,7 +109,7 @@ const SettingOverview = () => {
               state: {
                 direction: "next",
                 userInfo: {
-                  authorizationId: "sAksWjNPRfMt7PJ6IDtWM0Rnunt1",
+                  authorizationId: process.env.REACT_APP_Admin_ID,
                   accountName: "플랜온",
                   description: "최대한 신속하게 도와드리겠습니다.",
                   accountImage: ""
