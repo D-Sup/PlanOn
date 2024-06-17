@@ -44,6 +44,7 @@ const PostPage = () => {
   const location = useLocation()
 
   const [postFormState, setPostFormState] = useState<Pick<PostFormValueType, "hashtags">>({ hashtags: [{ id: "", data: {} }] });
+  const [firstMount, setFirstMount] = useState<boolean>(true);
 
   const { ReadPostAllPaged, ReadPostFollowPaged, ReadPostLikePaged, ReadPostTagPaged } = PostService()
   const { data: postAllData, isFetching: isPostAllFetching, isLoading: isPostAllLoading, refetch: refetchPostAll, reset: resetPostAll } = ReadPostAllPaged()
@@ -78,6 +79,10 @@ const PostPage = () => {
   const navigate = useNavigate();
 
   const isBottom = useScrollBottom();
+
+  useEffect(() => {
+    setTimeout(() => setFirstMount(false), 5000)
+  }, [])
 
   useEffect(() => {
     if (userData) {
@@ -137,6 +142,7 @@ const PostPage = () => {
     }
   }, [paginationValueState])
 
+  console.log(filteredData);
 
   return (
     <ScrollRefreshContainer isLoading={isFetching} refetch={() => {
@@ -192,7 +198,7 @@ const PostPage = () => {
             <PostCard data={singleData} key={singleData.id} />
           ))
           }
-          {!isLoading && filteredData?.length === 0 &&
+          {!isLoading && filteredData?.length === 0 && !firstMount &&
             <span className="absolute top-[200px] left-1/2 -translate-x-1/2 text-nowrap text-md text-white">게시물이 없습니다.</span>
           }
         </div>
