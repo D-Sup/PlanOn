@@ -9,6 +9,7 @@ import IconLogo from "../../assets/images/icon-logo.svg?react";
 import IconPlus from "../../assets/images/icon-plus.svg?react";
 import IconCircleX from "../../assets/images/icon-circle-x.svg?react";
 import IconLocation from "../../assets/images/icon-location.svg?react";
+import IconAlert from "../../assets/images/icon-alert.svg?react";
 
 const Header = () => {
   // const SearchHeaderForModal = (): JSX.Element => {
@@ -62,12 +63,17 @@ const Header = () => {
           <IconLogo fill={"var(--white)"} width={25} height={25} />
           <IconArrowBottom width={8} height={8} fill={"var(--white)"} className="absolute bottom-[7px] right-[2px]" />
         </button>
-        <div className="w-2/3 ">
+        <div className="ml-[10px] w-3/5">
           <SearchBar height={35} handleFunc={handleFunc[1]} />
         </div>
-        <button className="p-[10px]" type="button" onClick={handleFunc[2]}>
-          <IconPlus width={15} height={15} fill={"var(--white)"} />
-        </button>
+        <div className="flex-center">
+          <button className="p-[10px]" type="button" onClick={handleFunc[2]}>
+            <IconPlus width={15} height={15} fill={"var(--white)"} />
+          </button>
+          <button className="p-[10px]" type="button" onClick={handleFunc[3]}>
+            <IconAlert width={17} height={17} fill={"var(--white)"} />
+          </button>
+        </div>
       </header>
     )
   }

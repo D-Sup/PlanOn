@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useContext } from "react"
+import { UserContext } from "../organisms/UserInfoProvider";
 import useModalStack from "@/hooks/useModalStack";
 
 import CommentService from "@/services/commentService";
@@ -16,7 +17,7 @@ import { v4 as uuidv4 } from "uuid";
 import { CommentsType } from "@/types/posts.type";
 
 interface CommentOverViewProps {
-  props: { id: string, comments: CommentsType[] },
+  props: { id: string, comments: CommentsType[], deviceToken: string },
   handleScroll: (e: React.UIEvent<HTMLDivElement>) => void
 }
 
@@ -27,10 +28,11 @@ const CommentOverView = ({ props, handleScroll }: CommentOverViewProps) => {
 
   const accountId = getAccountId()
 
-  const { id, comments } = props
+  const { id, comments, deviceToken } = props
 
   const { openModal, closeModalDirect } = useModalStack()
 
+  const { data: userData } = useContext(UserContext);
   const { UpdateComment, ReadComment } = CommentService()
   const { data, isLoading, refetch } = ReadComment(comments)
   const { mutate: mutateLike } = LikeService();
@@ -92,7 +94,7 @@ const CommentOverView = ({ props, handleScroll }: CommentOverViewProps) => {
                     mutateUpdateComment({
                       type: "delete",
                       id,
-                      comment
+                      comment,
                     })
                   }
                   ])
@@ -123,6 +125,8 @@ const CommentOverView = ({ props, handleScroll }: CommentOverViewProps) => {
           mutateUpdateComment({
             type: "create",
             id,
+            deviceToken,
+            userData: userData.data,
             comment: {
               id: uuidv4(),
               content: inputValue,

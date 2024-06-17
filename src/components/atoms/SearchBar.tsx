@@ -24,19 +24,19 @@ const SearchBar = ({ height = 38, handleFunc }: SearchBarProps) => {
         placeholder="검색"
         onChange={(e) => setInputState(e.target.value)}
         onClick={handleFunc}
-        value={inputState}
+        value={handleFunc ? "" : inputState}
         autoComplete="off"
         readOnly={!!handleFunc}
       />
       <button type="button">
-        <IconCircleX
+        {!handleFunc && <IconCircleX
           className="transition duration-300"
           style={{ opacity: `${inputState.length > 0 ? 1 : 0}` }}
           width={15}
           height={15}
           fill={"var(--gray-old)"}
           onClick={() => setInputState("")}
-        />
+        />}
       </button>
     </div>
   )

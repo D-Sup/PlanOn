@@ -5,8 +5,11 @@ import useFirestoreRead from "@/hooks/useFirestoreRead";
 import useFirestoreDelete from "@/hooks/useFirestoreDelete";
 import useModalStack from "@/hooks/useModalStack";
 
+import notificationService from "./notificationService";
+
 import getAccountId from "@/utils/getAccountId";
 import { produce } from "immer";
+import { v4 as uuidv4 } from "uuid";
 
 import { ReadDocumentType } from "@/hooks/useFirestoreRead";
 import { UsersType } from "@/types/users.type";
@@ -43,40 +46,39 @@ const FollowService = () => {
   const UpdateFollow = () => {
     const accountId = getAccountId()
     const { openModal } = useModalStack();
-    const { createFieldArray } = useFirestoreCreate("users");
+    const { createFieldObject, createFieldArray } = useFirestoreCreate("users");
     const { deleteFieldArray } = useFirestoreDelete("users");
     const queryClient = useQueryClient();
 
     const queryKeys = [ "my-userInfo", "other-userInfo", "follow-users"];
   
     return useMutation({
-      mutationFn: async (request: {type: "create" | "delete", id: string | undefined }) => {
-        // if (request.target === "followings" && request.type === "create" && request.id) {
-        //   await Promise.all([
-        //     createFieldArray(accountId, "followers", request.id),
-        //     createFieldArray(request.id, "followings", accountId)
-        //   ])
-        // } else if (request.target === "followings" && request.type === "delete" && request.id) {
-        //   await Promise.all([
-        //     deleteFieldArray(accountId, "followers", request.id),
-        //     deleteFieldArray(request.id, "followings", accountId)
-        //   ])
-        // } else if (request.target === "followers" && request.type === "create" && request.id) {
-        //   await Promise.all([
-        //     createFieldArray(request.id, "followers", accountId),
-        //     createFieldArray(accountId, "followings", request.id)
-        //   ])
-        // } else if (request.target === "followers" && request.type === "delete" && request.id) {
-        //   await Promise.all([
-        //     createFieldArray(request.id, "followers", accountId),
-        //     createFieldArray(accountId, "followings", request.id)
-        //   ])
-        // } 
+      mutationFn: async (request: {type: "create" | "delete", id: string | undefined, deviceToken?: string, userData?: UsersType }) => { 
         if (request.type === "create" && request.id) {
           await Promise.all([
             createFieldArray(request.id, "followers", accountId),
             createFieldArray(accountId, "followings", request.id)
           ])
+          if (request.userData) {
+            createFieldObject(
+              request.userData.authorizationId,
+              "notificationHistory",
+              {
+                id: uuidv4(),
+                icon: request.userData.accountImage,
+                title: `${request.userData.accountName}님이 회원님을 팔로우 했습니다.`,
+                body: "",
+                isRead: false,
+                createdAt: new Date(),
+              }
+            )
+            notificationService(
+              request.deviceToken,
+              `${request.userData.accountName}님이 회원님을 팔로우 했습니다.`,
+              "",
+              `${request.userData.accountImage}`
+            )
+          }
         } else if (request.type === "delete" && request.id) {
           await Promise.all([
             deleteFieldArray(request.id, "followers", accountId),
@@ -84,7 +86,7 @@ const FollowService = () => {
           ])
         } 
       },
-      onMutate: async (request: {type: "create" | "delete", id: string | undefined }) => {
+      onMutate: async (request: {type: "create" | "delete", id: string | undefined, deviceToken?: string, userData?: UsersType }) => {
         queryKeys.forEach(async (key) => {
           await queryClient.cancelQueries({ queryKey: [key] });
         });

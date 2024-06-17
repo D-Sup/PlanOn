@@ -2,18 +2,21 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useFirestoreCreate from "@/hooks/useFirestoreCreate";
 import useFirestoreUpdate from "@/hooks/useFirestoreUpdate";
 import useFirestoreDelete from "@/hooks/useFirestoreDelete";
-import useModalStack from "@/hooks/useModalStack";
+import useModalStack from "@/hooks/useModalStack"
 
+import notificationService from "./notificationService";
 import getAccountId from "@/utils/getAccountId";
 import { produce } from "immer";
+import { v4 as uuidv4 } from "uuid";
 
 import { PostMachinedType } from "./postService";
 import { CommentsType } from "@/types/posts.type";
+import { UsersType } from "@/types/users.type";
 
 const LikeService = () => {
   const accountId = getAccountId()
   const { openModal } = useModalStack();
-  const { createFieldArray } = useFirestoreCreate("posts");
+  const { createFieldObject, createFieldArray } = useFirestoreCreate("posts");
   const { deleteFieldArray } = useFirestoreDelete("posts");
   const { updateFieldObject } = useFirestoreUpdate("posts");
   const queryClient = useQueryClient();
@@ -21,16 +24,34 @@ const LikeService = () => {
   const queryKeys = ["all-posts", "following-posts", "like-posts", "tag-posts", "single-posts"];
 
   return useMutation({
-    mutationFn: async (request: { target: "post" | "comment", type: "create" | "delete" | "update", id: string, comment?: CommentsType }) => {
+    mutationFn: async (request: { target: "post" | "comment", type: "create" | "delete" | "update", id: string, comment?: CommentsType, deviceToken?: string, userData?: UsersType }) => {
       if (request.target === "post" && request.type === "create") {
         await createFieldArray(request.id, "likedUsers", accountId);
+        createFieldObject(
+          request.userData.authorizationId,
+          "notificationHistory",
+          {
+            id: uuidv4(),
+            icon: request.userData.accountImage,
+            title: `${request.userData.accountName}님이 회원님 게시물에 좋아요를 눌렀습니다.`,
+            body: "",
+            isRead: false,
+            createdAt: new Date(),
+          }
+        )
+        notificationService(
+          request.deviceToken,
+          `${request.userData.accountName}님이 회원님 게시물에 좋아요를 눌렀습니다.`,
+          "",
+          `${request.userData.accountImage}`
+        )
       } else if (request.target === "post" && request.type === "delete") {
         await deleteFieldArray(request.id, "likedUsers", accountId);
       } else if (request.target === "comment" &&  request.type === "update" && request.comment) {
         await updateFieldObject(request.id, "comments", {id: request.comment.id}, request.comment)
       }
     },
-    onMutate: async (request: { target: "post" | "comment", type: "create" | "delete" | "update", id: string, comment?: CommentsType }) => {
+    onMutate: async (request: { target: "post" | "comment", type: "create" | "delete" | "update", id: string, comment?: CommentsType, deviceToken?: string, userData?: UsersType }) => {
 
       queryKeys.forEach(async (key) => {
         await queryClient.cancelQueries({ queryKey : [key] });
@@ -47,18 +68,22 @@ const LikeService = () => {
               produce(post, (draft) => {
                 if (draft.id === request.id) {
                   if (request.target === "post") {
-                    draft.data.likedUsers = draft.data.likedUsers.includes(accountId)
-                      ? draft.data.likedUsers.filter((id: string) => id !== accountId)
-                      : [...draft.data.likedUsers, accountId];
+                    if (draft.data.likedUsers.includes(accountId)) {
+                      draft.data.likedUsers = draft.data.likedUsers.filter((id: string) => id !== accountId)
+                    } else {
+                      draft.data.likedUsers = [...draft.data.likedUsers, accountId];
+                    }
                   } else {
                     const commentId = request.comment?.id;
                     if (commentId) {
                       const commentIndex = draft.data.comments.findIndex(comment => comment.id === commentId);
                       if (commentIndex !== -1) {
                         const likedUsers = draft.data.comments[commentIndex].likedUsers;
-                        draft.data.comments[commentIndex].likedUsers = likedUsers.includes(accountId)
-                          ? likedUsers.filter((id: string) => id !== accountId)
-                          : [...likedUsers, accountId];
+                        if (likedUsers.includes(accountId)) {
+                          draft.data.comments[commentIndex].likedUsers = likedUsers.filter((id: string) => id !== accountId)
+                        } else {
+                          draft.data.comments[commentIndex].likedUsers = [...likedUsers, accountId];
+                        }
                       }
                     }
                   }
@@ -72,18 +97,22 @@ const LikeService = () => {
             return produce(data, (draft: PostMachinedType) => {
               if (draft.id === request.id) {
                 if (request.target === "post") {
-                  draft.data.likedUsers = draft.data.likedUsers.includes(accountId)
-                    ? draft.data.likedUsers.filter((id: string) => id !== accountId)
-                    : [...draft.data.likedUsers, accountId];
+                  if (draft.data.likedUsers.includes(accountId)) {
+                    draft.data.likedUsers = draft.data.likedUsers.filter((id: string) => id !== accountId)
+                  } else {
+                    draft.data.likedUsers = [...draft.data.likedUsers, accountId];
+                  }
                 } else {
                   const commentId = request.comment?.id;
                   if (commentId) {
                     const commentIndex = draft.data.comments.findIndex(comment => comment.id === commentId);
                     if (commentIndex !== -1) {
                       const likedUsers = draft.data.comments[commentIndex].likedUsers;
-                      draft.data.comments[commentIndex].likedUsers = likedUsers.includes(accountId)
-                        ? likedUsers.filter((id: string) => id !== accountId)
-                        : [...likedUsers, accountId];
+                      if (likedUsers.includes(accountId)) {
+                        draft.data.comments[commentIndex].likedUsers = likedUsers.filter((id: string) => id !== accountId)
+                      } else {
+                        draft.data.comments[commentIndex].likedUsers = [...likedUsers, accountId];
+                      }
                     }
                   }
                 }

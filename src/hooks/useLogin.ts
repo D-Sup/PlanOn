@@ -76,7 +76,8 @@ const useLogin = (isChecked: boolean): LoginResponse => {
                 selectedFilter: "all-posts",
                 filterTags: [],
                 selectedFont: "프리텐다드체",
-                deviceToken: ""
+                deviceToken: "",
+                notificationHistory: []
               }    
               await setDoc(docRef, {
                 ...newUserDocument,

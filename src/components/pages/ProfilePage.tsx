@@ -82,6 +82,7 @@ const ProfilePage = () => {
           }
           {fetchUserData && fetchPostData &&
             <ProfileOverview
+              myInfo={userData?.data}
               data={fetchUserData.data}
               postLength={fetchPostData.length}
               isMyProfile={accountId === id}

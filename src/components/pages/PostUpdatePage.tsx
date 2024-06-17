@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { UserContext } from "../organisms/UserInfoProvider"
 import { useNavigate, useLocation } from "react-router-dom";
 import useModalStack from "@/hooks/useModalStack";
 
@@ -19,6 +20,8 @@ import PostService from "@/services/postService";
 import { PostFormValueType } from "@/store";
 
 const PostUpdatePage = () => {
+
+  const { data: userData } = useContext(UserContext);
 
   const location = useLocation()
   const editData = location.state?.data as PostFormValueType;
@@ -71,6 +74,7 @@ const PostUpdatePage = () => {
   )
 
   const { mutate: mutateCreatePost, isPending: isCreatePostPending } = CreatePost(
+    userData.data,
     () => {
       closeModal()
       setTimeout(() => {

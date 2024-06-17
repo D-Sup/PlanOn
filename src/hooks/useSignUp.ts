@@ -66,7 +66,8 @@ const useSignUp = (): SignUpResponse => {
 				selectedFilter: "all-posts",
 				filterTags: [],
 				selectedFont: "프리텐다드체",
-				deviceToken: ""
+				deviceToken: "",
+				notificationHistory: []
 			};
 
 			const unsubscribe = onAuthStateChanged(appAuth, async (user) => {

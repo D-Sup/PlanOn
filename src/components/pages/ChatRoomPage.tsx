@@ -54,6 +54,7 @@ const ChatRoomPage = () => {
 
   const { createFieldObject } = useFirestoreCreate("users")
   const { updateFieldObject } = useFirestoreUpdate("users")
+
   const queryRef = useRef(null);
 
   const { photoUpload } = usePhotoUpload()
@@ -120,7 +121,7 @@ const ChatRoomPage = () => {
 
   const loadMoreMessages = async () => {
 
-    const query = messagesRef.orderBy("createdAt", "desc").startAfter(lastVisible).limit(15);
+    const query = messagesRef.orderBy("createdAt", "desc").startAfter(lastVisible).limit(20);
 
     const documentSnapshots = await query.get();
     const newMessages = documentSnapshots.docs.map(doc => ({
@@ -196,7 +197,12 @@ const ChatRoomPage = () => {
         isRead: false,
         createdAt: now,
       });
-      notificationService(myInfo?.data.accountName, "사진", userInfo.deviceToken)
+      notificationService(
+        userInfo.deviceToken,
+        "회원님에게 메시지를 보냈습니다.",
+        `${myInfo?.data.accountName}: (사진)`,
+        `${myInfo?.data.accountImage}`
+      )
       setInputValue("");
       window.scrollTo({
         top: document.body.scrollHeight,
@@ -210,7 +216,12 @@ const ChatRoomPage = () => {
         isRead: false,
         createdAt: now,
       });
-      notificationService(myInfo?.data.accountName, inputValue, userInfo.deviceToken)
+      notificationService(
+        userInfo.deviceToken,
+        "회원님에게 메시지를 보냈습니다.",
+        `${myInfo?.data.accountName}: ${inputValue}`,
+        `${myInfo?.data.accountImage}`
+      )
       setInputValue("");
       window.scrollTo({
         top: document.body.scrollHeight,

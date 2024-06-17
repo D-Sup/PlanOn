@@ -3,6 +3,7 @@ import useFirestoreCreate from "@/hooks/useFirestoreCreate";
 import useFirestoreRead from "@/hooks/useFirestoreRead";
 import useFirestoreUpdate from "@/hooks/useFirestoreUpdate";
 import useFirestoreDelete from "@/hooks/useFirestoreDelete";
+import notificationService from "./notificationService";
 
 import useDataQuery from "@/hooks/useDataQuery";
 import useDataMutation from "@/hooks/useDataMutation";
@@ -32,12 +33,13 @@ const PostService =  () => {
   const accountId = getAccountId()
   const setPaginationValue = useSetRecoilState(paginationValue)
   
-  const CreatePost = (onSuccess: () => void, onError: () => void) => {
+  const CreatePost = (userData: UsersType, onSuccess: () => void, onError: () => void) => {
     const postFormState = useRecoilValue(postFormValue);
     const { photoUpload } = usePhotoUpload();
+    const { readDocumentsSimplePaged } = useFirestoreRead("users");
     const { createDocumentManual: createDocumentManualHashtags } = useFirestoreCreate("hashtags");
     const { createDocumentManual: createDocumentManualPosts } = useFirestoreCreate("posts");
-    const { createFieldArray } = useFirestoreCreate("hashtags")
+    const { createFieldObject, createFieldArray } = useFirestoreCreate("hashtags")
 
     const { mutate, isPending } = useDataMutation(
       ["all-posts", "following-posts", "like-posts", "tag-posts"],
@@ -73,22 +75,42 @@ const PostService =  () => {
                 usertags: postFormState.usertags.map(usertag => usertag.id),
                 scheduleId: postFormState.scheduleId
               })
+              
             })(),
           ])
-          uploadedPost && setPaginationValue(Prev => ({...Prev, 
-            allPosts: {
-              lastVisible: null,
-              isDataEnd: false
-            },
-            followingPosts: {
-              lastVisible: null,
-              isDataEnd: false
-            },
-            likePosts: {
-              lastVisible: null,
-              isDataEnd: false
-            }
-        }))
+          if (uploadedPost) {
+            setPaginationValue(Prev => ({...Prev, 
+              posts: {
+                lastVisible: null,
+                isDataEnd: false
+              },
+            }))
+          const readedUsers = await readDocumentsSimplePaged<UsersType>([], "authorizationId", "in", userData.followers, "createdAt", "asc", Infinity)
+          if (readedUsers) {
+            Promise.all(
+              readedUsers.map(async (user) => {
+                notificationService(
+                  user.data.deviceToken,
+                  `${userData.accountName}님이 게시물을 게시했습니다.`,
+                  `${postFormState.content}`,
+                  `${userData.accountImage}`
+                );
+                createFieldObject(
+                  userData.authorizationId,
+                  "notificationHistory",
+                  {
+                    id: uuidv4(),
+                    icon: `${userData.accountImage}`,
+                    title: `${userData.accountName}님이 게시물을 게시했습니다.`,
+                    body: `${postFormState.content}`,
+                    isRead: false,
+                    createdAt: new Date(),
+                  }
+                );
+              })
+            )
+          }
+          }
         }
       }, 
       onSuccess, 
@@ -624,18 +646,10 @@ const PostService =  () => {
         ])
         if (updatedPost) {
           setPaginationValue(Prev => ({...Prev, 
-            allPosts: {
+            posts: {
               lastVisible: null,
               isDataEnd: false
             },
-            followingPosts: {
-              lastVisible: null,
-              isDataEnd: false
-            },
-            likePosts: {
-              lastVisible: null,
-              isDataEnd: false
-            }
           }))
         }
       }, 
@@ -667,19 +681,11 @@ const PostService =  () => {
         
         if (deleted) {
           setPaginationValue(Prev => ({...Prev, 
-            allPosts: {
+            posts: {
               lastVisible: null,
               isDataEnd: false
             },
-            followingPosts: {
-              lastVisible: null,
-              isDataEnd: false
-            },
-            likePosts: {
-              lastVisible: null,
-              isDataEnd: false
-            }
-        }))
+          }))
         }
       }, 
       onSuccess, 

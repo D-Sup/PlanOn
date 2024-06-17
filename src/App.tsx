@@ -35,6 +35,7 @@ import DownloadGuidePage from "./components/pages/DownloadGuidePage";
 import SecurityUnlockPage from "./components/pages/SecurityUnlockPage";
 import LinkHistoryCollectionPage from "./components/pages/LinkHistoryCollectionPage";
 import TutorialPage from "./components/pages/TutorialPage";
+import NotificationPage from "./components/pages/NotificationPage";
 
 export const queryClient = new QueryClient()
 
@@ -65,6 +66,7 @@ const App = () => {
                 <Route path="/post/*" element={<PostPage />} />
                 <Route path="/post/update/*" element={<PostUpdatePage />} />
                 <Route path="/search/*" element={<SearchPage />} />
+                <Route path="/notification/*" element={<NotificationPage />} />
                 <Route path="/post/collection/*" element={<PostCollectionPage />} />
                 <Route path="/schedule/*" element={<SchedulePage />} />
                 <Route path="/schedule/update/*" element={<ScheduleUpdatePage />} />

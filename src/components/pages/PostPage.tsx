@@ -142,8 +142,6 @@ const PostPage = () => {
     }
   }, [paginationValueState])
 
-  console.log(filteredData);
-
   return (
     <ScrollRefreshContainer isLoading={isFetching} refetch={() => {
       setPaginationValueState({
@@ -188,7 +186,13 @@ const PostPage = () => {
                   state: { direction: "next" },
                 })
               }
-            }]} />
+            },
+            () => {
+              navigate("/notification", {
+                state: { direction: "next" },
+              })
+            },
+          ]} />
         </FixedTrigger>
         {isLoading &&
           <PostCardSkeleton repeat={2} />

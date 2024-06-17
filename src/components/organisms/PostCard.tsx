@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
+import { UserContext } from "../organisms/UserInfoProvider";
 import { useNavigate, useLocation } from "react-router-dom";
 import useModalStack from "@/hooks/useModalStack";
 
@@ -22,6 +23,7 @@ import { PostMachinedType } from "@/services/postService";
 
 const PostCard = ({ data, isReadOnly }: { data: PostMachinedType, isReadOnly?: boolean }) => {
 
+  const { data: userData } = useContext(UserContext);
   const { id, data: postData } = data
   const accountId = getAccountId()
 
@@ -70,14 +72,14 @@ const PostCard = ({ data, isReadOnly }: { data: PostMachinedType, isReadOnly?: b
               if (isReadOnly) {
                 openModal("Toast", { type: "info", message: "회원만 이용 가능한 기능입니다." });
               } else {
-                mutate({ target: "post", type: postData.likedUsers.includes(accountId) ? "delete" : "create", id })
+                mutate({ target: "post", type: postData.likedUsers.includes(accountId) ? "delete" : "create", id, deviceToken: postData.userInfo.deviceToken, userData: userData.data })
               }
             },
             () => {
               if (isReadOnly) {
                 openModal("Toast", { type: "info", message: "회원만 이용 가능한 기능입니다." });
               } else {
-                openModal(CommentOverView, { id, comments: postData.comments })
+                openModal(CommentOverView, { id, comments: postData.comments, deviceToken: postData.userInfo.deviceToken })
               }
             }]} />
         </div >

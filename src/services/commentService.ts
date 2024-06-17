@@ -3,9 +3,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useFirestoreRead from "@/hooks/useFirestoreRead";
 import useFirestoreCreate from "@/hooks/useFirestoreCreate";
 import useFirestoreDelete from "@/hooks/useFirestoreDelete";
+import notificationService from "./notificationService";
 import useModalStack from "@/hooks/useModalStack";
 
 import { produce } from "immer";
+import { v4 as uuidv4 } from "uuid";
 
 import { PostMachinedType } from "./postService";
 import { UsersType } from "@/types/users.type";
@@ -50,14 +52,32 @@ const CommentService = () => {
     const queryKeys = ["all-posts", "following-posts", "like-posts", "tag-posts", "single-posts"];
 
     return useMutation({
-      mutationFn: async (request: { type: "create" | "delete", id: string, comment: CommentsType | CommentMachinedType }) => {
+      mutationFn: async (request: { type: "create" | "delete", id: string, comment: CommentsType | CommentMachinedType, deviceToken?: string, userData?: UsersType }) => {
         if (request.type === "create") {
           await createFieldObject(request.id, "comments", request.comment);
+          createFieldObject(
+            request.userData.authorizationId,
+            "notificationHistory",
+            {
+              id: uuidv4(),
+              icon: request.userData.accountImage,
+              title: `회원님 게시물에 댓글을 남겼습니다.`,
+              body: `${request.userData.accountName}: ${request.comment.content}`,
+              isRead: false,
+              createdAt: new Date(),
+            }
+          )
+          notificationService(
+            request.deviceToken,
+            "회원님 게시물에 댓글을 남겼습니다.",
+            `${request.userData.accountName}: ${request.comment.content}`,
+            `${request.userData.accountImage}`
+          )
         } else if (request.type === "delete") {
           await deleteFieldObject(request.id, "comments", {id : request.comment.id});
         }
       },
-      onMutate: async (request: { type: "create" | "delete", id: string, comment: CommentsType | CommentMachinedType } ) => {
+      onMutate: async (request: { type: "create" | "delete", id: string, comment: CommentsType | CommentMachinedType, deviceToken?: string, userData?: UsersType} ) => {
         queryKeys.forEach(async (key) => {
           await queryClient.cancelQueries({ queryKey: [key] });
         });

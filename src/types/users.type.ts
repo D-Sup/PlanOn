@@ -21,6 +21,7 @@ export interface UsersType {
   filterTags: string[],
   selectedFont: string,
   deviceToken: string
+  notificationHistory: NotificationHistoryType[]
   // postIds: string[],
   // scheduleIds: string[]
 }
@@ -41,5 +42,14 @@ export interface ChatsType {
   lastMessageCreatedAt: Timestamp,
   unreadLength: number,
   isLocal: boolean
+}
+
+export interface NotificationHistoryType {
+  id: string,
+  icon: string,
+  title: string,
+  body: string,
+  isRead: string,
+  createdAt: Timestamp,
 }
 

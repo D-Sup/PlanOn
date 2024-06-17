@@ -15,6 +15,7 @@ import getAccountId from "@/utils/getAccountId";
 import { UsersType } from "@/types/users.type";
 
 interface ProfileOverviewProps {
+  myInfo?: UsersType
   data: UsersType,
   postLength: number
   isMyProfile: boolean,
@@ -22,9 +23,9 @@ interface ProfileOverviewProps {
   isFirstChat: boolean
 }
 
-const ProfileOverview = ({ data, postLength, isMyProfile, chatRoomId, isFirstChat }: ProfileOverviewProps) => {
+const ProfileOverview = ({ myInfo, data, postLength, isMyProfile, chatRoomId, isFirstChat }: ProfileOverviewProps) => {
 
-  const { accountImage, accountName, description, followers, followings, authorizationId } = data as UsersType;
+  const { accountImage, accountName, description, followers, followings, authorizationId, deviceToken } = data as UsersType;
   const accountId = getAccountId()
 
   const { openModal } = useModalStack();
@@ -63,7 +64,7 @@ const ProfileOverview = ({ data, postLength, isMyProfile, chatRoomId, isFirstCha
             } else {
               followed
                 ? mutate({ type: "delete", id: authorizationId })
-                : mutate({ type: "create", id: authorizationId })
+                : mutate({ type: "create", id: authorizationId, deviceToken, userData: myInfo })
             }
           }}
         >
