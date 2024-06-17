@@ -25,11 +25,11 @@ const LikeService = () => {
   const queryKeys = ["all-posts", "following-posts", "like-posts", "tag-posts", "single-posts"];
 
   return useMutation({
-    mutationFn: async (request: { target: "post" | "comment", type: "create" | "delete" | "update", id: string, comment?: CommentsType, deviceToken?: string, userData?: UsersType }) => {
+    mutationFn: async (request: { target: "post" | "comment", type: "create" | "delete" | "update", id: string, comment?: CommentsType, deviceToken?: string, userData?: UsersType, authorizationId?: string }) => {
       if (request.target === "post" && request.type === "create") {
         await createFieldArray(request.id, "likedUsers", accountId);
         createFieldObject(
-          request.userData.authorizationId,
+          request.authorizationId,
           "notificationHistory",
           {
             id: uuidv4(),
@@ -52,7 +52,7 @@ const LikeService = () => {
         await updateFieldObject(request.id, "comments", {id: request.comment.id}, request.comment)
       }
     },
-    onMutate: async (request: { target: "post" | "comment", type: "create" | "delete" | "update", id: string, comment?: CommentsType, deviceToken?: string, userData?: UsersType }) => {
+    onMutate: async (request: { target: "post" | "comment", type: "create" | "delete" | "update", id: string, comment?: CommentsType, deviceToken?: string, userData?: UsersType, authorizationId?: string}) => {
 
       queryKeys.forEach(async (key) => {
         await queryClient.cancelQueries({ queryKey : [key] });

@@ -17,7 +17,7 @@ import { v4 as uuidv4 } from "uuid";
 import { CommentsType } from "@/types/posts.type";
 
 interface CommentOverViewProps {
-  props: { id: string, comments: CommentsType[], deviceToken: string },
+  props: { id: string, comments: CommentsType[], deviceToken: string, authorizationId: string },
   handleScroll: (e: React.UIEvent<HTMLDivElement>) => void
 }
 
@@ -28,7 +28,7 @@ const CommentOverView = ({ props, handleScroll }: CommentOverViewProps) => {
 
   const accountId = getAccountId()
 
-  const { id, comments, deviceToken } = props
+  const { id, authorizationId, comments, deviceToken } = props
 
   const { openModal, closeModalDirect } = useModalStack()
 
@@ -127,6 +127,7 @@ const CommentOverView = ({ props, handleScroll }: CommentOverViewProps) => {
             id,
             deviceToken,
             userData: userData.data,
+            authorizationId,
             comment: {
               id: uuidv4(),
               content: inputValue,

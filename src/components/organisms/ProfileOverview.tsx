@@ -64,7 +64,7 @@ const ProfileOverview = ({ myInfo, data, postLength, isMyProfile, chatRoomId, is
             } else {
               followed
                 ? mutate({ type: "delete", id: authorizationId })
-                : mutate({ type: "create", id: authorizationId, deviceToken, userData: myInfo })
+                : mutate({ type: "create", id: authorizationId, deviceToken, userData: myInfo, authorizationId })
             }
           }}
         >

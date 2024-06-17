@@ -91,7 +91,7 @@ const PostService =  () => {
             Promise.all(
               readedUsers.map(async (user) => {
                 createFieldObject(
-                  userData.authorizationId,
+                  user.data.authorizationId,
                   "notificationHistory",
                   {
                     id: uuidv4(),

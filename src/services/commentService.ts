@@ -53,11 +53,11 @@ const CommentService = () => {
     const queryKeys = ["all-posts", "following-posts", "like-posts", "tag-posts", "single-posts"];
 
     return useMutation({
-      mutationFn: async (request: { type: "create" | "delete", id: string, comment: CommentsType | CommentMachinedType, deviceToken?: string, userData?: UsersType }) => {
+      mutationFn: async (request: { type: "create" | "delete", id: string, comment: CommentsType | CommentMachinedType, deviceToken?: string, userData?: UsersType, authorizationId?: string }) => {
         if (request.type === "create") {
           await createFieldObject(request.id, "comments", request.comment);
           createFieldObjectUsers(
-            request.userData.authorizationId,
+            request.authorizationId,
             "notificationHistory",
             {
               id: uuidv4(),
@@ -78,7 +78,7 @@ const CommentService = () => {
           await deleteFieldObject(request.id, "comments", {id : request.comment.id});
         }
       },
-      onMutate: async (request: { type: "create" | "delete", id: string, comment: CommentsType | CommentMachinedType, deviceToken?: string, userData?: UsersType} ) => {
+      onMutate: async (request: { type: "create" | "delete", id: string, comment: CommentsType | CommentMachinedType, deviceToken?: string, userData?: UsersType, authorizationId?: string} ) => {
         queryKeys.forEach(async (key) => {
           await queryClient.cancelQueries({ queryKey: [key] });
         });

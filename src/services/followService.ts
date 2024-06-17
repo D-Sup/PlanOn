@@ -53,7 +53,7 @@ const FollowService = () => {
     const queryKeys = [ "my-userInfo", "other-userInfo", "follow-users"];
   
     return useMutation({
-      mutationFn: async (request: {type: "create" | "delete", id: string | undefined, deviceToken?: string, userData?: UsersType }) => { 
+      mutationFn: async (request: {type: "create" | "delete", id: string | undefined, deviceToken?: string, userData?: UsersType, authorizationId?: string }) => { 
         if (request.type === "create" && request.id) {
           await Promise.all([
             createFieldArray(request.id, "followers", accountId),
@@ -61,7 +61,7 @@ const FollowService = () => {
           ])
           if (request.userData) {
             createFieldObject(
-              request.userData.authorizationId,
+              request.authorizationId,
               "notificationHistory",
               {
                 id: uuidv4(),
@@ -86,7 +86,7 @@ const FollowService = () => {
           ])
         } 
       },
-      onMutate: async (request: {type: "create" | "delete", id: string | undefined, deviceToken?: string, userData?: UsersType }) => {
+      onMutate: async (request: {type: "create" | "delete", id: string | undefined, deviceToken?: string, userData?: UsersType, authorizationId?: string  }) => {
         queryKeys.forEach(async (key) => {
           await queryClient.cancelQueries({ queryKey: [key] });
         });

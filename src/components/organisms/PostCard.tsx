@@ -72,14 +72,14 @@ const PostCard = ({ data, isReadOnly }: { data: PostMachinedType, isReadOnly?: b
               if (isReadOnly) {
                 openModal("Toast", { type: "info", message: "회원만 이용 가능한 기능입니다." });
               } else {
-                mutate({ target: "post", type: postData.likedUsers.includes(accountId) ? "delete" : "create", id, deviceToken: postData.userInfo.deviceToken, userData: userData.data })
+                mutate({ target: "post", type: postData.likedUsers.includes(accountId) ? "delete" : "create", id, deviceToken: postData.userInfo.deviceToken, userData: userData.data, authorizationId: postData.authorizationId })
               }
             },
             () => {
               if (isReadOnly) {
                 openModal("Toast", { type: "info", message: "회원만 이용 가능한 기능입니다." });
               } else {
-                openModal(CommentOverView, { id, comments: postData.comments, deviceToken: postData.userInfo.deviceToken })
+                openModal(CommentOverView, { id, comments: postData.comments, deviceToken: postData.userInfo.deviceToken, authorizationId: postData.authorizationId })
               }
             }]} />
         </div >
