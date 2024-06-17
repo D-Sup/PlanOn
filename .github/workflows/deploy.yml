@@ -25,37 +25,37 @@ jobs:
 
       - name: Build project
         env:
-          PUBLIC_URL: ${{ secrets.ENV.PUBLIC_URL }}
-          REACT_APP_API_KEY: ${{ secrets.ENV.REACT_APP_API_KEY }}
-          REACT_APP_AUTH_DOMAIN: ${{ secrets.ENV.REACT_APP_AUTH_DOMAIN }}
-          REACT_APP_PROJECT_ID: ${{ secrets.ENV.REACT_APP_PROJECT_ID }}
-          REACT_APP_STORAGE_BUCKET: ${{ secrets.ENV.REACT_APP_STORAGE_BUCKET }}
-          REACT_APP_MESSAGING_SENDER_ID: ${{ secrets.ENV.REACT_APP_MESSAGING_SENDER_ID }}
-          REACT_APP_APP_ID: ${{ secrets.ENV.REACT_APP_APP_ID }}
-          REACT_APP_MEASUREMENT_ID: ${{ secrets.ENV.REACT_APP_MEASUREMENT_ID }}
-          REACT_APP_GOOGLE_MAPS_API_KEY: ${{ secrets.ENV.REACT_APP_GOOGLE_MAPS_API_KEY }}
-          REACT_APP_META_TAGS_API_URL: ${{ secrets.ENV.REACT_APP_META_TAGS_API_URL }}
-          REACT_APP_SEARCH_PLACES_API_URL: ${{ secrets.ENV.REACT_APP_SEARCH_PLACES_API_URL }}
-          REACT_APP_SEND_MESSAGE_API_URL: ${{ secrets.ENV.REACT_APP_SEND_MESSAGE_API_URL }}
-          REACT_APP_VAPID_KEY: ${{ secrets.ENV.REACT_APP_VAPID_KEY }}
-          REACT_APP_ADMIN_ID: ${{ secrets.ENV.REACT_APP_ADMIN_ID }}
+          PUBLIC_URL: ${{ secrets.PUBLIC_URL }}
+          REACT_APP_API_KEY: ${{ secrets.REACT_APP_API_KEY }}
+          REACT_APP_AUTH_DOMAIN: ${{ secrets.REACT_APP_AUTH_DOMAIN }}
+          REACT_APP_PROJECT_ID: ${{ secrets.REACT_APP_PROJECT_ID }}
+          REACT_APP_STORAGE_BUCKET: ${{ secrets.REACT_APP_STORAGE_BUCKET }}
+          REACT_APP_MESSAGING_SENDER_ID: ${{ secrets.REACT_APP_MESSAGING_SENDER_ID }}
+          REACT_APP_APP_ID: ${{ secrets.REACT_APP_APP_ID }}
+          REACT_APP_MEASUREMENT_ID: ${{ secrets.REACT_APP_MEASUREMENT_ID }}
+          REACT_APP_GOOGLE_MAPS_API_KEY: ${{ secrets.REACT_APP_GOOGLE_MAPS_API_KEY }}
+          REACT_APP_META_TAGS_API_URL: ${{ secrets.REACT_APP_META_TAGS_API_URL }}
+          REACT_APP_SEARCH_PLACES_API_URL: ${{ secrets.REACT_APP_SEARCH_PLACES_API_URL }}
+          REACT_APP_SEND_MESSAGE_API_URL: ${{ secrets.REACT_APP_SEND_MESSAGE_API_URL }}
+          REACT_APP_VAPID_KEY: ${{ secrets.REACT_APP_VAPID_KEY }}
+          REACT_APP_ADMIN_ID: ${{ secrets.REACT_APP_ADMIN_ID }}
         run: npm run build
 
       - name: Deploy to server
         env:
-          PUBLIC_URL: ${{ secrets.ENV.PUBLIC_URL }}
-          REACT_APP_API_KEY: ${{ secrets.ENV.REACT_APP_API_KEY }}
-          REACT_APP_AUTH_DOMAIN: ${{ secrets.ENV.REACT_APP_AUTH_DOMAIN }}
-          REACT_APP_PROJECT_ID: ${{ secrets.ENV.REACT_APP_PROJECT_ID }}
-          REACT_APP_STORAGE_BUCKET: ${{ secrets.ENV.REACT_APP_STORAGE_BUCKET }}
-          REACT_APP_MESSAGING_SENDER_ID: ${{ secrets.ENV.REACT_APP_MESSAGING_SENDER_ID }}
-          REACT_APP_APP_ID: ${{ secrets.ENV.REACT_APP_APP_ID }}
-          REACT_APP_MEASUREMENT_ID: ${{ secrets.ENV.REACT_APP_MEASUREMENT_ID }}
-          REACT_APP_GOOGLE_MAPS_API_KEY: ${{ secrets.ENV.REACT_APP_GOOGLE_MAPS_API_KEY }}
-          REACT_APP_META_TAGS_API_URL: ${{ secrets.ENV.REACT_APP_META_TAGS_API_URL }}
-          REACT_APP_SEARCH_PLACES_API_URL: ${{ secrets.ENV.REACT_APP_SEARCH_PLACES_API_URL }}
-          REACT_APP_SEND_MESSAGE_API_URL: ${{ secrets.ENV.REACT_APP_SEND_MESSAGE_API_URL }}
-          REACT_APP_VAPID_KEY: ${{ secrets.ENV.REACT_APP_VAPID_KEY }}
-          REACT_APP_ADMIN_ID: ${{ secrets.ENV.REACT_APP_ADMIN_ID }}
+          PUBLIC_URL: ${{ secrets.PUBLIC_URL }}
+          REACT_APP_API_KEY: ${{ secrets.REACT_APP_API_KEY }}
+          REACT_APP_AUTH_DOMAIN: ${{ secrets.REACT_APP_AUTH_DOMAIN }}
+          REACT_APP_PROJECT_ID: ${{ secrets.REACT_APP_PROJECT_ID }}
+          REACT_APP_STORAGE_BUCKET: ${{ secrets.REACT_APP_STORAGE_BUCKET }}
+          REACT_APP_MESSAGING_SENDER_ID: ${{ secrets.REACT_APP_MESSAGING_SENDER_ID }}
+          REACT_APP_APP_ID: ${{ secrets.REACT_APP_APP_ID }}
+          REACT_APP_MEASUREMENT_ID: ${{ secrets.REACT_APP_MEASUREMENT_ID }}
+          REACT_APP_GOOGLE_MAPS_API_KEY: ${{ secrets.REACT_APP_GOOGLE_MAPS_API_KEY }}
+          REACT_APP_META_TAGS_API_URL: ${{ secrets.REACT_APP_META_TAGS_API_URL }}
+          REACT_APP_SEARCH_PLACES_API_URL: ${{ secrets.REACT_APP_SEARCH_PLACES_API_URL }}
+          REACT_APP_SEND_MESSAGE_API_URL: ${{ secrets.REACT_APP_SEND_MESSAGE_API_URL }}
+          REACT_APP_VAPID_KEY: ${{ secrets.REACT_APP_VAPID_KEY }}
+          REACT_APP_ADMIN_ID: ${{ secrets.REACT_APP_ADMIN_ID }}
         run: |
           scp -r ./build user@your_server:/path/to/your/project
