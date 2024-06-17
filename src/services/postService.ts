@@ -39,7 +39,8 @@ const PostService =  () => {
     const { readDocumentsSimplePaged } = useFirestoreRead("users");
     const { createDocumentManual: createDocumentManualHashtags } = useFirestoreCreate("hashtags");
     const { createDocumentManual: createDocumentManualPosts } = useFirestoreCreate("posts");
-    const { createFieldObject, createFieldArray } = useFirestoreCreate("hashtags")
+    const { createFieldArray } = useFirestoreCreate("hashtags")
+    const { createFieldObject } = useFirestoreCreate("users")
 
     const { mutate, isPending } = useDataMutation(
       ["all-posts", "following-posts", "like-posts", "tag-posts"],
@@ -89,12 +90,6 @@ const PostService =  () => {
           if (readedUsers) {
             Promise.all(
               readedUsers.map(async (user) => {
-                notificationService(
-                  user.data.deviceToken,
-                  `${userData.accountName}님이 게시물을 게시했습니다.`,
-                  `${postFormState.content}`,
-                  `${userData.accountImage}`
-                );
                 createFieldObject(
                   userData.authorizationId,
                   "notificationHistory",
@@ -106,6 +101,12 @@ const PostService =  () => {
                     isRead: false,
                     createdAt: new Date(),
                   }
+                )
+                notificationService(
+                  user.data.deviceToken,
+                  `${userData.accountName}님이 게시물을 게시했습니다.`,
+                  `${postFormState.content}`,
+                  `${userData.accountImage}`
                 );
               })
             )

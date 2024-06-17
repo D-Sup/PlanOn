@@ -44,6 +44,7 @@ const CommentService = () => {
   };
 
   const UpdateComment = () => {
+    const { createFieldObject: createFieldObjectUsers } = useFirestoreCreate("users")
     const { createFieldObject } = useFirestoreCreate("posts")
     const { deleteFieldObject } = useFirestoreDelete("posts")
     const { openModal } = useModalStack();
@@ -55,7 +56,7 @@ const CommentService = () => {
       mutationFn: async (request: { type: "create" | "delete", id: string, comment: CommentsType | CommentMachinedType, deviceToken?: string, userData?: UsersType }) => {
         if (request.type === "create") {
           await createFieldObject(request.id, "comments", request.comment);
-          createFieldObject(
+          createFieldObjectUsers(
             request.userData.authorizationId,
             "notificationHistory",
             {

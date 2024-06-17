@@ -16,7 +16,8 @@ import { UsersType } from "@/types/users.type";
 const LikeService = () => {
   const accountId = getAccountId()
   const { openModal } = useModalStack();
-  const { createFieldObject, createFieldArray } = useFirestoreCreate("posts");
+  const { createFieldObject } = useFirestoreCreate("users");
+  const { createFieldArray } = useFirestoreCreate("posts");
   const { deleteFieldArray } = useFirestoreDelete("posts");
   const { updateFieldObject } = useFirestoreUpdate("posts");
   const queryClient = useQueryClient();
