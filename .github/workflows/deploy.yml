@@ -58,4 +58,5 @@ jobs:
           REACT_APP_VAPID_KEY: ${{ secrets.REACT_APP_VAPID_KEY }}
           REACT_APP_ADMIN_ID: ${{ secrets.REACT_APP_ADMIN_ID }}
         run: |
-          scp -r ./build user@your_server: https://plan-on.vercel.app
+          scp -r ./build user@plan-on.vercel.app:/var/www/html
+
