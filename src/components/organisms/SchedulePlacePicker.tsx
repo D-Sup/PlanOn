@@ -4,6 +4,8 @@ import useModalStack from "@/hooks/useModalStack"
 import { useResetRecoilState } from "recoil"
 import { inputValue } from "@/store"
 
+import LocationService from "@/services/locationService";
+
 import SlideTransition from "./SlideTransition"
 import LocationLinkList from "./LocationLinkList"
 import MapOverview from "./MapOverview"
@@ -27,6 +29,8 @@ const SchedulePlacePicker = ({ props, closeModal, handleScroll, handleScrollLock
 
   const resetInputValueState = useResetRecoilState(inputValue)
 
+  const { readLocationDetail } = LocationService()
+
   const [progress, setProgress] = useState<number>(0)
   const [locationInfo, setLocationInfo] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -36,12 +40,7 @@ const SchedulePlacePicker = ({ props, closeModal, handleScroll, handleScrollLock
   const fetchLocationDetails = async (placeId: string) => {
     setLoading(true)
     try {
-      const response = await fetch(`${process.env.REACT_APP_SEARCH_PLACES_API_URL}?request=details&keyword=${placeId}&apikey=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`,
-        {
-          method: "GET",
-        }
-      )
-      const data = await response.json();
+      const data = await readLocationDetail(placeId)
       if (data.status === "OK") {
         setLocationInfo(data.result);
         setLoading(false)

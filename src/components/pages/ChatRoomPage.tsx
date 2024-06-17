@@ -11,6 +11,9 @@ import usePhotoUpload from "@/hooks/usePhotoUpload";
 import useScrollTop from "@/hooks/useScrollTop";
 import useScrollBottom from "@/hooks/useScrollBottom";
 
+import extractMetaTagService from "@/services/extractMetaTagService";
+import notificationService from "@/services/notificationService";
+
 import ChatActionOverview from "../organisms/ChatActionOverview";
 import InteractiveInput from "../organisms/InteractiveInput"
 import ChatRoomHeader from "../organisms/ChatRoomHeader";
@@ -26,7 +29,6 @@ import { v4 as uuidv4 } from "uuid";
 import { MessagesType } from "@/types/messages.type";
 import { PostFormValueType } from "@/store";
 import { postFormValueDefault } from "@/store";
-import { LinkType } from "@/types/messages.type";
 
 const ChatRoomPage = () => {
 
@@ -74,31 +76,6 @@ const ChatRoomPage = () => {
         return acc;
       }
     }, []);
-  };
-
-  const extractMetaTags = async (url: string): Promise<LinkType> => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_META_TAGS_API_URL}?url=${url}`, {
-        method: "GET",
-      });
-
-      const data = await response.json();
-      return data
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  const sendMessage = (title: string, body: string, token: string) => {
-    try {
-      fetch(`${process.env.REACT_APP_SEND_MESSAGE_API_URL}?title=${title}&body=${body}&token=${token}`, {
-        method: "POST",
-      });
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
   };
 
   useEffect(() => {
@@ -219,7 +196,7 @@ const ChatRoomPage = () => {
         isRead: false,
         createdAt: now,
       });
-      sendMessage(myInfo?.data.accountName, "사진", userInfo.deviceToken)
+      notificationService(myInfo?.data.accountName, "사진", userInfo.deviceToken)
       setInputValue("");
       window.scrollTo({
         top: document.body.scrollHeight,
@@ -233,7 +210,7 @@ const ChatRoomPage = () => {
         isRead: false,
         createdAt: now,
       });
-      sendMessage(myInfo?.data.accountName, inputValue, userInfo.deviceToken)
+      notificationService(myInfo?.data.accountName, inputValue, userInfo.deviceToken)
       setInputValue("");
       window.scrollTo({
         top: document.body.scrollHeight,
@@ -242,7 +219,7 @@ const ChatRoomPage = () => {
     }
 
     if (inputValue.includes("http")) {
-      const result = await extractMetaTags(inputValue)
+      const result = await extractMetaTagService(inputValue)
       if (result) {
         const { title, image, description } = result
         await messagesRef.add({

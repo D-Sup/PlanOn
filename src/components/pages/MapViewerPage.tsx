@@ -5,6 +5,8 @@ import useModalStack from "@/hooks/useModalStack";
 import { useResetRecoilState, useSetRecoilState } from "recoil";
 import { inputValue, routeDirectionValue } from "@/store";
 
+import LocationService from "@/services/locationService";
+
 import MapOverview from "../organisms/MapOverview"
 import LocationLinkList from "../organisms/LocationLinkList";
 import LocalPointPanel from "../organisms/LocalPointPanel";
@@ -18,6 +20,8 @@ const MapViewerPage = () => {
 
   const location = useLocation();
   const navigate = useNavigate()
+
+  const { readLocationDetail } = LocationService()
 
   const resetInputValueState = useResetRecoilState(inputValue)
   const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue)
@@ -50,12 +54,7 @@ const MapViewerPage = () => {
     offLocationLinkList()
     setLoading(true)
     try {
-      const response = await fetch(`${process.env.REACT_APP_SEARCH_PLACES_API_URL}?request=details&keyword=${placeId}&apikey=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`,
-        {
-          method: "GET",
-        }
-      )
-      const data = await response.json();
+      const data = await readLocationDetail(placeId)
       if (data.status === "OK") {
         setLocationInfo(data.result);
         setLoading(false)

@@ -8,6 +8,7 @@ import { ReadDocumentType } from "@/hooks/useFirestoreRead";
 import { SchedulesType } from "@/types/schedules.type";
 
 const LocationService = () => {
+
   const SearchLocation = () => {
     const inputValueState = useRecoilValue(inputValue);
 
@@ -56,8 +57,18 @@ const LocationService = () => {
     
     return { data, isFetching, refetch }
   }
+
+  const readLocationDetail = async (keyword: string) => {
+    const response = await fetch(`${process.env.REACT_APP_SEARCH_PLACES_API_URL}?request=details&keyword=${keyword}&apikey=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`,
+      {
+        method: "GET",
+      }
+    )
+    const data = await response.json();
+    return data;
+  }
   
-  return { SearchLocation, SearchPostLocation }
+  return { SearchLocation, SearchPostLocation, readLocationDetail }
 }
 
 export default LocationService
