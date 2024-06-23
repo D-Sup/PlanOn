@@ -47,28 +47,3 @@ self.addEventListener("notificationclick", function (event) {
 
     event.waitUntil(clients.openWindow(url));
 });
-
-
-
-
-// const messaging = firebase.messaging();
-// messaging.onBackgroundMessage((payload) => {
-//     const notificationTitle = payload.notification.title;
-//     console.log("payload", payload);
-//     const notificationOptions = {
-//         body: payload.notification.body,
-//         icon: payload.notification.image,
-//         data: {
-//             url: "https://plan-on.vercel.app/profile/slAeoXqXoae5x7UAWBUjZUULcnm2"
-//             // url: payload?.data?.openUrl,// This should contain the URL you want to open
-//         },
-//     };
-
-//     self.registration.showNotification(notificationTitle, notificationOptions);
-// });
-
-// self.addEventListener("notificationclick", function (event) {
-//     const url = "https://plan-on.vercel.app/profile/slAeoXqXoae5x7UAWBUjZUULcnm2";
-//     event.notification.close();
-//     event.waitUntil(clients.openWindow(url));
-// });
