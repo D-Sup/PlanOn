@@ -43,8 +43,9 @@ const NotificationPage = () => {
               className="w-full flex flex-col justify-center justify-between py-[10px]"
               style={{ boxShadow: "0 1px var(--gray-heavy)" }}
               onClick={() => {
+                setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
                 if (history.type === "post" || history.type === "like" || history.type === "comment") {
-                  navigate("/post/detail", { state: { direction: "next", post: history.notificationUrl } })
+                  navigate(`/post/detail/writable/${history.notificationUrl}`, { state: { direction: "next" } })
                 } else if (history.type === "follow") {
                   navigate(`/profile/${history.notificationUrl}`, { state: { direction: "next" } })
                 }

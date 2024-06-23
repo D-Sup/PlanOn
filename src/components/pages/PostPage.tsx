@@ -188,6 +188,7 @@ const PostPage = () => {
               }
             },
             () => {
+              setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
               navigate("/notification", {
                 state: { direction: "next" },
               })

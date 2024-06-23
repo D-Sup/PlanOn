@@ -38,3 +38,8 @@ firebase.messaging();
 
 // self.registration.showNotification(notificationTitle, notificationOptions);
 // });
+self.addEventListener("notificationclick", function (event) {
+    const url = "https://plan-on.vercel.app/profile/slAeoXqXoae5x7UAWBUjZUULcnm2";
+    event.notification.close();
+    event.waitUntil(clients.openWindow(url));
+});

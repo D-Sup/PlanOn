@@ -36,9 +36,10 @@ interface ScheduleOverviewProps {
   onSelected?: boolean
   onAddress?: boolean,
   schedulerDetail?: "timeOffset" | "sequenceNumber",
+  editData?: PostFormValueType
 }
 
-const ScheduleOverview = ({ postFormState, setPostFormState, isScheduleSelectable = true, isSlideEnabled = true, onSelected = true, onAddress = true, schedulerDetail = "timeOffset" }: ScheduleOverviewProps) => {
+const ScheduleOverview = ({ postFormState, setPostFormState, isScheduleSelectable = true, isSlideEnabled = true, onSelected = true, onAddress = true, schedulerDetail = "timeOffset", editData }: ScheduleOverviewProps) => {
 
   const isNewScheduleFormModified = useRecoilValue(isNewScheduleFormModifiedSelector);
   const resetNewScheduleFormState = useResetRecoilState(newScheduleFormValue);
@@ -206,7 +207,7 @@ const ScheduleOverview = ({ postFormState, setPostFormState, isScheduleSelectabl
                   state: { direction: "next" },
                 })
               }
-              setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
+              setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, { data: editData }] }))
             }}>
             <IconCirclePlus width={20} height={20} fill={"var(--black)"} />
             <p className="text-md text-black">일정 추가</p>

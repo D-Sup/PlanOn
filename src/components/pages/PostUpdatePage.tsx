@@ -31,7 +31,7 @@ const PostUpdatePage = () => {
   const [updatePostFormState, setUpdatePostFormState] = useState(editData);
   const resetPostFormState = useResetRecoilState(postFormValue);
   const isPostFormModified = useRecoilValue(isPostFormModifiedSelector);
-  const routeDirectionValueState = useRecoilValue(routeDirectionValue);
+  const [routeDirectionValueState, setRouteDirectionValueState] = useRecoilState(routeDirectionValue);
   const [progress, setProgress] = useState<number>(routeDirectionValueState.direction !== "" || editData ? 1 : 0);
   const [direction, setDirection] = useState<"next" | "prev">("next");
   const [isFetching, setIsFetching] = useState<boolean>(true);
@@ -128,9 +128,7 @@ const PostUpdatePage = () => {
         [
           () => {
             closeModal()
-            navigate("/post", {
-              state: { direction: "prev" },
-            })
+            setRouteDirectionValueState(Prev => ({ ...Prev, direction: "prev" }))
           },
           null
         ])
@@ -175,7 +173,7 @@ const PostUpdatePage = () => {
 
       <SlideTransition className="px-[30px] pb-[20px]" progress={progress} direction={direction} >
         {progress === 0 && <PhotoSelector postFormState={postState} setPostFormState={setPostState} />}
-        {progress === 1 && <ScheduleOverview postFormState={postState} setPostFormState={setPostState} isSlideEnabled={false} onAddress={false} />}
+        {progress === 1 && <ScheduleOverview postFormState={postState} setPostFormState={setPostState} isSlideEnabled={false} onAddress={false} editData={editData} />}
         {progress === 2 && <PostForm postFormState={postState} setPostFormState={setPostState} />}
       </SlideTransition>
     </>

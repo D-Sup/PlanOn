@@ -11,7 +11,7 @@ import { db } from "@/firebase/config";
 import getAccountId from "@/utils/getAccountId";
 
 import { ReadDocumentType } from "@/hooks/useFirestoreRead";
-import { UsersType, ChatsType } from "@/types/users.type";
+import { UsersType, ChatsType, NotificationHistoryType } from "@/types/users.type";
 
 interface UserContextType {
   data: ReadDocumentType<UsersType> | undefined,
@@ -66,6 +66,11 @@ const UserInfoProvider = ({ children }: { children: React.ReactNode }) => {
         data.chats.forEach((chat: ChatsType) => {
           if (new Date().getTime() - chat.lastMessageCreatedAt.toDate().getTime() < 1000 && chat.unreadLength > 0) {
             openModal("Toast", { type: "message", title: chat.userName, message: chat.lastReceive })
+          }
+        })
+        data.notificationHistory.forEach((history: NotificationHistoryType) => {
+          if (new Date().getTime() - history.createdAt.toDate().getTime() < 1000) {
+            openModal("Toast", { type: "alert", message: history.title })
           }
         })
         refetch()

@@ -2,6 +2,8 @@ import { useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import useModalStack from "@/hooks/useModalStack";
 import useFirestoreRead from "@/hooks/useFirestoreRead";
+import { useSetRecoilState } from "recoil";
+import { routeDirectionValue } from "@/store";
 
 import PostService from "@/services/postService";
 
@@ -25,6 +27,7 @@ const PostActionOverview = ({ props }: PostActionOverviewProps) => {
 
   const { id, data: postData } = data
 
+  const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue)
   const [isFetching, setIsFetching] = useState<boolean>(true);
   const formattedAddress = useRef<HTMLInputElement>(null);
 
@@ -87,6 +90,7 @@ const PostActionOverview = ({ props }: PostActionOverviewProps) => {
               Promise.all(postData.usertags.map((usertag) => readDocumentUsers(usertag)))
             ])
             if (hashtags && usertags) {
+              setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
               navigate("/post/update", {
                 state: {
                   direction: "next",

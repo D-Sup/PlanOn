@@ -65,7 +65,7 @@ const FollowService = () => {
               "notificationHistory",
               {
                 type: "follow",
-                notificationUrl: request.id,
+                notificationUrl: accountId,
                 id: uuidv4(),
                 icon: request.userData.accountImage,
                 title: `${request.userData.accountName}님이 회원님을 팔로우 했습니다.`,
