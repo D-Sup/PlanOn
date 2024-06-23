@@ -4,8 +4,6 @@ import useWindowSize from "@/hooks/useWindowSize"
 
 import { useRecoilValue, useSetRecoilState, useResetRecoilState } from "recoil";
 import { routeDirectionValue, updateScheduleFormValue } from "@/store";
-import IconLogo from "../../assets/images/icon-logo.svg?react";
-
 
 import { Select, SelectTrigger, SelectContent, SelectItem } from "../shadcnUIKit/select";
 import ScheduleCard from "../atoms/ScheduleCard"
@@ -136,7 +134,7 @@ const ScheduleDetailPage = () => {
               setRouteDirectionValueState(Prev => ({ ...Prev, direction: "prev" }))
               setTimeout(() => resetUpdateScheduleFormValue(), 500)
             }}>
-              <IconArrow className="absolute-center" width={7} height={12} fill={"var(--white)"} />
+              <IconArrow className="absolute-center" width={7} height={12} fill={"#FFF"} />
             </button>
           }
         </FixedTrigger>

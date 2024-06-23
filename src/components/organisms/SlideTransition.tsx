@@ -24,14 +24,14 @@ const SlideTransition = ({
       className="h-full"
       childFactory={(child) => {
         return React.cloneElement(child, {
-          classNames: `navigate-${direction}`,
+          classNames: `slide-${direction}`,
         });
       }}
     >
       <CSSTransition
         key={progress}
         timeout={300}
-        classNames={`navigate-${direction}`}
+        classNames={`slide-${direction}`}
       >
         <div className={`w-full overflow-x-clip ${className}`}>
           {children}

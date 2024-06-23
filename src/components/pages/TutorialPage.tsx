@@ -116,7 +116,7 @@ const TutorialPage = () => {
                   <div className="bg-background p-[8px] rounded-[5px]">
                     <IconLogo fill={"var(--white)"} width={20} height={20} />
                   </div>
-                  <span className="text-sm">플랜온</span>
+                  <span className="text-sm text-black">플랜온</span>
                 </div>
               </div>
             </div>
@@ -203,9 +203,9 @@ const TutorialPage = () => {
 
         {progress === 3 &&
           <div className="relative flex-center flex-col h-[calc(100dvh-195px)]">
-            <IconLogo fill={"var(--white)"} className="w-3/4 h-3/4 opacity-0 animate-show-content-2 blur-3xl" />
+            <IconLogo fill={"var(--white)"} className="w-3/4 h-3/4 opacity-0 animate-show-content-2 blur-3xl blur-effect" />
             <div className="absolute-center">
-              <h2 className="text-white text-xl opacity-0 animate-show-content-3 text-nowrap font-bold">{"당신의 하루를 계획하고, 공유하세요"}</h2>
+              <h2 className="text-[#FFF] text-xl opacity-0 animate-show-content-3 text-nowrap font-bold">{"당신의 하루를 계획하고, 공유하세요"}</h2>
             </div>
           </div>
         }

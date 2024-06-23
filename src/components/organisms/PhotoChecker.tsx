@@ -44,7 +44,7 @@ const PhotoChecker = ({ isGridAutoFlow, photoState, setPhotoState }: PhotoChecke
   }
 
   return (
-    <ul className={`${isGridAutoFlow ? "grid-flow-col  overflow-x-scroll" : "grid-cols-3"} m-auto grid gap-1`}>
+    <ul className={`${isGridAutoFlow ? "grid-flow-col  overflow-x-scroll" : "grid-cols-3"} grid gap-1`}>
       <button className={`${isGridAutoFlow ? "w-[calc(100vw/2)] h-[200px]" : "aspect-square"} relative bg-white`} type="button" onClick={resetPhotos}>
         <IconRecycle className="absolute-center" width={30} height={30} fill={"var(--black)"} />
       </button>

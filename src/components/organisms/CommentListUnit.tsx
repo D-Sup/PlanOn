@@ -33,34 +33,32 @@ const CommentListUnit = ({ data, handleFunc }: { data: CommentMachinedType, hand
           <p className="text-sm text-white inline">{userInfo.accountName}</p>
           <IconDot width={3} height={3} fill={"var(--gray-old)"} />
           {createdAt && <span className="text-xsm text-gray-old">{formatDate(createdAt, 9)}</span>}
+          {commentPermission &&
+            <button
+              className="ml-[2px] flex flex-col items-center justify-center"
+              onClick={() => {
+                handleFunc[0]()
+              }}
+            >
+              <IconTrash width={12} height={12} fill={"var(--red)"} />
+            </button>
+          }
         </div>
         <span className="block text-xsm text-white">{content}</span>
       </div>
-      {commentPermission ? (
-        <button
-          className="ml-auto flex flex-col items-center justify-center"
-          onClick={() => {
-            setHearted(Prev => !Prev)
-            handleFunc[0]()
-          }}
-        >
-          <IconTrash width={15} height={15} fill={"var(--gray-heavy)"} />
-        </button>
-      ) : (
-        <button
-          className="ml-auto flex flex-col items-center justify-center"
-          onClick={() => {
-            setHearted(Prev => !Prev)
-            handleFunc[1]()
-          }}
-        >
-          <IconHeart width={15} height={15} fill={hearted ? "#FB004D" : "var(--background)"} stroke={hearted ? "#FB004D" : "var(--gray-old)"} />
-          {isLike ?
-            <span className="text-xsm text-white">{hearted ? heartCount : heartCount - 1}</span> :
-            <span className="text-xsm text-white">{hearted ? heartCount + 1 : heartCount}</span>
-          }
-        </button>
-      )}
+      <button
+        className="ml-auto flex flex-col items-center justify-center"
+        onClick={() => {
+          setHearted(Prev => !Prev)
+          handleFunc[1]()
+        }}
+      >
+        <IconHeart width={15} height={15} fill={hearted ? "#FB004D" : "var(--background)"} stroke={hearted ? "#FB004D" : "var(--gray-old)"} />
+        {isLike ?
+          <span className="text-xsm text-white">{hearted ? heartCount : heartCount - 1}</span> :
+          <span className="text-xsm text-white">{hearted ? heartCount + 1 : heartCount}</span>
+        }
+      </button>
     </li>
   )
 }

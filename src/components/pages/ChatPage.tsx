@@ -134,6 +134,9 @@ const ChatPage = () => {
             ))
           )
           }
+          {!isFetching && inputValueState && userSearchData?.length === 0 &&
+            <span className="absolute-center text-nowrap text-md text-white">검색어와 일치하는 유저가 없습니다.</span>
+          }
         </>
       </div>
     </ScrollRefreshContainer>

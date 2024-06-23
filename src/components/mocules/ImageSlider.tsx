@@ -32,17 +32,32 @@ const ImageSlider = ({ data, photos, ratio }: { data?: any, photos: string[], ra
     setIsSwiping(false)
   }
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setStartX(e.touches[0].clientX);
-    setStartY(e.touches[0].clientY);
+  const handleTouchStart = (e: React.TouchEvent | React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if ("touches" in e) {
+      setStartX(e.touches[0].clientX);
+      setStartY(e.touches[0].clientY);
+    } else {
+      setStartX(e.clientX);
+      setStartY(e.clientY);
+    }
     setIsMoving(true);
     setStartTouchTime(Date.now());
   };
 
-  const handleTouchMove = (e: React.TouchEvent) => {
+  const handleTouchMove = (e: React.TouchEvent | React.MouseEvent) => {
     if (startX === null || startY === null) return;
-    const currentX = e.touches[0].clientX;
-    const currentY = e.touches[0].clientY;
+    let currentX: number
+    let currentY: number
+    if ("touches" in e) {
+      currentX = e.touches[0].clientX;
+      currentY = e.touches[0].clientY;
+    } else {
+      currentX = e.clientX;
+      currentY = e.clientY;
+    }
+
     const subtractX = Math.abs(startX - currentX);
     const subtractY = Math.abs(startY - currentY);
     const sliderRefCurrent = sliderRef.current;
@@ -68,9 +83,14 @@ const ImageSlider = ({ data, photos, ratio }: { data?: any, photos: string[], ra
     }
   }
 
-  const handleTouchEnd = (e: React.TouchEvent) => {
+  const handleTouchEnd = (e: React.TouchEvent | React.MouseEvent) => {
     if (startX === null || startY === null) return;
-    const endX = e.changedTouches[0].clientX;
+    let endX: number
+    if ("changedTouches" in e) {
+      endX = e.changedTouches[0].clientX;
+    } else {
+      endX = e.clientX;
+    }
     const subtract = Math.abs(startX - endX);
 
     if (subtract < 100 && lockScroll) {
@@ -129,6 +149,9 @@ const ImageSlider = ({ data, photos, ratio }: { data?: any, photos: string[], ra
         onTouchStart={(e) => photos.length > 1 && handleTouchStart(e)}
         onTouchMove={(e) => photos.length > 1 && handleTouchMove(e)}
         onTouchEnd={(e) => photos.length > 1 && handleTouchEnd(e)}
+        onMouseDown={(e) => photos.length > 1 && handleTouchStart(e)}
+        onMouseMove={(e) => photos.length > 1 && handleTouchMove(e)}
+        onMouseUp={(e) => photos.length > 1 && handleTouchEnd(e)}
         onDoubleClick={() => {
           setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, data] }))
           if (photos.length === 1) {

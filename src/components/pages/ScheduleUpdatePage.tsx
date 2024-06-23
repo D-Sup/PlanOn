@@ -111,26 +111,18 @@ const ScheduleUpdatePage = () => {
 
   const handlePreviousProgress = () => {
     if (progress === 0 && isAddSchedule && !isNewScheduleFormModified) {
-      navigate("/schedule", {
-        state: {
-          direction: "prev",
-        },
-      })
+      setRouteDirectionValueState(Prev => ({ ...Prev, direction: "prev" }))
     } else if (progress === 0 && isAddSchedule && isNewScheduleFormModified) {
       openModal("Alert", "임시저장을 하시겠습니까?", ["삭제", "확인"],
         [
           () => {
             closeModal()
-            navigate("/schedule", {
-              state: { direction: "prev" },
-            })
+            setRouteDirectionValueState(Prev => ({ ...Prev, direction: "prev" }))
             resetNewScheduleFormState()
           },
           () => {
             closeModal()
-            navigate("/schedule", {
-              state: { direction: "prev" },
-            })
+            setRouteDirectionValueState(Prev => ({ ...Prev, direction: "prev" }))
           }
         ])
     } else if (progress === 1) {

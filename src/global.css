@@ -82,8 +82,6 @@
   padding: 0;
 }
 
-html {}
-
 @font-face {
   font-family: "Pretendard-Regular";
   src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff") format("woff");
@@ -135,6 +133,7 @@ body {
   background-color: var(--background);
 }
 
+.slide-fade-enter,
 .navigate-fade-enter {
   position: absolute;
   height: 100dvh;
@@ -142,12 +141,14 @@ body {
   transform: translateY(50%);
 }
 
+.slide-fade-enter-active,
 .navigate-fade-enter-active {
   opacity: 1;
   transform: translateY(0);
   transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
 }
 
+.slide-fade-exit,
 .navigate-fade-exit {
   position: absolute;
   height: 100dvh;
@@ -155,16 +156,63 @@ body {
   transform: translateY(0%);
 }
 
+.slide-fade-exit-active,
 .navigate-fade-exit-active {
   opacity: 0;
   transform: translateY(50%);
   transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
 }
 
-.navigate-next-enter {
+.slide-next-enter {
   position: absolute;
   height: 100dvh;
   transform: translateX(100%);
+}
+
+.slide-next-enter-active {
+  transform: translateX(0);
+  transition: transform 300ms ease-in-out;
+}
+
+.slide-next-exit {
+  position: absolute;
+  height: 100dvh;
+  transform: translateX(0);
+}
+
+.slide-next-exit-active {
+  transform: translateX(-100%);
+  transition: transform 300ms ease-in-out;
+}
+
+.slide-prev-enter {
+  position: absolute;
+  height: 100dvh;
+  transform: translateX(-100%);
+}
+
+.slide-prev-enter-active {
+  transform: translateX(0);
+  transition: transform 300ms ease-in-out;
+}
+
+.slide-prev-exit {
+  position: absolute;
+  height: 100dvh;
+  transform: translateX(0);
+}
+
+.slide-prev-exit-active {
+  transform: translateX(100%);
+  transition: transform 300ms ease-in-out;
+}
+
+.navigate-next-enter {
+  z-index: 9999;
+  position: absolute;
+  height: 100dvh;
+  transform: translateX(100%);
+  background-color: var(--background);
 }
 
 .navigate-next-enter-active {
@@ -179,14 +227,14 @@ body {
 }
 
 .navigate-next-exit-active {
-  transform: translateX(-100%);
+  transform: translateX(-50%);
   transition: transform 300ms ease-in-out;
 }
 
 .navigate-prev-enter {
   position: absolute;
   height: 100dvh;
-  transform: translateX(-100%);
+  transform: translateX(-50%);
 }
 
 .navigate-prev-enter-active {
@@ -195,9 +243,11 @@ body {
 }
 
 .navigate-prev-exit {
+  z-index: 9999;
   position: absolute;
   height: 100dvh;
   transform: translateX(0);
+  background-color: var(--background);
 }
 
 .navigate-prev-exit-active {
@@ -295,6 +345,11 @@ body {
   white-space: nowrap;
   /* word-break: keep-all; */
   overflow: hidden;
+}
+
+.blur-effect {
+  will-change: filter;
+  transform: translateZ(0);
 }
 
 .text-stroke {

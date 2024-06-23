@@ -63,14 +63,14 @@ const PostPage = () => {
     currentCategory === "all-posts" && isPostAllFetching ||
     currentCategory === "following-posts" && isPostFollowFetching ||
     currentCategory === "like-posts" && isPostLikeFetching ||
-    currentCategory === "tag-posts" && isPostTagFetching || false
+    currentCategory === "tag-posts" && isPostTagFetching
 
 
   const isLoading =
     currentCategory === "all-posts" && isPostAllLoading ||
     currentCategory === "following-posts" && isPostFollowLoading ||
     currentCategory === "like-posts" && isPostLikeLoading ||
-    currentCategory === "tag-posts" && isPostTagLoading || false
+    currentCategory === "tag-posts" && isPostTagLoading
 
   const filteredData = posts?.filter(singleData => singleData.data.authorizationId === accountId || singleData.data.private === false)
 

@@ -24,10 +24,8 @@ const usePressingHandler = (action: () => void, delay: number = 500) => {
   }, [isPressing, delay]);
 
   const startPressing = () => setIsPressing(true);
-  const stopPressing = () => setIsPressing(false);
-  
 
-  return { startPressing, stopPressing };
+  return { startPressing };
 };
 
 export default usePressingHandler;

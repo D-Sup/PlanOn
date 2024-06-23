@@ -53,34 +53,34 @@ const PostCategory = ({ closeModal, props }: PostCategoryProps) => {
       <span className="pb-[10px] text-white text-lg text-center" style={{ boxShadow: "0 1px var(--gray-heavy)" }}>필터</span>
 
       <div className="grid grid-cols-2 gap-[2px] p-[20px]">
-        <button className={`flex-center flex-col gap-[10px] w-full min-h-[100px] rounded-tl-lg bg-input text-md ${selected === "all-posts" ? "bg-white text-black" : "bg-input text-white"}`} type="button" onClick={() => {
+        <button className={`flex-center flex-col gap-[10px] w-full min-h-[130px] rounded-tl-lg bg-input text-md ${selected === "all-posts" ? "bg-white text-black" : "bg-input text-white"}`} type="button" onClick={() => {
           closeModal()
           setSelected("all-posts")
           setTimeout(() => resetPosts("all-posts"), 400)
         }}
         >
-          <IconAll width={20} height={20} fill={`var(--${selected === "all-posts" ? "black" : "white"})`} />
+          <IconAll width={15} height={15} fill={`var(--${selected === "all-posts" ? "black" : "white"})`} />
           모든 게시물
         </button>
-        <button className={`flex-center flex-col gap-[10px] w-full min-h-[100px] rounded-tr-lg bg-input text-md ${selected === "following-posts" ? "bg-white text-black" : "bg-input text-white"}`} type="button" onClick={() => {
+        <button className={`flex-center flex-col gap-[10px] w-full min-h-[130px] rounded-tr-lg bg-input text-md ${selected === "following-posts" ? "bg-white text-black" : "bg-input text-white"}`} type="button" onClick={() => {
           closeModal()
           setSelected("following-posts")
           setTimeout(() => resetPosts("following-posts"), 400)
         }}
         >
-          <IconUser width={20} height={20} fill={`var(--${selected === "following-posts" ? "black" : "white"})`} />
+          <IconUser width={15} height={15} fill={`var(--${selected === "following-posts" ? "black" : "white"})`} />
           팔로잉
         </button>
-        <button className={`flex-center flex-col gap-[10px] w-full min-h-[100px] rounded-bl-lg bg-input text-md ${selected === "like-posts" ? "bg-white text-black" : "bg-input text-white"}`} type="button" onClick={() => {
+        <button className={`flex-center flex-col gap-[10px] w-full min-h-[130px] rounded-bl-lg bg-input text-md ${selected === "like-posts" ? "bg-white text-black" : "bg-input text-white"}`} type="button" onClick={() => {
           closeModal()
           setSelected("like-posts")
           setTimeout(() => resetPosts("like-posts"), 400)
         }}
         >
-          <IconHeart width={20} height={20} fill={`var(--${selected === "like-posts" ? "black" : "white"})`} />
+          <IconHeart width={15} height={15} fill={`var(--${selected === "like-posts" ? "black" : "white"})`} />
           좋아요
         </button>
-        <button className={`flex-center flex-col gap-[10px] w-full min-h-[100px] rounded-br-lg bg-input text-md ${selected === "tag-posts" ? "bg-white text-black" : "bg-input text-white"}`} type="button" onClick={() => {
+        <button className={`flex-center flex-col gap-[10px] w-full min-h-[130px] rounded-br-lg bg-input text-md ${selected === "tag-posts" ? "bg-white text-black" : "bg-input text-white"}`} type="button" onClick={() => {
           closeModal()
           setTimeout(() => {
             openModal(ToggleTagList, {
@@ -95,7 +95,7 @@ const PostCategory = ({ closeModal, props }: PostCategoryProps) => {
           }, 500)
         }}
         >
-          <IconHash width={20} height={20} fill={`var(--${selected === "tag-posts" ? "black" : "white"})`} />
+          <IconHash width={15} height={15} fill={`var(--${selected === "tag-posts" ? "black" : "white"})`} />
           해시태그
         </button>
       </div>

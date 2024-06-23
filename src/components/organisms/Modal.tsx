@@ -20,16 +20,28 @@ const Modal = ({ isOpen, props, closeModal, isScrolledToTop, children }: ModalPr
 
   const isHeightAuto = props?.isHeightAuto;
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setStartY(e.touches[0].clientY);
+  const handleTouchStart = (e: React.TouchEvent | React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if ("touches" in e) {
+      setStartY(e.touches[0].clientY);
+    } else {
+      setStartY(e.clientY);
+    }
+
     setIsMoving(true);
     setStartTouchTime(Date.now());
   };
 
-  const handleTouchMove = (e: React.TouchEvent) => {
+  const handleTouchMove = (e: React.TouchEvent | React.MouseEvent) => {
     if (isHeightAuto || startY === null) return;
 
-    const currentY = e.touches[0].clientY;
+    let currentY: number
+    if ("touches" in e) {
+      currentY = e.touches[0].clientY;
+    } else {
+      currentY = e.clientY;
+    }
     const subtract = Math.abs(startY - currentY);
     const sliderRefCurrent = sliderRef.current;
 
@@ -49,10 +61,16 @@ const Modal = ({ isOpen, props, closeModal, isScrolledToTop, children }: ModalPr
     }
   }
 
-  const handleTouchEnd = (e: React.TouchEvent) => {
+  const handleTouchEnd = (e: React.TouchEvent | React.MouseEvent) => {
     if (isHeightAuto || startY === null) return;
-    const endX = e.changedTouches[0].clientY;
-    const subtract = Math.abs(startY - endX);
+    let endY: number
+    if ("changedTouches" in e) {
+      endY = e.changedTouches[0].clientY;
+    } else {
+      endY = e.clientY;
+    }
+
+    const subtract = Math.abs(startY - endY);
     const sliderRefCurrent = sliderRef.current;
     const elapsedTime = Date.now() - startTouchTime;
 
@@ -62,18 +80,18 @@ const Modal = ({ isOpen, props, closeModal, isScrolledToTop, children }: ModalPr
     }
 
     if (sliderRefCurrent) {
-      if (startY < endX && !isOpenMore && elapsedTime < 100) {
+      if (startY < endY && !isOpenMore && elapsedTime < 100) {
         setIsMoving(false);
         closeModal();
-      } else if (startY < endX && !isOpenMore && transformPercentage > 75 / 2) {
+      } else if (startY < endY && !isOpenMore && transformPercentage > 75 / 2) {
         setIsMoving(false);
         closeModal();
-      } else if (backdropRef.current && startY < endX) {
+      } else if (backdropRef.current && startY < endY) {
         setIsMoving(false);
         setIsOpenMore(false)
         sliderRefCurrent.style.transform = `translateY(0%)`;
         backdropRef.current.style.opacity = "1";
-      } else if (backdropRef.current && startY > endX) {
+      } else if (backdropRef.current && startY > endY) {
         setIsMoving(false);
         setIsOpenMore(true)
         sliderRefCurrent.style.transform = `translateY(0%)`;
@@ -101,7 +119,9 @@ const Modal = ({ isOpen, props, closeModal, isScrolledToTop, children }: ModalPr
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
-        // onClick={() => isOnClick && handleFunc && handleFunc()}
+          onMouseDown={handleTouchStart}
+          onMouseMove={handleTouchMove}
+          onMouseUp={handleTouchEnd}
         >
           <div className="absolute top-[15px] left-1/2 -translate-x-1/2 w-[30px] h-[5px] bg-gray-old rounded-full m-auto"></div>
           <div

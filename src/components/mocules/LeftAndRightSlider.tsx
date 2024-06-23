@@ -24,18 +24,32 @@ const LeftAndRightSlider = ({ children, className, moreAreaWidth, isSlideEnabled
     setIsSwiping(false)
   }
 
-  const handleTouchStart = (e: React.TouchEvent) => {
+  const handleTouchStart = (e: React.TouchEvent | React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (isSlideEnabled) {
-      setStartX(e.touches[0].clientX);
-      setStartY(e.touches[0].clientY);
+      if ("touches" in e) {
+        setStartX(e.touches[0].clientX);
+        setStartY(e.touches[0].clientY);
+      } else {
+        setStartX(e.clientX);
+        setStartY(e.clientY);
+      }
       setIsMoving(true)
     }
   };
 
-  const handleTouchMove = (e: React.TouchEvent) => {
+  const handleTouchMove = (e: React.TouchEvent | React.MouseEvent) => {
     if (startX === null || startY === null) return;
-    const currentX = e.touches[0].clientX;
-    const currentY = e.touches[0].clientY;
+    let currentX: number
+    let currentY: number
+    if ("touches" in e) {
+      currentX = e.touches[0].clientX;
+      currentY = e.touches[0].clientY;
+    } else {
+      currentX = e.clientX;
+      currentY = e.clientY;
+    }
     const subtractX = Math.abs(startX - currentX);
     const subtractY = Math.abs(startY - currentY);
     const sliderRefCurrent = sliderRef.current;
@@ -62,9 +76,14 @@ const LeftAndRightSlider = ({ children, className, moreAreaWidth, isSlideEnabled
     }
   }
 
-  const handleTouchEnd = (e: React.TouchEvent) => {
+  const handleTouchEnd = (e: React.TouchEvent | React.MouseEvent) => {
     if (startX === null || startY === null) return;
-    const endX = e.changedTouches[0].clientX;
+    let endX: number
+    if ("changedTouches" in e) {
+      endX = e.changedTouches[0].clientX;
+    } else {
+      endX = e.clientX;
+    }
     const subtract = Math.abs(startX - endX);
 
     if (subtract < 100 && lockScroll) {
@@ -106,6 +125,9 @@ const LeftAndRightSlider = ({ children, className, moreAreaWidth, isSlideEnabled
       onTouchStart={(e) => handleTouchStart(e)}
       onTouchMove={(e) => handleTouchMove(e)}
       onTouchEnd={(e) => handleTouchEnd(e)}
+      onMouseDown={(e) => handleTouchStart(e)}
+      onMouseMove={(e) => handleTouchMove(e)}
+      onMouseUp={(e) => handleTouchEnd(e)}
       ref={sliderRef}
     >
       {children}
