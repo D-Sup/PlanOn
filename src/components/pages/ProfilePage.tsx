@@ -1,7 +1,7 @@
 import { useEffect, useContext } from "react"
 import { UserContext } from "../organisms/UserInfoProvider"
 import { useNavigate, useLocation } from "react-router-dom"
-import { useSetRecoilState } from "recoil"
+import { useRecoilState } from "recoil"
 import { routeDirectionValue } from "@/store"
 
 import Header from "../organisms/Header"
@@ -22,7 +22,7 @@ import { PostsType } from "@/types/posts.type"
 
 const ProfilePage = () => {
 
-  const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue)
+  const [routeDirectionValueState, setRouteDirectionValueState] = useRecoilState(routeDirectionValue)
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -45,7 +45,11 @@ const ProfilePage = () => {
   const isFirstChat = fetchUserData && userData && !userData.data.chats.some((chat) => chat.userId === fetchUserData.data.authorizationId)
 
   const goBack = () => {
-    setRouteDirectionValueState(Prev => ({ ...Prev, direction: "prev" }))
+    if (routeDirectionValueState.previousPageUrl.length === 0) {
+      navigate("/post", { state: { direction: "prev" } })
+    } else {
+      setRouteDirectionValueState(Prev => ({ ...Prev, direction: "prev" }))
+    }
   }
 
   useEffect(() => {

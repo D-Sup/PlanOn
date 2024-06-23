@@ -1,6 +1,6 @@
 import { useEffect, useContext } from "react"
 import { UserContext } from "../organisms/UserInfoProvider"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import useDebounce from "@/hooks/useDebounce"
 
 import useFirestoreCreate from "@/hooks/useFirestoreCreate"
@@ -43,6 +43,16 @@ const ChatPage = () => {
   const { openModal, closeModal } = useModalStack();
 
   const navigate = useNavigate()
+  const location = useLocation()
+
+  useEffect(() => {
+    const pathname = location.pathname.split("/")[2]
+    if (pathname) {
+      const chats = userData?.data.chats;
+      const chat = chats[chats.findIndex(chat => chat.id === pathname)]
+      navigate("/chatroom", { state: { direction: "next", id: chat.id, userInfo: chat.userInfo.data, unreadLength: chat.unreadLength } })
+    }
+  }, [])
 
   useEffect(() => {
     if (isInputDone) {

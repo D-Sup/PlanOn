@@ -2,10 +2,9 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 import PostService from "@/services/postService"
 
-import Loader from "../organisms/Loader";
 import { useEffect } from "react";
 
-const PostDetailPageReadOnlyPage = () => {
+const PostDetailEditablePage = () => {
 
   const location = useLocation()
   const navigate = useNavigate()
@@ -14,16 +13,13 @@ const PostDetailPageReadOnlyPage = () => {
 
   useEffect(() => {
     if (data) {
-      navigate("/post/detail", { state: { direction: "fade", post: data, isReadOnly: true } })
+      navigate("/post/detail", { state: { direction: "next", post: data } })
     }
   }, [isLoading])
 
-
   return (
-    <div className="absolute-center w-[150px]">
-      <Loader />
-    </div>
+    <></>
   )
 }
 
-export default PostDetailPageReadOnlyPage
+export default PostDetailEditablePage

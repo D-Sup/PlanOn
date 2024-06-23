@@ -20,8 +20,8 @@ import SearchPage from "./components/pages/SearchPage";
 import ProfilePage from "./components/pages/ProfilePage";
 import PostDetailPage from "./components/pages/PostDetailPage";
 import PostCollectionPage from "./components/pages/PostCollectionPage";
-import PostDetailPageReadOnlyPage from "./components/pages/PostDetailPageReadOnlyPage";
-import PostDetailPageEditablePage from "./components/pages/PostDetailPageEditablePage";
+import PostDetailReadOnlyPage from "./components/pages/PostDetailReadOnlyPage";
+import PostDetailEditablePage from "./components/pages/PostDetailEditablePage";
 import ScheduleDetailReadOnlyPage from "./components/pages/ScheduleDetailReadOnlyPage";
 import ChatPage from "./components/pages/ChatPage";
 import ChatRoomPage from "./components/pages/ChatRoomPage";
@@ -85,8 +85,8 @@ const App = () => {
               <Route path="/splash/*" element={<SplashPage />} />
               <Route path="/download/*" element={<DownloadGuidePage />} />
               <Route path="/post/detail/*" element={<PostDetailPage />} />
-              <Route path="/post/detail/readonly/*" element={<PostDetailPageReadOnlyPage />} />
-              <Route path="/post/detail/writable/*" element={<PostDetailPageEditablePage />} />
+              <Route path="/post/detail/readonly/*" element={<PostDetailReadOnlyPage />} />
+              <Route path="/post/detail/writable/*" element={<PostDetailEditablePage />} />
               <Route path="/schedule/detail/*" element={<ScheduleDetailPage />} />
               <Route path="/schedule/detail/readonly/*" element={<ScheduleDetailReadOnlyPage />} />
               <Route path="/map/*" element={<MapViewerPage />} />

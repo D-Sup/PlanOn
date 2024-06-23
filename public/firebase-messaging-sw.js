@@ -43,19 +43,9 @@ messaging.onBackgroundMessage((payload) => {
 self.addEventListener("notificationclick", function (event) {
     event.notification.close();
 
-    const homeUrl = "https://plan-on.vercel.app/post"
-    const targetUrl = event.notification.data.url;
+    const url = event.notification.data.url;
 
-    event.waitUntil(
-        clients.openWindow(homeUrl).then((windowClient) => {
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    windowClient.navigate(targetUrl);
-                    resolve();
-                }, 5000);
-            });
-        })
-    );
+    event.waitUntil(clients.openWindow(url));
 });
 
 

@@ -82,7 +82,6 @@ const ChatRoomPage = () => {
   useEffect(() => {
     if (!queryRef.current?.isEqual(messagesRef)) {
       queryRef.current = messagesRef.orderBy("createdAt", "desc").limit(firstMount ? unreadLength <= 20 ? 20 : unreadLength : 1);
-      // queryRef.current = messagesRef.orderBy("createdAt", "desc").limit(firstMount ? 20 : unreadLength === 0 ? 1 : unreadLength);
     }
   }, [messagesRef]);
 
@@ -199,6 +198,7 @@ const ChatRoomPage = () => {
       });
       notificationService(
         userInfo.deviceToken,
+        `chat/${id}`,
         "회원님에게 메시지를 보냈습니다.",
         `${myInfo?.data.accountName}: (사진)`,
         `${myInfo?.data.accountImage}`
@@ -218,6 +218,7 @@ const ChatRoomPage = () => {
       });
       notificationService(
         userInfo.deviceToken,
+        `chat/${id}`,
         "회원님에게 메시지를 보냈습니다.",
         `${myInfo?.data.accountName}: ${inputValue}`,
         `${myInfo?.data.accountImage}`

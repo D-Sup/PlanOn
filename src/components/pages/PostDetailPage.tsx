@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { useSetRecoilState } from "recoil"
+import { useNavigate, useLocation } from "react-router-dom";
+import { useRecoilState } from "recoil"
 import { routeDirectionValue } from "@/store"
 
 import PostService from "@/services/postService";
@@ -14,8 +14,9 @@ import PostCardSkeleton from "../skeleton/PostCardSkeleton";
 
 const PostDetailPage = () => {
 
+  const navigate = useNavigate()
   const location = useLocation()
-  const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue)
+  const [routeDirectionValueState, setRouteDirectionValueState] = useRecoilState(routeDirectionValue)
 
   const { post, isReadOnly } = location.state || []
 
@@ -31,7 +32,11 @@ const PostDetailPage = () => {
   const { DetailHeader, DownloadSuggestHeader } = Header()
 
   const goBack = () => {
-    setRouteDirectionValueState(Prev => ({ ...Prev, direction: "prev" }))
+    if (routeDirectionValueState.previousPageUrl.length === 0) {
+      navigate("/post", { state: { direction: "prev" } })
+    } else {
+      setRouteDirectionValueState(Prev => ({ ...Prev, direction: "prev" }))
+    }
   }
 
   return (
