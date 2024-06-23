@@ -16,7 +16,7 @@ const LoadingModal = ({ isOpen, props }: AlertProps) => {
         {props.isLoader &&
           <div className="relative h-[90px]">
             <div className="absolute bottom-[30%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-full px-[40px]">
-              <Loader />
+              <Loader color="white" />
             </div>
           </div>
         }
