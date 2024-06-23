@@ -33,7 +33,7 @@ messaging.onBackgroundMessage((payload) => {
         body: payload.data.body,
         icon: payload.data.icon,
         data: {
-            url: payload.data.action || "https://plan-on.vercel.app"
+            url: payload.data.action
         }
     };
 
