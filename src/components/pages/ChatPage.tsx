@@ -47,12 +47,14 @@ const ChatPage = () => {
 
   useEffect(() => {
     const pathname = location.pathname.split("/")[2]
-    if (pathname) {
-      const chats = userData?.data.chats;
+    console.log("실행");
+    if (pathname && userData) {
+      const chats = userData.data.chats;
       const chat = chats[chats.findIndex(chat => chat.id === pathname)]
+      setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
       navigate("/chatroom", { state: { direction: "next", id: chat.id, userInfo: chat.userInfo.data, unreadLength: chat.unreadLength } })
     }
-  }, [])
+  }, [userData])
 
   useEffect(() => {
     if (isInputDone) {

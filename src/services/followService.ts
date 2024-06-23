@@ -76,7 +76,7 @@ const FollowService = () => {
             )
             notificationService(
               request.deviceToken,
-              `post/detail/writable/${accountId}`,
+              `profile/${accountId}`,
               `${request.userData.accountName}님이 회원님을 팔로우 했습니다.`,
               "",
               `${request.userData.accountImage}`
