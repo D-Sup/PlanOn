@@ -22,7 +22,6 @@ const Modal = ({ isOpen, props, closeModal, isScrolledToTop, children }: ModalPr
 
   const handleTouchStart = (e: React.TouchEvent | React.MouseEvent) => {
     e.preventDefault();
-    e.stopPropagation();
     if ("touches" in e) {
       setStartY(e.touches[0].clientY);
     } else {
