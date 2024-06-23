@@ -38,8 +38,28 @@ firebase.messaging();
 
 // self.registration.showNotification(notificationTitle, notificationOptions);
 // });
+// self.addEventListener("notificationclick", function (event) {
+//     const url = "https://plan-on.vercel.app/profile/slAeoXqXoae5x7UAWBUjZUULcnm2";
+//     event.notification.close();
+//     event.waitUntil(clients.openWindow(url));
+// });
+
 self.addEventListener("notificationclick", function (event) {
-    const url = "https://plan-on.vercel.app/profile/slAeoXqXoae5x7UAWBUjZUULcnm2";
     event.notification.close();
-    event.waitUntil(clients.openWindow(url));
+
+    // const url = event.notification.data.url;
+    const url = "https://plan-on.vercel.app/profile/slAeoXqXoae5x7UAWBUjZUULcnm2";
+
+    event.waitUntil(
+        clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
+            for (const client of clientList) {
+                if (client.url === url && "focus" in client) {
+                    return client.focus();
+                }
+            }
+            if (clients.openWindow) {
+                return clients.openWindow(url);
+            }
+        })
+    );
 });
