@@ -70,31 +70,30 @@ const ProfilePage = () => {
 
   return (
     <>
-      <FixedTrigger className="w-full" height={352} enableAnimation={false}>
-
+      <FixedTrigger className="w-full" height={40} enableAnimation={false}>
         <DetailHeader title={"프로필"} handleFunc={goBack} />
-        <div className="my-[20px] ">
-          {isOtherUserLoading && isOtherPostLoading &&
-            <ProfileOverviewSkeleton />
-          }
-          {isUserLoading && isPostLoading &&
-            <ProfileOverviewSkeleton />
-          }
-          {fetchUserData && fetchPostData &&
-            <ProfileOverview
-              myInfo={userData?.data}
-              data={fetchUserData.data}
-              postLength={fetchPostData.length}
-              isMyProfile={accountId === id}
-              chatRoomId={isFirstChat
-                ? uuidv4()
-                : userData?.data.chats[userData?.data.chats.findIndex((chat) => chat.userId === fetchUserData.data.authorizationId)].id || ""
-              }
-              isFirstChat={!!isFirstChat}
-            />
-          }
-        </div>
       </FixedTrigger>
+      <div className="my-[20px] ">
+        {isOtherUserLoading && isOtherPostLoading &&
+          <ProfileOverviewSkeleton />
+        }
+        {isUserLoading && isPostLoading &&
+          <ProfileOverviewSkeleton />
+        }
+        {fetchUserData && fetchPostData &&
+          <ProfileOverview
+            myInfo={userData?.data}
+            data={fetchUserData.data}
+            postLength={fetchPostData.length}
+            isMyProfile={accountId === id}
+            chatRoomId={isFirstChat
+              ? uuidv4()
+              : userData?.data.chats[userData?.data.chats.findIndex((chat) => chat.userId === fetchUserData.data.authorizationId)].id || ""
+            }
+            isFirstChat={!!isFirstChat}
+          />
+        }
+      </div>
       {isOtherUserLoading && isOtherPostLoading &&
         <PhotoAlbumSkeleton />
       }

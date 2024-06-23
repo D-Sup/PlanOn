@@ -94,6 +94,8 @@ const PostService =  () => {
                   user.data.authorizationId,
                   "notificationHistory",
                   {
+                    type: "post",
+                    notificationUrl: postId,
                     id: uuidv4(),
                     icon: `${userData.accountImage}`,
                     title: `${userData.accountName}님이 게시물을 게시했습니다.`,

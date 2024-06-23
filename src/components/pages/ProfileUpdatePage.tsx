@@ -122,7 +122,7 @@ const ProfileUpdatePage = () => {
               }
               {accountImagePreview[0] !== "" &&
                 <button
-                  className="absolute top-0 right-0 w-[40px] h-[40px] rounded-full bg-white bg-white"
+                  className="z-20 absolute top-0 right-0 w-[40px] h-[40px] rounded-full bg-white bg-white"
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation()

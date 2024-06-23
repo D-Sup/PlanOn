@@ -135,35 +135,35 @@ const TutorialPage = () => {
                 <IconHome width={20} height={20} fill={"var(--black)"} />
                 게시글 작성
               </li>
-              <li className="w-full flex-center flex-col gap-[10px] aspect-square bg-white rounded-lg text-black text-md opacity-0 animate-quick-show-content-2">
+              <li className="w-full flex-center flex-col gap-[10px] aspect-square bg-white rounded-lg text-black text-md opacity-0 animate-quick-show-content-1">
                 <IconClock width={20} height={20} fill={"var(--black)"} />
                 일정관리
               </li>
-              <li className="w-full flex-center flex-col gap-[10px] aspect-square bg-white rounded-lg text-black text-md opacity-0 animate-quick-show-content-3">
+              <li className="w-full flex-center flex-col gap-[10px] aspect-square bg-white rounded-lg text-black text-md opacity-0 animate-quick-show-content-1">
                 <IconMessage width={20} height={20} fill={"var(--black)"} />
                 소통
               </li>
-              <li className="w-full flex-center flex-col gap-[10px] aspect-square bg-white rounded-lg text-black text-md opacity-0 animate-quick-show-content-2">
+              <li className="w-full flex-center flex-col gap-[10px] aspect-square bg-white rounded-lg text-black text-md opacity-0 animate-quick-show-content-1">
                 <IconMap width={20} height={20} fill={"var(--black)"} />
                 로드맵
               </li>
-              <li className="w-full flex-center flex-col gap-[10px] aspect-square bg-input rounded-lg text-white text-md opacity-0 animate-quick-show-content-3">
+              <li className="w-full flex-center flex-col gap-[10px] aspect-square bg-input rounded-lg text-white text-md opacity-0 animate-quick-show-content-2">
                 <IconShare width={20} height={20} fill={"var(--white)"} />
                 공유
               </li>
-              <li className="w-full flex-center flex-col gap-[10px] aspect-square bg-input rounded-lg text-white text-md opacity-0 animate-quick-show-content-4">
+              <li className="w-full flex-center flex-col gap-[10px] aspect-square bg-input rounded-lg text-white text-md opacity-0 animate-quick-show-content-2">
                 <IconHeart width={20} height={20} fill={"var(--white)"} />
                 좋아요
               </li>
-              <li className="w-full flex-center flex-col gap-[10px] aspect-square bg-white rounded-lg text-black text-md opacity-0 animate-quick-show-content-3">
+              <li className="w-full flex-center flex-col gap-[10px] aspect-square bg-white rounded-lg text-black text-md opacity-0 animate-quick-show-content-1">
                 <IconLocation width={20} height={20} fill={"var(--black)"} />
                 위치정보
               </li>
-              <li className="w-full flex-center flex-col gap-[10px] aspect-square bg-input rounded-lg text-white text-md opacity-0 animate-quick-show-content-4">
+              <li className="w-full flex-center flex-col gap-[10px] aspect-square bg-input rounded-lg text-white text-md opacity-0 animate-quick-show-content-2">
                 <IconSearch width={20} height={20} fill={"var(--white)"} />
                 검색
               </li>
-              <li className="w-full flex-center flex-col gap-[10px] aspect-square bg-white rounded-lg text-black text-md opacity-0 animate-quick-show-content-5">
+              <li className="w-full flex-center flex-col gap-[10px] aspect-square bg-white rounded-lg text-black text-md opacity-0 animate-quick-show-content-3">
                 <IconSetting width={20} height={20} fill={"var(--black)"} />
                 커스텀 설정
               </li>
@@ -205,7 +205,7 @@ const TutorialPage = () => {
           <div className="relative flex-center flex-col h-[calc(100dvh-195px)]">
             <IconLogo fill={"var(--white)"} className="w-3/4 h-3/4 opacity-0 animate-show-content-2 blur-3xl blur-effect" />
             <div className="absolute-center">
-              <h2 className="text-[#FFF] text-xl opacity-0 animate-show-content-3 text-nowrap font-bold">{"당신의 하루를 계획하고, 공유하세요"}</h2>
+              <h2 className="text-[#FFF] text-xl opacity-0 animate-show-content-3 text-nowrap font-bold">{"당신의 하루를 계획하고, 공유하세요!"}</h2>
             </div>
           </div>
         }

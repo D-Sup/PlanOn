@@ -12,7 +12,7 @@ interface ActionCardProps {
 
 const ActionCard = ({ className, icon: Icon, name, handleFunc, type, color }: ActionCardProps) => {
   return (
-    <button type="button" className={`px-[15px] w-full h-[50px] rounded-lg bg-gray-heavy flex items-center justify-between ${className}`} onClick={handleFunc}>
+    <button type="button" className={`px-[15px] w-full h-[50px] rounded-lg bg-input flex items-center justify-between ${className}`} onClick={handleFunc}>
       <div className="flex items-center gap-[15px]">
         <Icon width={15} height={15} fill={`var(--${color ? color : "white"})`} />
         <p className={`text-md text-${color ? color : "white"}`}>{name}</p>

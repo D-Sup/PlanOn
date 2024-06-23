@@ -54,7 +54,6 @@ const SettingPage = () => {
         </div>
 
         <div className=" bottom-[100px] px-[30px] w-full">
-          {/* {!isLoading && userData && */}
           <button
             className="w-full h-[50px] rounded-md bg-input text-md text-red"
             type="button"

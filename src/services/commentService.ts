@@ -6,6 +6,7 @@ import useFirestoreDelete from "@/hooks/useFirestoreDelete";
 import notificationService from "./notificationService";
 import useModalStack from "@/hooks/useModalStack";
 
+import getAccountId from "@/utils/getAccountId";
 import { produce } from "immer";
 import { v4 as uuidv4 } from "uuid";
 
@@ -16,6 +17,8 @@ import { CommentsType } from "@/types/posts.type";
 export type CommentMachinedType = CommentsType & {userInfo: UsersType};
 
 const CommentService = () => {
+
+  const accountId = getAccountId()
 
   const ReadComment = (comments: CommentsType[]) => {
 
@@ -56,24 +59,28 @@ const CommentService = () => {
       mutationFn: async (request: { type: "create" | "delete", id: string, comment: CommentsType | CommentMachinedType, deviceToken?: string, userData?: UsersType, authorizationId?: string }) => {
         if (request.type === "create") {
           await createFieldObject(request.id, "comments", request.comment);
-          createFieldObjectUsers(
-            request.authorizationId,
-            "notificationHistory",
-            {
-              id: uuidv4(),
-              icon: request.userData.accountImage,
-              title: `회원님 게시물에 댓글을 남겼습니다.`,
-              body: `${request.userData.accountName}: ${request.comment.content}`,
-              isRead: false,
-              createdAt: new Date(),
-            }
-          )
-          notificationService(
-            request.deviceToken,
-            "회원님 게시물에 댓글을 남겼습니다.",
-            `${request.userData.accountName}: ${request.comment.content}`,
-            `${request.userData.accountImage}`
-          )
+          if(accountId !== request.authorizationId) {
+            createFieldObjectUsers(
+              request.authorizationId,
+              "notificationHistory",
+              {
+                type: "comment",
+                notificationUrl: request.id,
+                id: uuidv4(),
+                icon: request.userData.accountImage,
+                title: `회원님 게시물에 댓글을 남겼습니다.`,
+                body: `${request.userData.accountName}: ${request.comment.content}`,
+                isRead: false,
+                createdAt: new Date(),
+              }
+            )
+            notificationService(
+              request.deviceToken,
+              "회원님 게시물에 댓글을 남겼습니다.",
+              `${request.userData.accountName}: ${request.comment.content}`,
+              `${request.userData.accountImage}`
+            )
+          } 
         } else if (request.type === "delete") {
           await deleteFieldObject(request.id, "comments", {id : request.comment.id});
         }

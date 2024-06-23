@@ -53,7 +53,7 @@ const ScheduleCard = ({
 
   const formattedAddress = useRef<HTMLInputElement>(null);
 
-  const { startPressing } = usePressingHandler(() => {
+  const { startPressing, stopPressing } = usePressingHandler(() => {
     handleEditCard && handleEditCard(data as ReadDocumentType<SchedulesType>)
   });
 
@@ -70,7 +70,9 @@ const ScheduleCard = ({
     <LeftAndRightSlider className="h-[70px]" moreAreaWidth={120} isSlideEnabled={isSlideEnabled}>
       <div
         onTouchStart={startPressing}
+        onTouchEnd={stopPressing}
         onMouseDown={startPressing}
+        onMouseUp={stopPressing}
         onClick={() => {
           handleSelectCard && handleSelectCard(scheduleId)
           handleFunc && handleFunc()

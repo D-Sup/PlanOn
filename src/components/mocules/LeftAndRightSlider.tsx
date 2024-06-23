@@ -25,8 +25,6 @@ const LeftAndRightSlider = ({ children, className, moreAreaWidth, isSlideEnabled
   }
 
   const handleTouchStart = (e: React.TouchEvent | React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
     if (isSlideEnabled) {
       if ("touches" in e) {
         setStartX(e.touches[0].clientX);

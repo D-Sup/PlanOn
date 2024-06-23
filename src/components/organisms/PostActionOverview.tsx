@@ -12,7 +12,6 @@ import getAccountId from "@/utils/getAccountId";
 import IconEdit from "../../assets/images/icon-edit.svg?react";
 import IconLink from "../../assets/images/icon-link.svg?react";
 import IconTrash from "../../assets/images/icon-trash.svg?react";
-// import IconBookmark from "../../assets/images/icon-bookmark.svg?react";
 
 import { PostMachinedType } from "@/services/postService";
 
@@ -77,7 +76,6 @@ const PostActionOverview = ({ props }: PostActionOverviewProps) => {
 
   return (
     <div className="flex flex-col gap-[10px] px-[20px] pt-[20px] pb-[30px]">
-      {/* {!isMyPost && <ActionCard icon={IconBookmark} name={"저장"} handleFunc={() => { }} />} */}
       <input ref={formattedAddress} className="a11y-hidden" value={`https://plan-on.vercel.app/post/detail/readonly/${id}`} readOnly />
       <ActionCard icon={IconLink} name={"공유"} handleFunc={handleCopyClipBoard} type={"collect"} />
       {isMyPost &&

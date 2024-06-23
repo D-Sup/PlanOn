@@ -24,8 +24,6 @@ const ScrollRefreshContainer = ({ children, isLoading, refetch }: ScrollRefreshC
 
   const handleTouchStart = (e: React.TouchEvent | React.MouseEvent) => {
     if (scrollTop !== 0 && !isTop) return;
-    e.preventDefault();
-    e.stopPropagation();
     if ("touches" in e) {
       setStartY(e.touches[0].clientY);
     } else {
@@ -102,12 +100,12 @@ const ScrollRefreshContainer = ({ children, isLoading, refetch }: ScrollRefreshC
   return (
     <div
       className="w-full h-full"
-      onTouchStart={(e) => handleTouchStart(e)}
-      onTouchMove={(e) => handleTouchMove(e)}
-      onTouchEnd={(e) => handleTouchEnd(e)}
-      onMouseDown={(e) => handleTouchStart(e)}
-      onMouseMove={(e) => handleTouchMove(e)}
-      onMouseUp={(e) => handleTouchEnd(e)}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      onMouseDown={handleTouchStart}
+      onMouseMove={handleTouchMove}
+      onMouseUp={handleTouchEnd}
     >
       <div className={`${isMoving ? "" : "transition-transform duration-300 ease-in-out"} ${isVisible ? "opacity-100" : "opacity-0"} h-[50px] w-[100px] rounded-lg bg-white fixed left-1/2 top-[-50px] z-50`} ref={refreshRef}>
         <div className={`absolute-center w-[50px] transition duration-100 ${isRefresh ? "opacity-100" : "opacity-0"}`}>

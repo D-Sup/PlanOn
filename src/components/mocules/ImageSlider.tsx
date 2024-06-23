@@ -34,7 +34,7 @@ const ImageSlider = ({ data, photos, ratio }: { data?: any, photos: string[], ra
 
   const handleTouchStart = (e: React.TouchEvent | React.MouseEvent) => {
     e.preventDefault();
-    e.stopPropagation();
+    if (photos.length < 2) return;
     if ("touches" in e) {
       setStartX(e.touches[0].clientX);
       setStartY(e.touches[0].clientY);
@@ -146,12 +146,12 @@ const ImageSlider = ({ data, photos, ratio }: { data?: any, photos: string[], ra
       </div>
       <div
         className="photo-navigator h-full w-full flex flex-col items-center"
-        onTouchStart={(e) => photos.length > 1 && handleTouchStart(e)}
-        onTouchMove={(e) => photos.length > 1 && handleTouchMove(e)}
-        onTouchEnd={(e) => photos.length > 1 && handleTouchEnd(e)}
-        onMouseDown={(e) => photos.length > 1 && handleTouchStart(e)}
-        onMouseMove={(e) => photos.length > 1 && handleTouchMove(e)}
-        onMouseUp={(e) => photos.length > 1 && handleTouchEnd(e)}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onMouseDown={handleTouchStart}
+        onMouseMove={handleTouchMove}
+        onMouseUp={handleTouchEnd}
         onDoubleClick={() => {
           setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, data] }))
           if (photos.length === 1) {

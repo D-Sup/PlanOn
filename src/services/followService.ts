@@ -59,11 +59,13 @@ const FollowService = () => {
             createFieldArray(request.id, "followers", accountId),
             createFieldArray(accountId, "followings", request.id)
           ])
-          if (request.userData) {
-            createFieldObject(
+          if (request.userData && accountId !== request.authorizationId) {
+              createFieldObject(
               request.authorizationId,
               "notificationHistory",
               {
+                type: "follow",
+                notificationUrl: request.id,
                 id: uuidv4(),
                 icon: request.userData.accountImage,
                 title: `${request.userData.accountName}님이 회원님을 팔로우 했습니다.`,

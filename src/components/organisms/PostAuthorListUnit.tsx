@@ -1,6 +1,5 @@
 import ProfileAvatar from "../atoms/ProfileAvatar";
 
-import IconCirclePlus from "../../assets/images/icon-circle-plus.svg?react";
 import IconMoreVertical from "../../assets/images/icon-more-vertical.svg?react";
 import IconLock from "../../assets/images/icon-lock.svg?react";
 
@@ -14,9 +13,6 @@ const PostAuthorListUnit = ({ data, handleFunc }: { data: PostsType & { userInfo
 
   return (
     <div className="flex items-center w-full h-[40px] pl-[10px] mb-[10px]">
-
-      {/* {isPrivate === true && <IconLock width={15} height={15} fill={"var(--gray-old)"} className="mr-[10px]" />} */}
-
       <ProfileAvatar
         className="w-[40px] h-[40px]"
         src={userInfo?.accountImage || ""}
@@ -30,7 +26,8 @@ const PostAuthorListUnit = ({ data, handleFunc }: { data: PostsType & { userInfo
           {isPrivate === true && <IconLock width={15} height={15} fill={"var(--gray-old)"} className="ml-[10px] mt-[3px]" />}
         </div>
         {usertags.length !== 0 &&
-          <div className="flex mt-[1px] ml-[3px]" onClick={handleFunc[1]}>
+          <div className="flex items-center gap-[8px]" onClick={handleFunc[1]}>
+            <span className="text-sm text-gray-old leading-none">with</span>
             {
               data.tagUserInfo?.map((tagUser) => (
                 <div className="-ml-[3px]" key={tagUser.id}>
@@ -42,7 +39,6 @@ const PostAuthorListUnit = ({ data, handleFunc }: { data: PostsType & { userInfo
                 </div>
               ))
             }
-            <IconCirclePlus width={15} height={15} fill={"var(--white)"} className="relative -ml-[3px]" />
           </div>}
       </div>
 

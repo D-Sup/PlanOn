@@ -1,5 +1,6 @@
 import { useContext } from "react"
 import { UserContext } from "../organisms/UserInfoProvider"
+import { useNavigate } from "react-router-dom"
 
 import { useSetRecoilState } from "recoil"
 import { routeDirectionValue } from "@/store"
@@ -19,6 +20,8 @@ const NotificationPage = () => {
   const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue);
 
   const { data: userData, isLoading, isFetching, refetch } = useContext(UserContext);
+
+  const navigate = useNavigate()
 
   return (
     <ScrollRefreshContainer isLoading={isFetching} refetch={refetch}>
@@ -40,6 +43,11 @@ const NotificationPage = () => {
               className="w-full flex flex-col justify-center justify-between py-[10px]"
               style={{ boxShadow: "0 1px var(--gray-heavy)" }}
               onClick={() => {
+                if (history.type === "post" || history.type === "like" || history.type === "comment") {
+                  navigate("/post/detail", { state: { direction: "next", post: history.notificationUrl } })
+                } else if (history.type === "follow") {
+                  navigate(`/profile/${history.notificationUrl}`, { state: { direction: "next" } })
+                }
               }}
             >
               <ProfileCard

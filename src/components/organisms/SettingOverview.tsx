@@ -72,7 +72,7 @@ const SettingOverview = () => {
             handleFunc={() => {
               requestPermission()
               if (userData.data.deviceToken !== "") {
-                openModal("Toast", { message: "디바이스 설정에서 알림 권한을 설정해주세요." });
+                openModal("Toast", { message: "디바이스 설정에서 알림을 설정해주세요!" });
               }
             }}
             hasSwitch={true}

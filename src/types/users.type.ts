@@ -22,8 +22,6 @@ export interface UsersType {
   selectedFont: string,
   deviceToken: string
   notificationHistory: NotificationHistoryType[]
-  // postIds: string[],
-  // scheduleIds: string[]
 }
 
 export interface SearchHistoryType {
@@ -45,6 +43,8 @@ export interface ChatsType {
 }
 
 export interface NotificationHistoryType {
+  type: "post" | "like" | "comment" | "follow",
+  notificationUrl: string,
   id: string,
   icon: string,
   title: string,

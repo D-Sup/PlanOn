@@ -28,24 +28,28 @@ const LikeService = () => {
     mutationFn: async (request: { target: "post" | "comment", type: "create" | "delete" | "update", id: string, comment?: CommentsType, deviceToken?: string, userData?: UsersType, authorizationId?: string }) => {
       if (request.target === "post" && request.type === "create") {
         await createFieldArray(request.id, "likedUsers", accountId);
-        createFieldObject(
-          request.authorizationId,
-          "notificationHistory",
-          {
-            id: uuidv4(),
-            icon: request.userData.accountImage,
-            title: `${request.userData.accountName}님이 회원님 게시물에 좋아요를 눌렀습니다.`,
-            body: "",
-            isRead: false,
-            createdAt: new Date(),
-          }
-        )
-        notificationService(
-          request.deviceToken,
-          `${request.userData.accountName}님이 회원님 게시물에 좋아요를 눌렀습니다.`,
-          "",
-          `${request.userData.accountImage}`
-        )
+        if (accountId !== request.authorizationId) {
+          createFieldObject(
+            request.authorizationId,
+            "notificationHistory",
+            {
+              type: "like",
+              notificationUrl: request.id,
+              id: uuidv4(),
+              icon: request.userData.accountImage,
+              title: `${request.userData.accountName}님이 회원님 게시물에 좋아요를 눌렀습니다.`,
+              body: "",
+              isRead: false,
+              createdAt: new Date(),
+            }
+          )
+          notificationService(
+            request.deviceToken,
+            `${request.userData.accountName}님이 회원님 게시물에 좋아요를 눌렀습니다.`,
+            "",
+            `${request.userData.accountImage}`
+          )
+        }
       } else if (request.target === "post" && request.type === "delete") {
         await deleteFieldArray(request.id, "likedUsers", accountId);
       } else if (request.target === "comment" &&  request.type === "update" && request.comment) {
