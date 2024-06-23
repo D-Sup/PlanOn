@@ -52,7 +52,7 @@ self.addEventListener("notificationclick", function (event) {
                 setTimeout(() => {
                     windowClient.navigate(targetUrl);
                     resolve();
-                }, 500);
+                }, 2000);
             });
         })
     );
