@@ -1,6 +1,7 @@
 const notificationService = (token: string, action: string, title: string, body?: string, icon?: string) => {
     try {
-      fetch(`${process.env.REACT_APP_SEND_MESSAGE_API_URL}?token=${token}&action=${action}&title=${title}&body=${body ? body : "none"}&icon=${"none"}`, {
+      const encodedIcon = icon ? encodeURIComponent(icon) : "none";
+      fetch(`${process.env.REACT_APP_SEND_MESSAGE_API_URL}?token=${token}&action=${action}&title=${title}&body=${body ? body : "none"}&icon=${encodedIcon}`, {
         method: "POST",
       });
     } catch (error) {
