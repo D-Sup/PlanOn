@@ -43,7 +43,7 @@ messaging.onBackgroundMessage((payload) => {
 self.addEventListener("notificationclick", function (event) {
     event.notification.close();
 
-    const homeUrl = "https://plan-on.vercel.app/post";
+    const homeUrl = "https://plan-on.vercel.app/post"
     const targetUrl = event.notification.data.url;
 
     event.waitUntil(
@@ -57,7 +57,6 @@ self.addEventListener("notificationclick", function (event) {
         })
     );
 });
-
 
 
 
