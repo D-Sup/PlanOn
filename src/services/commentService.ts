@@ -76,6 +76,7 @@ const CommentService = () => {
             )
             notificationService(
               request.deviceToken,
+              `post/detail/writable/${request.id}`,
               "회원님 게시물에 댓글을 남겼습니다.",
               `${request.userData.accountName}: ${request.comment.content}`,
               `${request.userData.accountImage}`

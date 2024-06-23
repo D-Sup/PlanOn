@@ -33,7 +33,7 @@ messaging.onBackgroundMessage((payload) => {
         body: payload.notification.body,
         icon: payload.notification.image,
         data: {
-            url: payload.notification.click_action || "https://www.naver.com"
+            url: payload.notification.click_action || "https://plan-on.vercel.app"
         }
     };
 

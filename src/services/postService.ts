@@ -106,6 +106,7 @@ const PostService =  () => {
                 )
                 notificationService(
                   user.data.deviceToken,
+                  `post/detail/writable/${postId}`,
                   `${userData.accountName}님이 게시물을 게시했습니다.`,
                   `${postFormState.content}`,
                   `${userData.accountImage}`

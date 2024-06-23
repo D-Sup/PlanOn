@@ -45,6 +45,7 @@ const LikeService = () => {
           )
           notificationService(
             request.deviceToken,
+            `post/detail/writable/${request.id}`,
             `${request.userData.accountName}님이 회원님 게시물에 좋아요를 눌렀습니다.`,
             "",
             `${request.userData.accountImage}`
