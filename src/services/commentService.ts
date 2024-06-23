@@ -70,7 +70,6 @@ const CommentService = () => {
                 icon: request.userData.accountImage,
                 title: `회원님 게시물에 댓글을 남겼습니다.`,
                 body: `${request.userData.accountName}: ${request.comment.content}`,
-                isRead: false,
                 createdAt: new Date(),
               }
             )

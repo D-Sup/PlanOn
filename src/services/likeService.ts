@@ -39,7 +39,6 @@ const LikeService = () => {
               icon: request.userData.accountImage,
               title: `${request.userData.accountName}님이 회원님 게시물에 좋아요를 눌렀습니다.`,
               body: "",
-              isRead: false,
               createdAt: new Date(),
             }
           )

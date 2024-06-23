@@ -49,7 +49,6 @@ export interface NotificationHistoryType {
   icon: string,
   title: string,
   body: string,
-  isRead: string,
   createdAt: Timestamp,
 }
 

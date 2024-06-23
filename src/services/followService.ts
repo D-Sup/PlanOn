@@ -70,7 +70,6 @@ const FollowService = () => {
                 icon: request.userData.accountImage,
                 title: `${request.userData.accountName}님이 회원님을 팔로우 했습니다.`,
                 body: "",
-                isRead: false,
                 createdAt: new Date(),
               }
             )

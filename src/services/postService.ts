@@ -100,7 +100,6 @@ const PostService =  () => {
                     icon: `${userData.accountImage}`,
                     title: `${userData.accountName}님이 게시물을 게시했습니다.`,
                     body: `${postFormState.content}`,
-                    isRead: false,
                     createdAt: new Date(),
                   }
                 )
