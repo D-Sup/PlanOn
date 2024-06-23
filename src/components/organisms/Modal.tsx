@@ -21,7 +21,7 @@ const Modal = ({ isOpen, props, closeModal, isScrolledToTop, children }: ModalPr
   const isHeightAuto = props?.isHeightAuto;
 
   const handleTouchStart = (e: React.TouchEvent | React.MouseEvent) => {
-    e.preventDefault();
+    // e.preventDefault();
     if ("touches" in e) {
       setStartY(e.touches[0].clientY);
     } else {
