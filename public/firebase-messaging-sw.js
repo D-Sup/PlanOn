@@ -26,29 +26,25 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-firebase.messaging();
-// const messaging = firebase.messaging();
-// messaging.onBackgroundMessage((payload) => {
-// const notificationTitle = payload.notification.title;
-// console.log("payload", payload);
-// const notificationOptions = {
-//     body: payload.notification.body,
-//     icon: payload.notification.image,
-// };
+const messaging = firebase.messaging();
 
-// self.registration.showNotification(notificationTitle, notificationOptions);
-// });
-// self.addEventListener("notificationclick", function (event) {
-//     const url = "https://plan-on.vercel.app/profile/slAeoXqXoae5x7UAWBUjZUULcnm2";
-//     event.notification.close();
-//     event.waitUntil(clients.openWindow(url));
-// });
+messaging.onBackgroundMessage((payload) => {
+    const notificationTitle = payload.notification.title;
+    const notificationOptions = {
+        body: payload.notification.body,
+        icon: payload.notification.image,
+        data: {
+            url: payload.notification.click_action || "https://default-url.com"
+        }
+    };
+
+    self.registration.showNotification(notificationTitle, notificationOptions);
+});
 
 self.addEventListener("notificationclick", function (event) {
     event.notification.close();
 
-    // const url = event.notification.data.url;
-    const url = "https://plan-on.vercel.app/profile/slAeoXqXoae5x7UAWBUjZUULcnm2";
+    const url = event.notification.data.url;
 
     event.waitUntil(
         clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {

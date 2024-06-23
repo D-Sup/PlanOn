@@ -102,7 +102,6 @@ const UserInfoProvider = ({ children }: { children: React.ReactNode }) => {
       if (data.data.deviceToken) {
         requestPermission()
       }
-
     }
   }, [data])
 
