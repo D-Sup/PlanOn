@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import useModalStack from "@/hooks/useModalStack";
 import useFirestoreUpdate from "@/hooks/useFirestoreUpdate";
 import ImageFrame from "./ImageFrame";
@@ -110,23 +110,26 @@ const ChatMessageBox = ({ chatRoomId, data, previousCreatedAt, nextCreatedAt }: 
             </div>
           }
 
-          {link &&
-            <a
-              href={link.url}
-              className="relative mb-[10px] mr-[10px] ml-auto w-1/2 bg-background"
-              target="_blank"
-            >
-              {link.image &&
-                <div className="h-[120px] rounded-t-md overflow-hidden">
-                  <ImageFrame src={link.image} alt={link.url} />
+          {link && link.title &&
+            <div className="mb-[10px] flex items-end gap-[10px]">
+              {isEqual && <span className={"ml-auto inline-block text-xsm text-white"}>{formatDate(createdAt, 7)}</span>}
+              <a
+                href={link.url}
+                className={`${!isEqual && "ml-auto"} relative mr-[10px] w-1/2 bg-background`}
+                target="_blank"
+              >
+                {link.image &&
+                  <div className="h-[120px] rounded-t-md overflow-hidden">
+                    <ImageFrame src={link.image} alt={link.url} />
+                  </div>
+                }
+                <div className={`p-[10px] bg-input flex flex-col justify-center text-white ${link.image ? "rounded-b-md" : "rounded-md"}`}>
+                  <strong className="text-md break-all">{link.title}</strong>
+                  <span className="text-xsm text-blue-500 break-all reduce-words">{link.url}</span>
+                  <span className="text-xsm text-gray-old break-all">{link.description}</span>
                 </div>
-              }
-              <div className={`p-[10px] bg-input flex flex-col justify-center text-white ${link.image ? "rounded-b-md" : "rounded-md"}`}>
-                <strong className="text-md break-all">{link.title}</strong>
-                <span className="text-xsm text-blue-500 break-all reduce-words">{link.url}</span>
-                <span className="text-xsm text-gray-old break-all">{link.description}</span>
-              </div>
-            </a>
+              </a>
+            </div>
           }
         </>
       ) : (
@@ -162,23 +165,26 @@ const ChatMessageBox = ({ chatRoomId, data, previousCreatedAt, nextCreatedAt }: 
             </div>
           }
 
-          {link &&
-            <a
-              href={link.url}
-              className="mb-[10px] ml-[10px] mr-auto w-1/2 aspect-square relative bg-background"
-              target="_blank"
-            >
-              {link.image &&
-                <div className="h-[120px] rounded-t-md overflow-hidden">
-                  <ImageFrame src={link.image} alt={link.url} />
+          {link && link.title &&
+            <div className="mb-[10px] flex items-end gap-[10px]">
+              <a
+                href={link.url}
+                className={`${!isEqual && "mr-auto"} ml-[10px] w-1/2 aspect-square relative bg-background`}
+                target="_blank"
+              >
+                {link.image &&
+                  <div className="h-[120px] rounded-t-md overflow-hidden">
+                    <ImageFrame src={link.image} alt={link.url} />
+                  </div>
+                }
+                <div className={`p-[10px] bg-input flex flex-col justify-center text-white ${link.image ? "rounded-b-md" : "rounded-md"}`}>
+                  <strong className="text-md break-all">{link.title}</strong>
+                  <span className="text-xsm text-blue-500 break-all reduce-words">{link.url}</span>
+                  <span className="text-xsm text-gray-old break-all">{link.description}</span>
                 </div>
-              }
-              <div className={`p-[10px] bg-input flex flex-col justify-center text-white ${link.image ? "rounded-b-md" : "rounded-md"}`}>
-                <strong className="text-md break-all">{link.title}</strong>
-                <span className="text-xsm text-blue-500 break-all reduce-words">{link.url}</span>
-                <span className="text-xsm text-gray-old break-all">{link.description}</span>
-              </div>
-            </a>
+              </a>
+              {isEqual && <span className={"mr-auto inline-block text-xsm text-white"}>{formatDate(createdAt, 7)}</span>}
+            </div>
           }
         </>
       )}

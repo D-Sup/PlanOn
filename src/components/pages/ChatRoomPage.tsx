@@ -231,25 +231,37 @@ const ChatRoomPage = () => {
     }
 
     if (inputValue.includes("http")) {
-      const result = await extractMetaTagService(inputValue)
-      if (result) {
-        const { title, image, description } = result
+      try {
+        const result = await extractMetaTagService(inputValue);
+        if (result) {
+          const { title, image, description } = result;
+          await messagesRef.add({
+            id: uuidv4(),
+            userId: accountId,
+            link: {
+              url: inputValue,
+              title,
+              image,
+              description
+            },
+            isRead: false,
+            createdAt: new Date(now.getTime() + 1000),
+          });
+          window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: "smooth"
+          });
+        }
+      } catch (error) {
         await messagesRef.add({
           id: uuidv4(),
           userId: accountId,
           link: {
-            url: inputValue,
-            title,
-            image,
-            description
+            url: inputValue
           },
           isRead: false,
           createdAt: new Date(now.getTime() + 1000),
         });
-        window.scrollTo({
-          top: document.body.scrollHeight,
-          behavior: "smooth"
-        })
       }
     }
 

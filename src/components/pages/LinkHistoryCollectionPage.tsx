@@ -57,16 +57,17 @@ const LinkHistoryCollectionPage = () => {
             <a
               key={singleData.id}
               href={singleData.link.url}
-              className="aspect-square bg-background inline-block w-1/2 p-[8px]"
+              className="aspect-square bg-background inline-block w-1/2 p-[8px] align-top"
               target="_blank"
             >
-              {singleData.link.image &&
-                <div className="h-1/2 rounded-t-md overflow-hidden">
+              <div className="h-1/2 rounded-t-md overflow-hidden">
+                {singleData.link.image &&
                   <ImageFrame src={singleData.link.image} alt={`photo-${index}`} />
-                </div>
-              }
+                }
+              </div>
+
               <div className={`min-h-[50%] p-[10px] bg-input flex flex-col justify-center text-white ${singleData.link.image ? "rounded-b-md" : "rounded-md"}`}>
-                <strong className="text-md break-all">{singleData.link.title}</strong>
+                <strong className="text-md break-all">{singleData.link.title ? singleData.link.title : singleData.link.url}</strong>
                 <span className="text-xsm text-blue-500 break-all reduce-words">{singleData.link.url}</span>
                 <span className="text-xsm text-gray-old break-all">{singleData.link.description}</span>
               </div>
