@@ -1,15 +1,19 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import getAccountId from "@/utils/getAccountId";
+
 import IconLogo from "../../assets/images/icon-logo.svg?react";
 
 const SplashPage = () => {
 
   const navigate = useNavigate()
 
+  const accountId = getAccountId()
+
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      navigate("/introduce", { state: { direction: "fade" } })
+      navigate(accountId ? "/post" : "/introduce", { state: { direction: "fade" } })
     }, 2000)
 
     return () => {

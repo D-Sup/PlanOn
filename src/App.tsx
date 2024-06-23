@@ -57,7 +57,6 @@ const App = () => {
               {/* <Route path='/404page' element={<Page404 />} /> */}
 
               <Route element={<NonLoginProtectedRoute />}>
-                <Route path="/splash/*" element={<SplashPage />} />
                 <Route path="/introduce/*" element={<IntroducePage />} />
                 <Route path="/login/*" element={<LoginPage />} />
                 <Route path="/signup/*" element={<SignUpPage />} />
@@ -83,6 +82,7 @@ const App = () => {
                 <Route path="/tutorial/*" element={<TutorialPage />} />
               </Route>
 
+              <Route path="/splash/*" element={<SplashPage />} />
               <Route path="/download/*" element={<DownloadGuidePage />} />
               <Route path="/post/detail/*" element={<PostDetailPage />} />
               <Route path="/post/detail/readonly/*" element={<PostDetailPageReadOnlyPage />} />

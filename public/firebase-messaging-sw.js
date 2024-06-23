@@ -27,14 +27,13 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const messaging = firebase.messaging();
-
 messaging.onBackgroundMessage((payload) => {
     const notificationTitle = payload.notification.title;
     const notificationOptions = {
         body: payload.notification.body,
         icon: payload.notification.image,
         data: {
-            url: payload.notification.click_action || "https://default-url.com"
+            url: payload.notification.click_action || "https://www.naver.com"
         }
     };
 
@@ -46,16 +45,30 @@ self.addEventListener("notificationclick", function (event) {
 
     const url = event.notification.data.url;
 
-    event.waitUntil(
-        clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
-            for (const client of clientList) {
-                if (client.url === url && "focus" in client) {
-                    return client.focus();
-                }
-            }
-            if (clients.openWindow) {
-                return clients.openWindow(url);
-            }
-        })
-    );
+    event.waitUntil(clients.openWindow(url));
 });
+
+
+
+
+// const messaging = firebase.messaging();
+// messaging.onBackgroundMessage((payload) => {
+//     const notificationTitle = payload.notification.title;
+//     console.log("payload", payload);
+//     const notificationOptions = {
+//         body: payload.notification.body,
+//         icon: payload.notification.image,
+//         data: {
+//             url: "https://plan-on.vercel.app/profile/slAeoXqXoae5x7UAWBUjZUULcnm2"
+//             // url: payload?.data?.openUrl,// This should contain the URL you want to open
+//         },
+//     };
+
+//     self.registration.showNotification(notificationTitle, notificationOptions);
+// });
+
+// self.addEventListener("notificationclick", function (event) {
+//     const url = "https://plan-on.vercel.app/profile/slAeoXqXoae5x7UAWBUjZUULcnm2";
+//     event.notification.close();
+//     event.waitUntil(clients.openWindow(url));
+// });
