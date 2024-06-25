@@ -125,11 +125,6 @@
 }
 
 body {
-  /* font-family: "Pretendard-Regular", sans-serif; */
-  /* font-family: "GangwonEdu_OTFBoldA", sans-serif; */
-  /* font-family: "Ownglyph_meetme-Rg", sans-serif; */
-  /* font-family: "omyu_pretty", sans-serif; */
-  /* overflow-x: hidden; */
   background-color: var(--background);
 }
 
@@ -390,31 +385,4 @@ li {
 
 img {
   vertical-align: top;
-}
-
-
-/* h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-} */
-
-/* button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-} */
-
-/* button:hover {
-  border-color: #646cff;
-} */
-
-button:focus,
-button:focus-visible {
-  /* outline: 4px auto -webkit-focus-ring-color; */
 }

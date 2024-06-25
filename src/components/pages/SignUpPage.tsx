@@ -87,13 +87,13 @@ const SignUpPage = () => {
           type="button"
           className={`relative mt-[10px] w-full h-[50px] rounded-[10px]  text-lg font-bold transition duration-300 ${isRequire ? "bg-white text-black" : "bg-input text-gray-old"}`}
           onClick={() => {
-            if (isRequire) {
-              signUp({
-                accountEmail,
-                accountPassword,
-                accountName
-              });
-            }
+            // if (isRequire) {
+            signUp({
+              accountEmail,
+              accountPassword,
+              accountName
+            });
+            // }
           }}
         >
           {isPending ? (

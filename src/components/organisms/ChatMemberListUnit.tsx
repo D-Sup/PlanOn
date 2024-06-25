@@ -5,14 +5,17 @@ import formatDate from "@/utils/formatDate";
 
 import IconExit from "../../assets/images/icon-exit.svg?react";
 
-import { ChatsType } from "@/types/users.type";;
+import { ChatsType } from "@/types/users.type";
 
 const ChatMemberListUnit = ({ data, handleFunc }: { data: ChatsType, handleFunc: (() => void)[] }): JSX.Element => {
-  const { id, userId, userInfo, lastReceive, lastMessageCreatedAt, unreadLength } = data
+  const { userInfo, lastReceive, lastMessageCreatedAt, unreadLength } = data
 
   return (
     <LeftAndRightSlider className="max-w-full h-[34px]" moreAreaWidth={60}>
-      <div className="flex items-center justify-between" onClick={handleFunc[0]}>
+      <div className="flex items-center justify-between" onClick={(e) => {
+        e.stopPropagation()
+        handleFunc[0]
+      }}>
         {userInfo && <ProfileCard title={userInfo.data.accountName} description={lastReceive} src={userInfo.data.accountImage} />}
         <div className="h-[34px] flex items-end justify-start flex-col gap-[7px]">
           <span className="text-xsm text-gray-heavy leading-none">{formatDate(lastMessageCreatedAt, 9) === "오늘" ? formatDate(lastMessageCreatedAt, 7) : formatDate(lastMessageCreatedAt, 9)}</span>

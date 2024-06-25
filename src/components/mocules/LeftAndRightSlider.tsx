@@ -103,11 +103,6 @@ const LeftAndRightSlider = ({ children, className, moreAreaWidth, isSlideEnabled
       setIsMoving(false)
       setIsOpenMore(true)
       sliderRefCurrent.style.transform = `translateX(-${moreAreaWidth}px)`;
-    } else {
-      if (sliderRefCurrent) {
-        setIsMoving(false)
-        sliderRefCurrent.style.transform = `translateX(0%)`;
-      }
     }
     setStartX(null);
     setStartY(null)
