@@ -1,6 +1,6 @@
 # PlanOn
 
-![Intro](https://github.com/D-Sup/PlanOn/assets/96939334/a3fd2338-eefc-4a6b-aef9-eed0a3d80d7d)
+![Intro](https://github.com/D-Sup/PlanOn/assets/96939334/e8b0270e-8a87-46f4-bd65-ed084220b88d)
 
 ![Architecture](https://github.com/D-Sup/PlanOn/assets/96939334/2a6d6799-ce6d-4d2e-aea0-b53a765a111e)
 
