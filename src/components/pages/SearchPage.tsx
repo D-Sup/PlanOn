@@ -25,7 +25,6 @@ import { v4 as uuidv4 } from "uuid";
 import { ReadDocumentType } from "@/hooks/useFirestoreRead"
 import { UsersType } from "@/types/users.type"
 import { HashtagsType } from "@/types/hashtags.type"
-import { SchedulesType } from "@/types/schedules.type"
 
 const SearchPage = () => {
 
@@ -152,11 +151,11 @@ const SearchPage = () => {
                   navigate(`/profile/${singleData.data.authorizationId}`, { state: { direction: "next" } })
                 }} /> ||
               progress === 2 &&
-              <LocationLinkListUnit key={singleData.id} data={singleData as SchedulesType}
+              <LocationLinkListUnit key={singleData.id} data={singleData as ReadDocumentType<HashtagsType>}
                 handleFunc={() => {
                   mutate({ type: "create", searchHistory: { id: uuidv4(), type: "location", title: inputValueState, createdAt: new Date() } })
                   setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, "location"] }))
-                  navigate("/post/collection", { state: { direction: "next", type: "location", data: singleData, title: "scheduleLocation" in singleData.data && singleData.data.scheduleLocation.placeName } })
+                  navigate("/post/collection", { state: { direction: "next", type: "location", data: singleData.data, title: singleData.id } })
                 }} /> ||
               progress === 3 &&
               <HashTagLinkListUnit key={singleData.id} data={singleData as ReadDocumentType<HashtagsType>}

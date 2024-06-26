@@ -81,7 +81,7 @@ const PostService =  () => {
               })
             })(),
             (async () => {
-              const readedSchedule = await readDocumentSingleSchedules<SchedulesType>(postFormState.scheduleId)
+              const readedSchedule = postFormState.scheduleId && await readDocumentSingleSchedules<SchedulesType>(postFormState.scheduleId)
               if (readedSchedule) {
                 const placeName = readedSchedule.data.scheduleLocation.placeName
                 const readedLocation = await readDocumentSingleLocations<LocationsType>(placeName)

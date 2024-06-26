@@ -30,7 +30,7 @@ const PostCollectionPage = () => {
   const isSearchLocation = type === "location"
 
   const { ReadPostAllSearch } = PostService()
-  const { data: postData, isLoading } = ReadPostAllSearch(isSearchLocation ? "scheduleId" : "id", isSearchLocation ? [data.id] : data.taggedPostIds)
+  const { data: postData, isLoading } = ReadPostAllSearch("id", data.taggedPostIds)
 
   // const filteredData = postData?.filter(singleData => singleData.data.authorizationId === accountId || singleData.data.private === false)
 
