@@ -27,8 +27,6 @@ const PostCollectionPage = () => {
 
   const { type, data, title } = location.state || {};
 
-  const isSearchLocation = type === "location"
-
   const { ReadPostAllSearch } = PostService()
   const { data: postData, isLoading } = ReadPostAllSearch("id", data.taggedPostIds)
 
