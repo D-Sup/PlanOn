@@ -20,6 +20,7 @@ const NavigationMenu = () => {
   ];
 
   const [isVisible, setIsVisible] = useState<boolean>(true);
+  const [firstClick, setFirstClick] = useState<boolean>(true);
   const setRouteDirectionValueState = useSetRecoilState(routeDirectionValue)
 
   const navigate = useNavigate();
@@ -61,6 +62,17 @@ const NavigationMenu = () => {
             ${location.pathname === item.path ? "bg-white" : "bg-background"}
           `}
             onClick={() => {
+              if (item.path === "/post") {
+                setFirstClick(true)
+                if (firstClick) {
+                  window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                  })
+                }
+              } else {
+                setFirstClick(false)
+              }
               item.path === "/map" && setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
               navigate(item.path, {
                 state: { direction: "fade" },

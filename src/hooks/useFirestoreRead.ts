@@ -70,6 +70,7 @@ const readDocumentsSimplePaged = async <T>(
     isDataEnd?: boolean
 ): Promise<undefined | ReadDocumentType<T>[]> => {
     try {
+			if (filterValues.length === 0) return []
 			if (isDataEnd) {
 				openModal("Toast", {type: "info", message: "데이터를 모두 불러왔습니다."});
 				return data;
