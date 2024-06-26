@@ -667,7 +667,7 @@ const PostService =  () => {
             })
           })(),
           (async () => {
-            const readedSchedule = await readDocumentSingleSchedules<SchedulesType>(data.scheduleId)
+            const readedSchedule = data.scheduleId && await readDocumentSingleSchedules<SchedulesType>(data.scheduleId)
             if (readedSchedule) {
               const placeName = readedSchedule.data.scheduleLocation.placeName
               const readedLocations = await readDocumentQueryLocations("taggedPostIds", "array-contains", id)
