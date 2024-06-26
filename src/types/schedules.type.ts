@@ -9,7 +9,6 @@ export interface SchedulesType {
   scheduleName: string,
   scheduleLocation: ScheduleLocationType,
   scheduleDetails: ScheduleDetailsType[]
-  locationKeywords?: string[]
 }
 
 export interface ScheduleDetailsType {
@@ -17,8 +16,6 @@ export interface ScheduleDetailsType {
   endTime: Timestamp,
   scheduleName: string,
   scheduleLocation: ScheduleLocationType,
-  // scheduleLocation: string,
-  // scheduleAddress: string,
   memoContent: string,
 }
 

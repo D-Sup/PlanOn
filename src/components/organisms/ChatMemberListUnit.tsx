@@ -12,10 +12,7 @@ const ChatMemberListUnit = ({ data, handleFunc }: { data: ChatsType, handleFunc:
 
   return (
     <LeftAndRightSlider className="max-w-full h-[34px]" moreAreaWidth={60}>
-      <div className="flex items-center justify-between" onClick={(e) => {
-        e.stopPropagation()
-        handleFunc[0]
-      }}>
+      <div className="flex items-center justify-between" onDoubleClick={handleFunc[0]}>
         {userInfo && <ProfileCard title={userInfo.data.accountName} description={lastReceive} src={userInfo.data.accountImage} />}
         <div className="h-[34px] flex items-end justify-start flex-col gap-[7px]">
           <span className="text-xsm text-gray-heavy leading-none">{formatDate(lastMessageCreatedAt, 9) === "오늘" ? formatDate(lastMessageCreatedAt, 7) : formatDate(lastMessageCreatedAt, 9)}</span>

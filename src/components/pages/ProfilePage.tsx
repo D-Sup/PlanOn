@@ -69,7 +69,7 @@ const ProfilePage = () => {
   }
 
   const filteredData = fetchPostData?.
-    filter(singleData => singleData.data.authorizationId === accountId || singleData.data.private === false).
+    // filter(singleData => singleData.data.authorizationId === accountId || singleData.data.private === false).
     sort((first, second) => first.data.createdAt.seconds >= second.data.createdAt.seconds ? -1 : 1)
 
   return (

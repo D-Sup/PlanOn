@@ -152,7 +152,7 @@ const SearchPage = () => {
                   navigate(`/profile/${singleData.data.authorizationId}`, { state: { direction: "next" } })
                 }} /> ||
               progress === 2 &&
-              <LocationLinkListUnit key={singleData.id} data={singleData.data as SchedulesType}
+              <LocationLinkListUnit key={singleData.id} data={singleData as SchedulesType}
                 handleFunc={() => {
                   mutate({ type: "create", searchHistory: { id: uuidv4(), type: "location", title: inputValueState, createdAt: new Date() } })
                   setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, "location"] }))

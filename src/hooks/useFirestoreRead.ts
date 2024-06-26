@@ -56,126 +56,160 @@ const useFirestoreRead = (collectionName: string) => {
 		}
 	};
 
-	const readDocumentsSimplePaged = async <T>(
-		data: ReadDocumentType<T>[],
-		fieldName: string,
+const readDocumentsSimplePaged = async <T>(
+    data: ReadDocumentType<T>[],
+    fieldName: string,
     whereOperator: WhereFilterOp,
-		filterValues: string[],
-		sortFieldName: string,
-		sortOrder: OrderByDirection = "desc",
-		pageSize: number = 1,
-		handleFunc?: (data: DocumentData | boolean) => void, 
-		lastVisible?: null | DocumentData,
-		isDataEnd?: boolean
-	): Promise<undefined | ReadDocumentType<T>[]> => {
-		try {
+    filterValues: string[],
+    sortFieldName: string,
+    sortOrder: OrderByDirection = "desc",
+		includePrivate: boolean,
+    pageSize: number = 1,
+    handleFunc?: (data: DocumentData | boolean) => void, 
+    lastVisible?: null | DocumentData,
+    isDataEnd?: boolean
+): Promise<undefined | ReadDocumentType<T>[]> => {
+    try {
 			if (isDataEnd) {
-				openModal("Toast", {type: "info", message: "데이터를 모두 불러왔습니다."})
+				openModal("Toast", {type: "info", message: "데이터를 모두 불러왔습니다."});
 				return data;
 			}
 			const collectionRef = collection(appFireStore, collectionName);
 			const documents: ReadDocumentType<T>[] = data;
-			const filteredDocuments: ReadDocumentType<T>[] = [];
-			let pagedDocuments: ReadDocumentType<T>[] = [];
-	
-			const chunkedFilterValues = [];
-			for (let i = 0; i < filterValues.length; i += 30) {
-				chunkedFilterValues.push(filterValues.slice(i, i + 30));
-			}
-			
-			for (const chunk of chunkedFilterValues) {
-				let documentSnapshots
-				if (fieldName === "id") {
-					documentSnapshots = await Promise.all(chunk.map(id => getDoc(doc(collectionRef, id))));
-				} else {
-					const q = query(collectionRef, where(fieldName, whereOperator, chunk));
-					documentSnapshots = await getDocs(q);
-				}
-	
-				documentSnapshots.forEach((doc) => {
-					filteredDocuments.push({ id: doc.id, data: doc.data() as T });
+			if (fieldName === "id") {
+				const docRefs = filterValues.map(id => doc(collectionRef, id));
+				const documentSnapshots = await Promise.all(docRefs.map(docRef => getDoc(docRef)));
+				documentSnapshots.forEach(doc => {
+					if (doc.exists()) {
+						documents.push({ id: doc.id, data: doc.data() as T });
+					}
 				});
-			}
-	
-			filteredDocuments.sort((a, b) => {
-				const aSeconds = (a.data as Record<string, Timestamp>)[sortFieldName].seconds;
-				const bSeconds = (b.data as Record<string, Timestamp>)[sortFieldName].seconds;
-		
-				if (sortOrder === "asc") {
-					return aSeconds - bSeconds;
+				documents.sort((a, b) => {
+					const aSeconds = (a.data as Record<string, Timestamp>)[sortFieldName].seconds;
+					const bSeconds = (b.data as Record<string, Timestamp>)[sortFieldName].seconds;
+			
+					if (sortOrder === "asc") {
+						return aSeconds - bSeconds;
+					} else {
+						return bSeconds - aSeconds;
+					}
+				});	
+			} else {
+				let q;
+				if (!includePrivate) {
+					if (lastVisible) {
+						q = query(
+							collectionRef,
+							where(fieldName, whereOperator, filterValues),
+							where("private", "==", false),
+							orderBy(sortFieldName, sortOrder),
+							startAfter(lastVisible),
+							limit(pageSize)
+						);
+					} else {
+						q = query(
+							collectionRef,
+							where(fieldName, whereOperator, filterValues),
+							where("private", "==", false),
+							orderBy(sortFieldName, sortOrder),
+							limit(pageSize)
+						);
+					}
 				} else {
-					return bSeconds - aSeconds;
+					if (lastVisible) {
+						q = query(
+							collectionRef,
+							where(fieldName, whereOperator, filterValues),
+							orderBy(sortFieldName, sortOrder),
+							startAfter(lastVisible),
+							limit(pageSize)
+						);
+					} else {
+						q = query(
+							collectionRef,
+							where(fieldName, whereOperator, filterValues),
+							orderBy(sortFieldName, sortOrder),
+							limit(pageSize)
+						);
+					}
 				}
-		});	
 
-		if (pageSize === Infinity) {
-			return filteredDocuments
-		}
-	
-			if (lastVisible) {
-				const lastVisibleIndex = filteredDocuments.findIndex((doc) => doc.id === lastVisible.id);
-				pagedDocuments = filteredDocuments.slice(lastVisibleIndex + 1, lastVisibleIndex + pageSize + 1);
-			} else {
-				pagedDocuments = filteredDocuments.slice(0, pageSize);
+				const documentSnapshots = await getDocs(q);
+
+				documentSnapshots.forEach((doc) => {
+					documents.push({ id: doc.id, data: doc.data() as T });
+				});
+
+				if (documentSnapshots.size < pageSize) {
+					isDataEnd = true;
+					pageSize !== Infinity && openModal("Toast", {type: "info", message: "데이터를 모두 불러왔습니다."});
+				}
+
+				if (documentSnapshots.size > 0) {
+					handleFunc && handleFunc(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+				} else {
+					handleFunc && handleFunc(true);
+				}
 			}
-	
-			if (pagedDocuments.length > 0) {
-				handleFunc && handleFunc(pagedDocuments[pagedDocuments.length - 1]);
-			} else {
-				handleFunc && handleFunc(true);
-				openModal("Toast", {type: "info", message: "데이터를 모두 불러왔습니다."})
-			}
-	
-			pagedDocuments.forEach(filteredDocument => {
-				documents.push(filteredDocument) 
-			})
 			return documents;
-		} catch (error) {
+    } catch (error) {
 			console.error("데이터 조회를 실패했습니다:", error);
 			throw error;
-		}
-	};
+    }
+};
 
 	const readDocumentsPaged = async <T>(
-		data: ReadDocumentType<T>[], 
-		sortFieldName: string, 
-		sortOrder: OrderByDirection = "desc", 
-		pageSize: number = 1, 
-		handleFunc: (data: DocumentData | boolean) => void, 
-		lastVisible: null | DocumentData,
-		isDataEnd: boolean
-	): Promise<undefined | ReadDocumentType<T>[]> => {
-		try {
+    data: ReadDocumentType<T>[], 
+    sortFieldName: string, 
+    sortOrder: OrderByDirection = "desc", 
+    pageSize: number = 1, 
+    handleFunc: (data: DocumentData | boolean) => void, 
+    lastVisible: null | DocumentData,
+    isDataEnd: boolean
+): Promise<undefined | ReadDocumentType<T>[]> => {
+    try {
 			if (isDataEnd) {
-				openModal("Toast", {type: "info", message: "데이터를 모두 불러왔습니다."})
+				openModal("Toast", {type: "info", message: "데이터를 모두 불러왔습니다."});
 				return data;
 			}
 			const collectionRef = collection(appFireStore, collectionName);
 			let q;
 			if (lastVisible) {
-				q = query(collectionRef, orderBy(sortFieldName, sortOrder), startAfter(lastVisible), limit(pageSize));
+				q = query(
+					collectionRef, 
+					where("private", "==", false), 
+					orderBy(sortFieldName, sortOrder), 
+					startAfter(lastVisible), 
+					limit(pageSize)
+				);
 			} else {
-				q = query(collectionRef, orderBy(sortFieldName, sortOrder), limit(pageSize));
+				q = query(
+					collectionRef, 
+					where("private", "==", false), 
+					orderBy(sortFieldName, sortOrder), 
+					limit(pageSize)
+				);
 			}
 			const documentSnapshots = await getDocs(q);
-			const lastDocs = documentSnapshots.docs[documentSnapshots.docs.length - 1]
+			const lastDocs = documentSnapshots.docs[documentSnapshots.docs.length - 1];
 			
 			if (lastDocs) {
 				handleFunc(lastDocs);
 			} else {
-				openModal("Toast", {type: "info", message: "데이터를 모두 불러왔습니다."})
-				handleFunc(true)
+				openModal("Toast", {type: "info", message: "데이터를 모두 불러왔습니다."});
+				handleFunc(true);
 			}
 			const documents: ReadDocumentType<T>[] = data;
 			documentSnapshots.forEach(doc => {
 				documents.push({ id: doc.id, data: doc.data() as T });
 			});
 			return documents;
-		} catch (error) {
+	} catch (error) {
 			console.error("데이터 조회를 실패했습니다:", error);
 			throw error;
-		}
-	};
+	}
+};
+
 
 	const readDocumentQuery = async <T>(fieldName: string, operator: WhereFilterOp, value: string | string[]): Promise<undefined | ReadDocumentType<T>[]> => {
 		try{

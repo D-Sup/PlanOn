@@ -16,6 +16,7 @@ import { HashtagsType } from "@/types/hashtags.type";
 
 import { PostsType } from "@/types/posts.type";
 import { SchedulesType } from "@/types/schedules.type";
+import { LocationsType } from "@/types/locations.type";
 
 const ListUnit = () => {
 
@@ -73,21 +74,21 @@ const ListUnit = () => {
   }
 
   const HashTagPickerListUnit = ({ data, selected, handleFunc }: { data: ReadDocumentType<HashtagsType>, selected: boolean, handleFunc: (tag: ReadDocumentType<UsersType> | ReadDocumentType<HashtagsType>) => void }): JSX.Element => {
-    const { id: hashtagId, data: tagSearchData } = data
+    const { id: hashtagId, data: hashtagData } = data
 
     return (
       <li
         className="w-full flex items-center justify-between py-[10px]"
         style={{ boxShadow: "0 1px var(--gray-heavy)" }}
       >
-        <ProfileCard title={hashtagId} description={`게시물 ${tagSearchData.taggedPostIds.length}`} src={IconHash} />
+        <ProfileCard title={hashtagId} description={`게시물 ${hashtagData.taggedPostIds.length}`} src={IconHash} />
         <ToggleButton options={["취소", "선택"]} selected={selected} handleFunc={() => handleFunc(data)} />
       </li>
     )
   }
 
-  const LocationLinkListUnit = ({ data, handleFunc }: { data: SchedulesType, handleFunc: () => void }): JSX.Element => {
-    const { scheduleLocation } = data
+  const LocationLinkListUnit = ({ data, handleFunc }: { data: ReadDocumentType<LocationsType>, handleFunc: () => void }): JSX.Element => {
+    const { id: locationId, data: locationData } = data
 
     return (
       <li
@@ -95,7 +96,7 @@ const ListUnit = () => {
         style={{ boxShadow: "0 1px var(--gray-heavy)" }}
         onClick={handleFunc}
       >
-        <ProfileCard title={scheduleLocation.placeName} description={scheduleLocation.placeAddress} src={IconLocation} />
+        <ProfileCard title={locationId} description={`게시물 ${locationData.taggedPostIds.length}`} src={IconLocation} />
         <IconArrow width={7} height={12} fill={"var(--white)"} className="mr-[10px]" />
       </li>
     )

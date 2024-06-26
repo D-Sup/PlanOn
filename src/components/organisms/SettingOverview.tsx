@@ -99,7 +99,7 @@ const SettingOverview = () => {
             openModal(FontOverView, { selectedFont: userData.data.selectedFont })
           }} />
 
-          <SettingCard icon={IconInfo} name={"앱 튜토리얼"} handleFunc={() => {
+          <SettingCard icon={IconInfo} name={"앱 소개"} handleFunc={() => {
             navigate("/tutorial", { state: { direction: "up" } })
           }} />
 

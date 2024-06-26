@@ -25,6 +25,8 @@ const PostUpdatePage = () => {
 
   const location = useLocation()
   const editData = location.state?.data as PostFormValueType;
+  console.log("editData", editData);
+
   const navigate = useNavigate();
 
   const [postFormState, setPostFormState] = useRecoilState(postFormValue);

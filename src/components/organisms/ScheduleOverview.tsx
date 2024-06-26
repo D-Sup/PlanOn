@@ -110,7 +110,7 @@ const ScheduleOverview = ({ postFormState, setPostFormState, isScheduleSelectabl
         draft.scheduleFormSnapshot = formattedScheduleData as ScheduleFormValueType;
       })
     )
-    setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
+    setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, { data: editData }] }))
     navigate("/schedule/detail", {
       state: {
         direction: "next"

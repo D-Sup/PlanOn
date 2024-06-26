@@ -10,7 +10,6 @@ import { useRecoilValue } from "recoil";
 import { newScheduleFormValue } from "@/store";
 
 import getAccountId from "@/utils/getAccountId";
-import generateKeywordCombinations from "@/utils/generateKeywordCombinations";
 
 import { ReadDocumentType } from "@/hooks/useFirestoreRead";
 import { SchedulesType } from "@/types/schedules.type";
@@ -21,48 +20,24 @@ const ScheduleService = () => {
   const accountId = getAccountId()
 
   const CreateSchedule = (onSuccess: () => void, onError: () => void) => {
-    const { createFieldArray } = useFirestoreCreate("users")
     const { createDocument } = useFirestoreCreate("schedules")
     const scheduleFormValueState = useRecoilValue(newScheduleFormValue)
     
     const { mutate, isPending } = useDataMutation(
       "schedules",
-      async () => {
-        const extractPlaceDetails = (data: ScheduleFormValueType) => {
-          const result = [];
-          if (data.scheduleLocation) {
-            result.push(data.scheduleLocation.placeName, data.scheduleLocation.placeAddress);
-          }
-          if (Array.isArray(data.scheduleDetails)) {
-            data.scheduleDetails.forEach(detail => {
-              if (detail.scheduleLocation) {
-                result.push(detail.scheduleLocation.placeName, detail.scheduleLocation.placeAddress);
-              }
-            });
-          }
-          return result;
-        }
-
-        const flattenArray = (arr: (string[])[]) => {
-          return arr.reduce((acc, val) => acc.concat(val), []);
-        }
-
-        const uploadedScheduleId = await createDocument({
+      async() => {
+        await createDocument({
         private: scheduleFormValueState.private,
         startTime: new Date(scheduleFormValueState.startTime),
         endTime: new Date(scheduleFormValueState.endTime),
         scheduleName: scheduleFormValueState.scheduleName,
         scheduleLocation: scheduleFormValueState.scheduleLocation,
-        locationKeywords: scheduleFormValueState.scheduleLocation.placeName ? flattenArray(extractPlaceDetails(scheduleFormValueState).map((extractPlaceDetail) => generateKeywordCombinations(extractPlaceDetail))) : [],
         scheduleDetails: scheduleFormValueState.scheduleDetails.map(({selectedDay, startTime, endTime, ...otherDetails})=> ({
           ...otherDetails,
           startTime: new Date(`${selectedDay} ${startTime}`),
           endTime: new Date(`${selectedDay} ${endTime}`)
         }))
         })
-        if (uploadedScheduleId) {
-          createFieldArray(accountId, "scheduleIds", uploadedScheduleId)
-        }
       },
       onSuccess,
       onError
@@ -109,7 +84,7 @@ const ScheduleService = () => {
 
     const { data, isLoading, isFetching, refetch } = useDataQuery<ReadDocumentType<SchedulesType>[], Error, ReadDocumentType<SchedulesType>[]>(
       "schedules",
-      ()=> readDocumentsSimplePaged<SchedulesType>([], "authorizationId", "in", [accountId], "startTime", "asc", Infinity),
+      ()=> readDocumentsSimplePaged<SchedulesType>([], "authorizationId", "in", [accountId], "startTime", "desc", true, Infinity),
       (data) => data,
       {
         staleTime: Infinity,
@@ -126,32 +101,12 @@ const ScheduleService = () => {
     const { mutate, isPending } = useDataMutation(
       "schedules",
       async () => {
-        const extractPlaceDetails = (data: ScheduleFormValueType) => {
-          const result = [];
-          if (data.scheduleLocation) {
-            result.push(data.scheduleLocation.placeName, data.scheduleLocation.placeAddress);
-          }
-          if (Array.isArray(data.scheduleDetails)) {
-            data.scheduleDetails.forEach(detail => {
-              if (detail.scheduleLocation) {
-                result.push(detail.scheduleLocation.placeName, detail.scheduleLocation.placeAddress);
-              }
-            });
-          }
-          return result;
-        }
-
-        const flattenArray = (arr: (string[])[]) => {
-          return arr.reduce((acc, val) => acc.concat(val), []);
-        }
-
         await updateField(scheduleId, {
           private: scheduleData.private,
           startTime: new Date(scheduleData.startTime),
           endTime: new Date(scheduleData.endTime),
           scheduleName: scheduleData.scheduleName,
           scheduleLocation: scheduleData.scheduleLocation,
-          locationKeywords: scheduleData.scheduleLocation.placeName ? flattenArray(extractPlaceDetails(scheduleData).map((extractPlaceDetail) => generateKeywordCombinations(extractPlaceDetail))) : [],
           scheduleDetails: scheduleData.scheduleDetails.map(({selectedDay, startTime, endTime, ...otherDetails})=> ({
             ...otherDetails,
             startTime: new Date(`${selectedDay} ${startTime}`),
@@ -167,17 +122,11 @@ const ScheduleService = () => {
   }
 
   const DeleteSchedule = (id: string , onSuccess: () => void, onError: () => void) => {
-    const { deleteFieldArray } = useFirestoreDelete("users")
     const { deleteDocument } = useFirestoreDelete("schedules")
 
     const { mutate, isPending } = useDataMutation(
       "schedules",
-      async () => {
-        const deletedScheduleId = await deleteDocument(id)
-        if (deletedScheduleId) {
-          deleteFieldArray(accountId, "scheduleIds", deletedScheduleId)
-        }
-      },
+      async() => await deleteDocument(id),
       onSuccess,
       onError
     )

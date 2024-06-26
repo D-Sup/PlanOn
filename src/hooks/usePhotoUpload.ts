@@ -20,12 +20,12 @@ const usePhotoUpload = () => {
     }
 
     const urls: string[] = [];
-    await Promise.all(selectedFiles.map( async (file) => {
+    await Promise.all(selectedFiles.map( async (file, index) => {
       const fileRef = ref(storage, `${pathToSave}/${uuidv4()}`);
       try {
         await uploadBytes(fileRef, file);
         const downloadURL = await getDownloadURL(fileRef);
-        urls.push(downloadURL);
+        urls[index] = downloadURL; // 인덱스를 사용하여 순서 보장
       } catch (error) {
         console.error("이미지 업로드를 실패했습니다:", error);
         throw error;

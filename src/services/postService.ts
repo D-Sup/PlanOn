@@ -25,6 +25,7 @@ import { PostFormValueType } from "@/store";
 import { HashtagsType } from "@/types/hashtags.type";
 
 import { produce } from "immer"
+import { LocationsType } from "@/types/locations.type";
 
 export type PostMachinedType = ReadDocumentType<PostsType & {userInfo: UsersType, tagUserInfo: ReadDocumentType<UsersType>[], scheduleInfo: SchedulesType}>
 
@@ -37,9 +38,11 @@ const PostService =  () => {
     const postFormState = useRecoilValue(postFormValue);
     const { photoUpload } = usePhotoUpload();
     const { readDocumentsSimplePaged } = useFirestoreRead("users");
-    const { createDocumentManual: createDocumentManualHashtags } = useFirestoreCreate("hashtags");
+    const { readDocumentSingle: readDocumentSingleSchedules } = useFirestoreRead("schedules");
+    const { readDocumentSingle: readDocumentSingleLocations } = useFirestoreRead("locations");
+    const { createDocumentManual: createDocumentManualHashtags, createFieldArray: createFieldArrayHashtags } = useFirestoreCreate("hashtags");
+    const { createDocumentManual: createDocumentManualLocations, createFieldArray: createFieldArrayLocations } = useFirestoreCreate("locations");
     const { createDocumentManual: createDocumentManualPosts } = useFirestoreCreate("posts");
-    const { createFieldArray } = useFirestoreCreate("hashtags")
     const { createFieldObject } = useFirestoreCreate("users")
 
     const { mutate, isPending } = useDataMutation(
@@ -63,7 +66,7 @@ const PostService =  () => {
               createDocumentManualHashtags(tag.id, {tagKeywords: generateKeywordCombinations(tag.id), taggedPostIds: [postId]})
             ))),
             Promise.all(remainingTags.map((tag) => {
-              createFieldArray(tag.id, "taggedPostIds", postId)
+              createFieldArrayHashtags(tag.id, "taggedPostIds", postId)
             })),
             (async () => {
               createDocumentManualPosts(postId, {
@@ -76,8 +79,19 @@ const PostService =  () => {
                 usertags: postFormState.usertags.map(usertag => usertag.id),
                 scheduleId: postFormState.scheduleId
               })
-              
             })(),
+            (async () => {
+              const readedSchedule = await readDocumentSingleSchedules<SchedulesType>(postFormState.scheduleId)
+              if (readedSchedule) {
+                const placeName = readedSchedule.data.scheduleLocation.placeName
+                const readedLocation = await readDocumentSingleLocations<LocationsType>(placeName)
+                if (readedLocation.data) {
+                  createFieldArrayLocations(placeName, "taggedPostIds", postId)
+                } else {
+                  createDocumentManualLocations(placeName, {locationKeywords: generateKeywordCombinations(placeName), taggedPostIds: [postId]})
+                }
+              }
+            })()
           ])
           if (uploadedPost) {
             setPaginationValue(Prev => ({...Prev, 
@@ -86,7 +100,7 @@ const PostService =  () => {
                 isDataEnd: false
               },
             }))
-          const readedUsers = await readDocumentsSimplePaged<UsersType>([], "authorizationId", "in", userData.followers, "createdAt", "asc", Infinity)
+          const readedUsers = userData.followers.length !== 0 && await readDocumentsSimplePaged<UsersType>([], "authorizationId", "in", userData.followers, "createdAt", "desc", true, Infinity)
           if (readedUsers) {
             Promise.all(
               readedUsers.map(async (user) => {
@@ -140,10 +154,10 @@ const PostService =  () => {
   }
 
   const ReadPostAllOther = (id: string) => {
-    const { readDocumentQuery } = useFirestoreRead("posts")
+    const { readDocumentsSimplePaged } = useFirestoreRead("posts")
     const { data, isLoading, refetch } = useDataQuery<ReadDocumentType<PostsType>[], Error, ReadDocumentType<PostsType>[]>(
       "other-posts",
-      ()=> readDocumentQuery<PostsType>("authorizationId", "==", id),
+      () => readDocumentsSimplePaged<PostsType>([], "authorizationId", "in", [id], "createdAt", "desc", false, Infinity),
       (data) => data,
       {
         staleTime: 300000,
@@ -159,7 +173,7 @@ const PostService =  () => {
 
     const { data, isLoading } = useDataQuery<ReadDocumentType<PostsType>[], Error, ReadDocumentType<PostsType>[]>(
       "search-posts",
-      ()=> readDocumentsSimplePaged<PostsType>([], fieldName, "in", ids, "createdAt", "asc", Infinity),
+      ()=> readDocumentsSimplePaged<PostsType>([], fieldName, "in", ids, "createdAt", "desc", false, Infinity),
       (data) => data,
       {
         staleTime: 0,
@@ -355,6 +369,7 @@ const PostService =  () => {
             readedUser.data.followings, 
             "createdAt",
             "desc",
+            false,
             3,
             handlePaginationValueState,
             paginationValueState.posts.lastVisible, 
@@ -449,6 +464,7 @@ const PostService =  () => {
           accountId, 
           "createdAt",
           "desc",
+          false,
           3,
           handlePaginationValueState,
           paginationValueState.posts.lastVisible, 
@@ -542,6 +558,7 @@ const PostService =  () => {
           tags, 
           "createdAt",
           "desc",
+          false,
           3,
           handlePaginationValueState,
           paginationValueState.posts.lastVisible, 
@@ -603,9 +620,13 @@ const PostService =  () => {
   }
 
   const UpdatePost = (id: string, data: PostFormValueType, onSuccess: () => void, onError: () => void) => {
-    const { createDocumentManual, createFieldArray } = useFirestoreCreate("hashtags");
-    const { readDocumentQuery } = useFirestoreRead("hashtags")
-    const { deleteFieldArray } = useFirestoreDelete("hashtags");
+    const { createDocumentManual: createDocumentManualHashtags, createFieldArray: createFieldArrayHashtags } = useFirestoreCreate("hashtags");
+    const { createDocumentManual: createDocumentManualLocations, createFieldArray: createFieldArrayLocations } = useFirestoreCreate("locations")
+    const { readDocumentQuery: readDocumentQueryHashtags } = useFirestoreRead("hashtags")
+    const { readDocumentQuery: readDocumentQueryLocations, readDocumentSingle: readDocumentSingleLocations } = useFirestoreRead("locations")
+    const { readDocumentSingle: readDocumentSingleSchedules } = useFirestoreRead("schedules");
+    const { deleteFieldArray: deleteFieldArrayHashtags } = useFirestoreDelete("hashtags");
+    const { deleteFieldArray: deleteFieldArrayLocations } = useFirestoreDelete("locations");
     const { updateField } = useFirestoreUpdate("posts");
 
     const { mutate, isPending } = useDataMutation(
@@ -622,20 +643,19 @@ const PostService =  () => {
 
         const updatedPost = await Promise.all([
           (async () => {
-            const readHashtagIds = await readDocumentQuery<HashtagsType>("taggedPostIds", "array-contains", id);
-
+            const readHashtagIds = await readDocumentQueryHashtags<HashtagsType>("taggedPostIds", "array-contains", id);
             if (readHashtagIds){
               const filtered = readHashtagIds.filter((tagId) => !data.hashtags.map(hashtag => hashtag.id).includes(tagId.id))
               await Promise.all(filtered.map((tag) =>
-                deleteFieldArray(tag.id, "taggedPostIds", id)
+                deleteFieldArrayHashtags(tag.id, "taggedPostIds", id)
               ));
             }
           })(),
           Promise.all(filteredTags.map((tag)=> (
-            createDocumentManual(tag.id, {tagKeywords: generateKeywordCombinations(tag.id), taggedPostIds: [id]})
+            createDocumentManualHashtags(tag.id, {tagKeywords: generateKeywordCombinations(tag.id), taggedPostIds: [id]})
           ))),
           Promise.all(remainingTags.map((tag) => {
-            createFieldArray(tag.id, "taggedPostIds", id)
+            createFieldArrayHashtags(tag.id, "taggedPostIds", id)
           })),
           (async () => {
             updateField(id, {
@@ -645,6 +665,25 @@ const PostService =  () => {
               usertags: data.usertags.map(usertag => usertag.id),
               scheduleId: data.scheduleId
             })
+          })(),
+          (async () => {
+            const readedSchedule = await readDocumentSingleSchedules<SchedulesType>(data.scheduleId)
+            if (readedSchedule) {
+              const placeName = readedSchedule.data.scheduleLocation.placeName
+              const readedLocations = await readDocumentQueryLocations("taggedPostIds", "array-contains", id)
+              const readedLocation = await readDocumentSingleLocations<LocationsType>(placeName)
+              if (readedLocations){
+                const filtered = readedLocations.filter((location) => location.id !== placeName)
+                await Promise.all(filtered.map((location) =>
+                  deleteFieldArrayLocations(location.id, "taggedPostIds", id)
+                ));
+              }
+              if (readedLocation.data) {
+                createFieldArrayLocations(placeName, "taggedPostIds", id)
+              } else {
+                createDocumentManualLocations(placeName, {locationKeywords: generateKeywordCombinations(placeName), taggedPostIds: [id]})
+              }
+            }
           })()
         ])
         if (updatedPost) {
@@ -665,18 +704,28 @@ const PostService =  () => {
 
   const DeletePost = (id: string, onSuccess: () => void, onError: () => void) => {
     const { deleteDocument } = useFirestoreDelete("posts");
-    const { deleteFieldArray } = useFirestoreDelete("hashtags");
-    const { readDocumentQuery } = useFirestoreRead("hashtags")
+    const { deleteFieldArray: deleteFieldArrayHashtags } = useFirestoreDelete("hashtags");
+    const { deleteFieldArray: deleteFieldArrayLocations } = useFirestoreDelete("locations");
+    const { readDocumentQuery: readDocumentQueryHashtags } = useFirestoreRead("hashtags")
+    const { readDocumentQuery: readDocumentQueryLocations } = useFirestoreRead("locations")
     const { mutate, isPending } = useDataMutation(
       ["all-posts", "following-posts", "like-posts", "tag-posts"],
       async () => {
         const deleted = await Promise.all([
           deleteDocument(id),
           (async () => {
-            const tagIdToDelete = await readDocumentQuery<HashtagsType>("taggedPostIds", "array-contains", id);
+            const tagIdToDelete = await readDocumentQueryHashtags<HashtagsType>("taggedPostIds", "array-contains", id);
             if (tagIdToDelete) {
               await Promise.all(tagIdToDelete.map((tag) =>
-                deleteFieldArray(tag.id, "taggedPostIds", id)
+                deleteFieldArrayHashtags(tag.id, "taggedPostIds", id)
+              ));
+            }
+          })(),
+          (async () => {
+            const locationIdToDelete = await readDocumentQueryLocations<LocationsType>("taggedPostIds", "array-contains", id);
+            if (locationIdToDelete) {
+              await Promise.all(locationIdToDelete.map((tag) =>
+                deleteFieldArrayLocations(tag.id, "taggedPostIds", id)
               ));
             }
           })()

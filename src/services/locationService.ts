@@ -5,7 +5,7 @@ import { inputValue } from "@/store";
 import useDataQuery from "@/hooks/useDataQuery";
 
 import { ReadDocumentType } from "@/hooks/useFirestoreRead";
-import { SchedulesType } from "@/types/schedules.type";
+import { LocationsType } from "@/types/locations.type";
 
 const LocationService = () => {
 
@@ -43,10 +43,10 @@ const LocationService = () => {
 
   const SearchPostLocation = () => {
     const inputValueState = useRecoilValue(inputValue);
-    const { readDocumentQuery } = useFirestoreRead("schedules");
-    const { data, isFetching, refetch } = useDataQuery<ReadDocumentType<SchedulesType>[], Error, ReadDocumentType<SchedulesType>[]>(
+    const { readDocumentQuery } = useFirestoreRead("locations");
+    const { data, isFetching, refetch } = useDataQuery<ReadDocumentType<LocationsType>[], Error, ReadDocumentType<LocationsType>[]>(
       "locationPostSearch",
-      () => readDocumentQuery<SchedulesType>("locationKeywords", "array-contains", inputValueState),
+      () => readDocumentQuery<LocationsType>("locationKeywords", "array-contains", inputValueState),
       (data) => data,
       {
         staleTime: 300000, 

@@ -23,7 +23,7 @@ const FollowService = () => {
     const { data, isLoading } = useDataQuery<UserMachinedType[], Error, UserMachinedType[]>(
       "follow-users",
       async ()=> {
-        const readedUsers = await readDocumentsSimplePaged<UsersType>([], "authorizationId", "in", users, "accountName", "asc", Infinity)
+        const readedUsers = await readDocumentsSimplePaged<UsersType>([], "authorizationId", "in", users, "accountName", "asc", true, Infinity)
         if (readedUsers) {
           const updatedUser = readedUsers.map((readedUser) => {
             return {

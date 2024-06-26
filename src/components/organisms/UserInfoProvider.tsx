@@ -96,11 +96,15 @@ const UserInfoProvider = ({ children }: { children: React.ReactNode }) => {
       }
 
       if (data.data.isFirstEntry) {
-        navigate("/tutorial", { state: { direction: "up" } })
+        setTimeout(() => {
+          navigate("/tutorial", { state: { direction: "up" } })
+        }, 1000)
       }
 
       if (data.data.deviceToken) {
-        requestPermission()
+        setTimeout(() => {
+          requestPermission()
+        }, 1000)
       }
     }
   }, [data])

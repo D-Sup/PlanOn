@@ -9,7 +9,7 @@ import PhotoAlbum from "../organisms/PhotoAlbum"
 import FixedTrigger from "../mocules/FixedTrigger"
 import PhotoAlbumSkeleton from "../skeleton/PhotoAlbumSkeleton"
 
-import getAccountId from "@/utils/getAccountId"
+// import getAccountId from "@/utils/getAccountId"
 
 import { ReadDocumentType } from "@/hooks/useFirestoreRead"
 import { PostsType } from "@/types/posts.type"
@@ -23,7 +23,7 @@ const PostCollectionPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const accountId = getAccountId()
+  // const accountId = getAccountId()
 
   const { type, data, title } = location.state || {};
 
@@ -32,7 +32,7 @@ const PostCollectionPage = () => {
   const { ReadPostAllSearch } = PostService()
   const { data: postData, isLoading } = ReadPostAllSearch(isSearchLocation ? "scheduleId" : "id", isSearchLocation ? [data.id] : data.taggedPostIds)
 
-  const filteredData = postData?.filter(singleData => singleData.data.authorizationId === accountId || singleData.data.private === false)
+  // const filteredData = postData?.filter(singleData => singleData.data.authorizationId === accountId || singleData.data.private === false)
 
   const handleNavigate = (post: ReadDocumentType<PostsType>) => {
     setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, { type, data, title }] }))
@@ -50,8 +50,8 @@ const PostCollectionPage = () => {
       </FixedTrigger>
 
       {isLoading && <PhotoAlbumSkeleton />}
-      {filteredData && <PhotoAlbum data={filteredData} handleFunc={handleNavigate} />}
-      {filteredData?.length === 0 &&
+      {postData && <PhotoAlbum data={postData} handleFunc={handleNavigate} />}
+      {postData?.length === 0 &&
         <span className="absolute-center block text-center text-nowrap text-md text-white">관련 게시물이 없거나 비공개 게시물 입니다.</span>
       }
     </>

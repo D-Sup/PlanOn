@@ -59,7 +59,7 @@ const PostCard = ({ data, isReadOnly }: { data: PostMachinedType, isReadOnly?: b
               openModal(PostActionOverview, { isHeightAuto: true, data })
             }
           ]} />
-          <ImageSlider photos={postData.images} ratio={"16/12"} />
+          <ImageSlider photos={postData.images} ratio={"16/16"} />
           {(postData.authorizationId === accountId || postData.private === false) &&
             <PostScheduleListUnit data={postData} handleFunc={() => {
               navigate("/schedule/detail", { state: { direction: "next", data: postData.scheduleInfo, isReadOnly: postData.authorizationId !== accountId } })
