@@ -11,6 +11,7 @@ import generateKeywordCombinations from "@/utils/generateKeywordCombinations";
 import { UsersType } from "@/types/users.type";
 
 interface SignUpResponse {
+  error: string | null,
 	isPending: boolean;
 	signUp: (signUpData: SignUpParams) => void;
 	isSuccess: boolean
@@ -24,10 +25,12 @@ interface SignUpParams {
 
 const useSignUp = (): SignUpResponse => {
 
+  const [error, setError] = useState<string | null>(null);
 	const [isPending, setIsPending] = useState<boolean>(false);
 	const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
 	const signUp = async (signUpData: SignUpParams) => {
+    setError(null);
     setIsPending(true);
 
 		const {accountEmail, accountPassword, accountName } = signUpData;
@@ -42,8 +45,11 @@ const useSignUp = (): SignUpResponse => {
 				console.log("회원가입에 성공했습니다", userCredential);
 				return userCredential.user.uid;
 			} catch (error) {
+				setError("message" in error && error.message)
 				console.error("회원가입에 실패했습니다:", error);
 				throw error
+			} finally {
+				setIsPending(false)
 			}
 		}
 
@@ -90,10 +96,7 @@ const useSignUp = (): SignUpResponse => {
 				} catch (error) {
 					console.error("권한이 없거나 부족합니다:", error);
 					throw error
-					
-				} finally {
-					setIsPending(false); 
-				}
+				} 
 			});
 		};
 		
@@ -101,7 +104,7 @@ const useSignUp = (): SignUpResponse => {
 		uid && createDocument(uid)
 	}
 
-	return { isPending, signUp, isSuccess };
+	return { error, isPending, signUp, isSuccess };
 };
 
 export default useSignUp;
