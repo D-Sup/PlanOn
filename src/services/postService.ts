@@ -37,7 +37,7 @@ const PostService =  () => {
   const CreatePost = (userData: UsersType, onSuccess: () => void, onError: () => void) => {
     const postFormState = useRecoilValue(postFormValue);
     const { photoUpload } = usePhotoUpload();
-    const { readDocumentsSimplePaged } = useFirestoreRead("users");
+    const { readDocumentSingle: readDocumentSingleUsers, readDocumentsSimplePaged } = useFirestoreRead("users");
     const { readDocumentSingle: readDocumentSingleSchedules } = useFirestoreRead("schedules");
     const { readDocumentSingle: readDocumentSingleLocations } = useFirestoreRead("locations");
     const { createDocumentManual: createDocumentManualHashtags, createFieldArray: createFieldArrayHashtags } = useFirestoreCreate("hashtags");
@@ -91,6 +91,35 @@ const PostService =  () => {
                   createDocumentManualLocations(placeName, {locationKeywords: generateKeywordCombinations(placeName), taggedPostIds: [postId]})
                 }
               }
+            })(),
+            (async () => {
+              Promise.all(
+                postFormState.usertags.map(async (usertag) => {
+                  const readedUser = await readDocumentSingleUsers<UsersType>(usertag.id)
+                  if (readedUser) {
+                    createFieldObject(
+                      usertag.id,
+                      "notificationHistory",
+                      {
+                        type: "post",
+                        notificationUrl: postId,
+                        id: uuidv4(),
+                        icon: `${userData.accountImage}`,
+                        title: `${userData.accountName}님이 회원님을 태그했습니다.`,
+                        body: `${postFormState.content}`,
+                        createdAt: new Date(),
+                      }
+                    )
+                    notificationService(
+                      readedUser.data.deviceToken,
+                      `post/detail/writable/${postId}`,
+                      `${userData.accountName}님이 회원님을 태그했습니다.`,
+                      `${postFormState.content}`,
+                      `${userData.accountImage}`
+                    );
+                  }
+                })
+                )
             })()
           ])
           if (uploadedPost) {

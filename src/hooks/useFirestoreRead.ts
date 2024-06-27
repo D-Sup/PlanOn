@@ -71,7 +71,7 @@ const readDocumentsSimplePaged = async <T>(
 ): Promise<undefined | ReadDocumentType<T>[]> => {
     try {
 			if (filterValues.length === 0) return []
-			if (isDataEnd) {
+			if (isDataEnd && lastVisible) {
 				openModal("Toast", {type: "info", message: "데이터를 모두 불러왔습니다."});
 				return data;
 			}
@@ -143,7 +143,7 @@ const readDocumentsSimplePaged = async <T>(
 
 				if (documentSnapshots.size < pageSize) {
 					isDataEnd = true;
-					pageSize !== Infinity && openModal("Toast", {type: "info", message: "데이터를 모두 불러왔습니다."});
+					lastVisible && pageSize !== Infinity && openModal("Toast", {type: "info", message: "데이터를 모두 불러왔습니다."});
 				}
 
 				if (documentSnapshots.size > 0) {
