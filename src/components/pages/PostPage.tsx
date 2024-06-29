@@ -19,7 +19,7 @@ import Loader from "../organisms/Loader";
 import FixedTrigger from "../mocules/FixedTrigger";
 import PostCardSkeleton from "../skeleton/PostCardSkeleton";
 
-import getAccountId from "@/utils/getAccountId";
+// import getAccountId from "@/utils/getAccountId";
 
 import { PostFormValueType } from "@/store";
 
@@ -27,7 +27,7 @@ const PostPage = () => {
 
   const { data: userData } = useContext(UserContext);
 
-  const accountId = getAccountId()
+  // const accountId = getAccountId()
 
   const modalStackState = useRecoilValue(modalStack);
   const isPostFormModified = useRecoilValue(isPostFormModifiedSelector);
@@ -107,7 +107,7 @@ const PostPage = () => {
         refetchPostFollow()
       } else if (currentCategory === "like-posts") {
         refetchPostLike()
-      } else if (currentCategory === "tag-posts" && postFormState.hashtags[0].id !== "") {
+      } else if (currentCategory === "tag-posts" && postFormState.hashtags[0]?.id !== "") {
         refetchPostTag()
       }
     }
