@@ -5,7 +5,6 @@ import { routeDirectionValue, paginationValue } from "@/store";
 
 import useFirestoreUpdate from "@/hooks/useFirestoreUpdate";
 import getAccountId from "@/utils/getAccountId";
-import { produce } from "immer"
 
 import PostProgressIndicator from "../organisms/PostProgressIndicator"
 import SlideTransition from "../organisms/SlideTransition";
@@ -219,15 +218,20 @@ const TutorialPage = () => {
           className="w-full h-[50px] rounded-[10px] bg-white text-lg text-black font-bold"
           onClick={() => {
             if (progress === 3) {
-              setRouteDirectionValueState(Prev => ({ ...Prev, direction: "down" }))
-              updateField(accountId, { isFirstEntry: false })
               if (filterTags.length !== 0) {
-                setPaginationValueState((Prev) =>
-                  produce(Prev, (draft) => {
-                    draft.currentCategory = "tag-posts"
-                  })
-                )
-                updateField(accountId, { filterTags: filterTags })
+                (async () => {
+                  const updated = await updateField(accountId, { isFirstEntry: false, filterTags: filterTags });
+                  if (updated) {
+                    setPaginationValueState({
+                      currentCategory: "tag-posts",
+                      posts: {
+                        lastVisible: null,
+                        isDataEnd: false
+                      },
+                    })
+                    setRouteDirectionValueState(Prev => ({ ...Prev, direction: "down" }))
+                  }
+                })()
               }
             } else {
               setProgress(Prev => Prev + 1)

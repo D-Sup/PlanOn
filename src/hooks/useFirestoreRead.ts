@@ -70,7 +70,6 @@ const readDocumentsSimplePaged = async <T>(
     isDataEnd?: boolean
 ): Promise<undefined | ReadDocumentType<T>[]> => {
     try {
-			if (filterValues.length === 0) return []
 			if (isDataEnd && lastVisible) {
 				openModal("Toast", {type: "info", message: "데이터를 모두 불러왔습니다."});
 				return data;
@@ -101,7 +100,7 @@ const readDocumentsSimplePaged = async <T>(
 					if (lastVisible) {
 						q = query(
 							collectionRef,
-							where(fieldName, whereOperator, filterValues),
+							where(fieldName, whereOperator, filterValues.length === 0 ? [""] : filterValues),
 							where("private", "==", false),
 							orderBy(sortFieldName, sortOrder),
 							startAfter(lastVisible),
@@ -110,7 +109,7 @@ const readDocumentsSimplePaged = async <T>(
 					} else {
 						q = query(
 							collectionRef,
-							where(fieldName, whereOperator, filterValues),
+							where(fieldName, whereOperator, filterValues.length === 0 ? [""] : filterValues),
 							where("private", "==", false),
 							orderBy(sortFieldName, sortOrder),
 							limit(pageSize)
@@ -120,7 +119,7 @@ const readDocumentsSimplePaged = async <T>(
 					if (lastVisible) {
 						q = query(
 							collectionRef,
-							where(fieldName, whereOperator, filterValues),
+							where(fieldName, whereOperator, filterValues.length === 0 ? [""] : filterValues),
 							orderBy(sortFieldName, sortOrder),
 							startAfter(lastVisible),
 							limit(pageSize)
@@ -128,7 +127,7 @@ const readDocumentsSimplePaged = async <T>(
 					} else {
 						q = query(
 							collectionRef,
-							where(fieldName, whereOperator, filterValues),
+							where(fieldName, whereOperator, filterValues.length === 0 ? [""] : filterValues),
 							orderBy(sortFieldName, sortOrder),
 							limit(pageSize)
 						);

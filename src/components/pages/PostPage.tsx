@@ -86,7 +86,9 @@ const PostPage = () => {
 
   useEffect(() => {
     if (userData) {
-      setPostFormState({ hashtags: userData.data.filterTags.map(tag => ({ id: tag, data: {} })) })
+      if (userData.data.filterTags.length !== 0) {
+        setPostFormState({ hashtags: userData.data.filterTags.map(tag => ({ id: tag, data: {} })) })
+      }
       if (currentCategory === "") {
         setPaginationValueState({
           currentCategory: userData?.data.selectedFilter,
@@ -111,7 +113,7 @@ const PostPage = () => {
         refetchPostTag()
       }
     }
-  }, [posts])
+  }, [posts, postFormState])
 
   useEffect(() => {
     if (isBottom && !isOpen) {
@@ -126,7 +128,6 @@ const PostPage = () => {
       }
     }
   }, [isBottom]);
-
 
   useEffect(() => {
     if (paginationValueState.posts.lastVisible === null) {
@@ -204,7 +205,9 @@ const PostPage = () => {
           ))
           }
           {!isLoading && posts?.length === 0 && !firstMount &&
-            <span className="absolute top-[200px] left-1/2 -translate-x-1/2 text-nowrap text-md text-white">게시물이 없습니다.</span>
+            <div className="w-screen h-[calc(100dvh-140px)] bg-background">
+              <span className="absolute-center text-nowrap text-md text-white">게시물이 없습니다.</span>
+            </div>
           }
         </div>
         <div className={`fixed bottom-[80px] left-1/2 -translate-x-1/2 w-[150px] h-[80px] rounded-lg transition duration-300 backdrop-blur-sm ${isBottom && isFetching && !isLoading ? "opacity-1" : "opacity-0"}`} style={{ pointerEvents: "none" }}>

@@ -96,6 +96,7 @@ const UserInfoProvider = ({ children }: { children: React.ReactNode }) => {
       }
 
       if (data.data.isFirstEntry) {
+        setRouteDirectionValueState(Prev => ({ ...Prev, previousPageUrl: [...Prev.previousPageUrl, location.pathname], data: [...Prev.data, {}] }))
         setTimeout(() => {
           navigate("/tutorial", { state: { direction: "up" } })
         }, 1000)
