@@ -7,7 +7,7 @@ import { routeDirectionValue } from "@/store";
 
 import PostService from "@/services/postService";
 
-import ActionCard from "../mocules/ActionCard";
+import ActionCard from "../molecules/ActionCard";
 
 import getAccountId from "@/utils/getAccountId";
 

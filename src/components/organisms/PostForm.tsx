@@ -2,7 +2,7 @@ import useModalStack from "@/hooks/useModalStack";
 
 import { SetterOrUpdater } from "recoil";
 
-import FormField from "../mocules/FormField";
+import FormField from "../molecules/FormField";
 import GenericInput from "../atoms/GenericInput";
 
 import { Switch } from "../shadcnUIKit/switch";

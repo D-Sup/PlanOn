@@ -1,4 +1,4 @@
-import ProfileCard from "../mocules/ProfileCard";
+import ProfileCard from "../molecules/ProfileCard";
 import ToggleButton from "../atoms/ToggleButton";
 
 import formatDate from "@/utils/formatDate";

@@ -10,11 +10,11 @@ import HashtagService from "@/services/hashtagService";
 import { produce } from "immer";
 import getAccountId from "@/utils/getAccountId";
 
-import FixedTrigger from "../mocules/FixedTrigger";
+import FixedTrigger from "../molecules/FixedTrigger";
 
 import ListUnit from "./ListUnit";
 import TagSelectionPanel from "./TagSelectionPanel";
-import ProfileCard from "../mocules/ProfileCard";
+import ProfileCard from "../molecules/ProfileCard";
 import ToggleButton from "../atoms/ToggleButton";
 import SearchBar from "../atoms/SearchBar";
 import ListSkeleton from "../skeleton/ListSkeleton";

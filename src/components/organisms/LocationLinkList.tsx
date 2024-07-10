@@ -5,8 +5,8 @@ import useDebounce from "@/hooks/useDebounce";
 
 import LocationService from "@/services/locationService";
 
-import FixedTrigger from "../mocules/FixedTrigger";
-import ProfileCard from "../mocules/ProfileCard";
+import FixedTrigger from "../molecules/FixedTrigger";
+import ProfileCard from "../molecules/ProfileCard";
 import SearchBar from "../atoms/SearchBar";
 import ListUnit from "./ListUnit";
 import ListSkeleton from "../skeleton/ListSkeleton";

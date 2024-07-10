@@ -2,7 +2,7 @@ import useModalStack from "@/hooks/useModalStack";
 import { useRef } from "react";
 
 import usePressingHandler from "@/hooks/usePressingHandler";
-import LeftAndRightSlider from "../mocules/LeftAndRightSlider";
+import LeftAndRightSlider from "../molecules/LeftAndRightSlider";
 
 import formatDate from "@/utils/formatDate";
 

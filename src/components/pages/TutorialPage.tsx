@@ -7,7 +7,7 @@ import useFirestoreUpdate from "@/hooks/useFirestoreUpdate";
 import getAccountId from "@/utils/getAccountId";
 
 import PostProgressIndicator from "../organisms/PostProgressIndicator"
-import SlideTransition from "../organisms/SlideTransition";
+import SlideTransition from "../transitions/SlideTransition";
 
 import IconLogo from "../../assets/images/icon-logo.svg?react";
 import IconHome from "../../assets/images/icon-edit.svg?react";

@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react"
-import { UserContext } from "../organisms/UserInfoProvider"
+import { UserContext } from "../providers/UserInfoProvider"
 import { useNavigate } from "react-router-dom"
 import useDebounce from "@/hooks/useDebounce"
 
@@ -12,11 +12,11 @@ import LocationService from "@/services/locationService"
 import HashtagService from "@/services/hashtagService"
 import SearchHistoryService from "@/services/searchHistoryService"
 
-import SlideTransition from "../organisms/SlideTransition"
+import SlideTransition from "../transitions/SlideTransition"
 import CategorySlider from "../organisms/CategorySlider"
 import ListUnit from "../organisms/ListUnit"
 import UserLinkListUnit from "../organisms/UserLinkListUnit"
-import FixedTrigger from "../mocules/FixedTrigger"
+import FixedTrigger from "../molecules/FixedTrigger"
 import SearchBar from "../atoms/SearchBar"
 import ListSkeleton from "../skeleton/ListSkeleton"
 

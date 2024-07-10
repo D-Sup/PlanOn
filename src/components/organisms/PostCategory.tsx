@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { UserContext } from "../organisms/UserInfoProvider"
+import { UserContext } from "../providers/UserInfoProvider";
 import { paginationValue } from "@/store"
 import { useRecoilState } from "recoil"
 

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react"
 import { useContext } from "react"
-import { UserContext } from "../organisms/UserInfoProvider"
+import { UserContext } from "../providers/UserInfoProvider"
 
 import { useSetRecoilState } from "recoil"
 import { routeDirectionValue } from "@/store"
@@ -11,7 +11,7 @@ import usePhotoUpload from "@/hooks/usePhotoUpload"
 import UserService from "@/services/userService"
 
 import Header from "../organisms/Header"
-import FixedTrigger from "../mocules/FixedTrigger"
+import FixedTrigger from "../molecules/FixedTrigger"
 import ProfileAvatar from "../atoms/ProfileAvatar"
 import GenericInput from "../atoms/GenericInput"
 import { Skeleton } from "../shadcnUIKit/skeleton"

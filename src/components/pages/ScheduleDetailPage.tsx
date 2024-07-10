@@ -6,9 +6,9 @@ import { useRecoilValue, useSetRecoilState, useResetRecoilState } from "recoil";
 import { routeDirectionValue, updateScheduleFormValue } from "@/store";
 
 import { Select, SelectTrigger, SelectContent, SelectItem } from "../shadcnUIKit/select";
-import ScheduleCard from "../atoms/ScheduleCard"
-import ScheduleCardField from "../mocules/ScheduleCardField"
-import FixedTrigger from "../mocules/FixedTrigger"
+import ScheduleCard from "../organisms/ScheduleCard";
+import ScheduleCardField from "../molecules/ScheduleCardField"
+import FixedTrigger from "../molecules/FixedTrigger"
 import MapOverview from "../organisms/MapOverview"
 import Header from "../organisms/Header";
 

@@ -5,8 +5,8 @@ import useModalStack from "@/hooks/useModalStack";
 import { useResetRecoilState, useRecoilState } from "recoil";
 import { inputValue, routeDirectionValue } from "@/store";
 
-import ImageSlider from "../mocules/ImageSlider";
-import ProfileCard from "../mocules/ProfileCard";
+import ImageSlider from "../molecules/ImageSlider";
+import ProfileCard from "../molecules/ProfileCard";
 import RateIndicator from "../atoms/RateIndicator"
 
 import wordDataConverter from "@/utils/wordDataConverter";

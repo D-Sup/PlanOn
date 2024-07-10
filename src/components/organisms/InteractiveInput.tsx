@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useContext } from "react";
-import { UserContext } from "./UserInfoProvider";
+import { UserContext } from "../providers/UserInfoProvider";
 
 import usePhotoUpload from "@/hooks/usePhotoUpload";
 import useModalStack from "@/hooks/useModalStack";

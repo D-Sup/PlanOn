@@ -7,7 +7,7 @@ import PostService from "@/services/postService";
 
 import getAccountId from "@/utils/getAccountId";
 
-import FixedTrigger from "../mocules/FixedTrigger";
+import FixedTrigger from "../molecules/FixedTrigger";
 import Header from "../organisms/Header";
 import PostCard from "../organisms/PostCard";
 import PostCardSkeleton from "../skeleton/PostCardSkeleton";

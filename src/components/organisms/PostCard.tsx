@@ -1,5 +1,5 @@
 import { useEffect, useContext } from "react";
-import { UserContext } from "../organisms/UserInfoProvider";
+import { UserContext } from "../providers/UserInfoProvider";
 import { useNavigate, useLocation } from "react-router-dom";
 import useModalStack from "@/hooks/useModalStack";
 
@@ -10,7 +10,7 @@ import ListUnit from "./ListUnit";
 import PostAuthorListUnit from "./PostAuthorListUnit";
 import CommentOverView from "./CommentOverView";
 import PostActionOverview from "./PostActionOverview";
-import ImageSlider from "../mocules/ImageSlider";
+import ImageSlider from "../molecules/ImageSlider";
 import PostContentListUnit from "./PostContentListUnit";
 import PostActionListUnit from "./PostActionListUnit";
 import TagUserOverview from "./TagUserOverview";

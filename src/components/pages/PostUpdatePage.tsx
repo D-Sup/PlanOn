@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { UserContext } from "../organisms/UserInfoProvider"
+import { UserContext } from "../providers/UserInfoProvider";
 import { useNavigate, useLocation } from "react-router-dom";
 import useModalStack from "@/hooks/useModalStack";
 
@@ -7,8 +7,8 @@ import { useRecoilValue, useRecoilState, useResetRecoilState } from "recoil";
 import { postFormValue } from "@/store";
 import { isPostFormModifiedSelector, routeDirectionValue } from "@/store";
 
-import FixedTrigger from "../mocules/FixedTrigger";
-import SlideTransition from "../organisms/SlideTransition";
+import FixedTrigger from "../molecules/FixedTrigger";
+import SlideTransition from "../transitions/SlideTransition";
 
 import Header from "../organisms/Header";
 import PostForm from "../organisms/PostForm";

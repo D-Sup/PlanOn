@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
-import RouteTransition from "./components/organisms/RouteTransition";
-import { ModalStack } from "./components/organisms/ModalStack";
+import RouteTransition from "./components/transitions/RouteTransition";
+import { ModalStack } from "./components/appComponents/ModalStack";
 import { NonLoginProtectedRoute, LoginProtectedRoute } from "./routes/ProtectedRoute";
 
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -27,7 +27,7 @@ import ChatPage from "./components/pages/ChatPage";
 import ChatRoomPage from "./components/pages/ChatRoomPage";
 import PhotoHistoryCollectionPage from "./components/pages/PhotoHistoryCollectionPage";
 import PhotoCollectionPage from "./components/pages/PhotoCollectionPage";
-import { UserInfoProvider } from "./components/organisms/UserInfoProvider";
+import { UserInfoProvider } from "./components/providers/UserInfoProvider";
 import SettingPage from "./components/pages/SettingPage";
 import ProfileUpdatePage from "./components/pages/ProfileUpdatePage";
 import SplashPage from "./components/pages/SplashPage";

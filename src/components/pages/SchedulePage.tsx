@@ -1,6 +1,6 @@
 import ScheduleService from "@/services/scheduleService"
 
-import ScrollRefreshContainer from "../organisms/ScrollRefreshContainer"
+import ScrollRefreshContainer from "../appComponents/ScrollRefreshContainer"
 import Calendar from "../organisms/Calendar"
 import ScheduleOverview from "../organisms/ScheduleOverview"
 

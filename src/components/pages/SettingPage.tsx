@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import { useNavigate } from "react-router-dom"
-import { UserContext } from "../organisms/UserInfoProvider"
+import { UserContext } from "../providers/UserInfoProvider"
 import useModalStack from "@/hooks/useModalStack"
 
 import { useResetRecoilState, useSetRecoilState } from "recoil"
@@ -8,8 +8,8 @@ import { authUser, routeDirectionValue } from "@/store"
 
 import logoutService from "@/services/logoutService"
 
-import FixedTrigger from "../mocules/FixedTrigger"
-import ScrollRefreshContainer from "../organisms/ScrollRefreshContainer"
+import FixedTrigger from "../molecules/FixedTrigger"
+import ScrollRefreshContainer from "../appComponents/ScrollRefreshContainer"
 import Header from "../organisms/Header"
 import SettingOverview from "../organisms/SettingOverview"
 import ListUnitSkeleton from "../skeleton/ListUnitSkeleton"

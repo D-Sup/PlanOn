@@ -1,7 +1,7 @@
 import { useSetRecoilState } from "recoil";
 import { routeDirectionValue } from "@/store";
 
-import ProfileCard from "../mocules/ProfileCard";
+import ProfileCard from "../molecules/ProfileCard";
 
 import IconArrow from "../../assets/images/icon-arrow-left.svg?react";
 import IconMoreVertical from "../../assets/images/icon-more-vertical.svg?react";

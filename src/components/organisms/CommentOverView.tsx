@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react"
-import { UserContext } from "../organisms/UserInfoProvider";
+import { UserContext } from "../providers/UserInfoProvider";
 import useModalStack from "@/hooks/useModalStack";
 
 import CommentService from "@/services/commentService";

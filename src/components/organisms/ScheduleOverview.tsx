@@ -11,10 +11,10 @@ import ScheduleService from "@/services/scheduleService";
 import { useRecoilValue, useResetRecoilState, SetterOrUpdater } from "recoil";
 import { selectedDateValue } from "@/store";
 
-import FixedTrigger from "../mocules/FixedTrigger";
-import ScheduleCardField from "../mocules/ScheduleCardField";
-import DateDropdownSelector from "../mocules/DateDropdownSelector";
-import ScheduleCard from "../atoms/ScheduleCard"
+import FixedTrigger from "../molecules/FixedTrigger";
+import ScheduleCardField from "../molecules/ScheduleCardField";
+import DateDropdownSelector from "../molecules/DateDropdownSelector";
+import ScheduleCard from "./ScheduleCard";
 import ScheduleOverviewSkeleton from "../skeleton/ScheduleOverviewSkeleton";
 
 import { produce } from "immer"

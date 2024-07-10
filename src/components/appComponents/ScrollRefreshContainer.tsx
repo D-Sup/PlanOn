@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react"
 import useScrollTop from "@/hooks/useScrollTop"
 
-import Loader from "./Loader"
+import Loader from "../organisms/Loader"
 
 interface ScrollRefreshContainerProps {
   children: React.ReactNode,

@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import { UserContext } from "../organisms/UserInfoProvider"
+import { UserContext } from "../providers/UserInfoProvider";
 
 import { useSetRecoilState } from "recoil";
 import { routeDirectionValue } from "@/store";
@@ -10,7 +10,7 @@ import useFirestoreDelete from "@/hooks/useFirestoreDelete";
 
 import useModalStack from "@/hooks/useModalStack";
 
-import ActionCard from "../mocules/ActionCard";
+import ActionCard from "../molecules/ActionCard";
 
 import getAccountId from "@/utils/getAccountId";
 

@@ -7,7 +7,7 @@ import ScheduleService from "@/services/scheduleService";
 
 import CalendarSkeleton from "../skeleton/CalendarSkeleton";
 
-import DateDropdownSelector from "../mocules/DateDropdownSelector"
+import DateDropdownSelector from "../molecules/DateDropdownSelector"
 
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid"
 import {

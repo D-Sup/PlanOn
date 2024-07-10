@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 import SearchBar from "../atoms/SearchBar";
-import ProfileCard from "../mocules/ProfileCard";
+import ProfileCard from "../molecules/ProfileCard";
 
 import IconArrow from "../../assets/images/icon-arrow-left.svg?react";
 import IconArrowBottom from "../../assets/images/icon-arrow-bottom.svg?react";

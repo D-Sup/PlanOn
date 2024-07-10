@@ -1,4 +1,4 @@
-import ProfileCard from "../mocules/ProfileCard";
+import ProfileCard from "../molecules/ProfileCard";
 
 import IconArrow from "../../assets/images/icon-arrow-right.svg?react";
 

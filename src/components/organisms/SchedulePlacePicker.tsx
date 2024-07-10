@@ -6,7 +6,7 @@ import { inputValue } from "@/store"
 
 import LocationService from "@/services/locationService";
 
-import SlideTransition from "./SlideTransition"
+import SlideTransition from "../transitions/SlideTransition";
 import LocationLinkList from "./LocationLinkList"
 import MapOverview from "./MapOverview"
 import Header from "./Header"

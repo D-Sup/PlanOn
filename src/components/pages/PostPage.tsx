@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { UserContext } from "../organisms/UserInfoProvider"
+import { UserContext } from "../providers/UserInfoProvider";
 import { useNavigate, useLocation } from "react-router-dom";
 import useModalStack from "@/hooks/useModalStack";
 import useScrollBottom from "@/hooks/useScrollBottom";
@@ -11,12 +11,12 @@ import { modalStack } from "@/store";
 import PostService from "@/services/postService";
 import useFirestoreUpdate from "@/hooks/useFirestoreUpdate";
 
-import ScrollRefreshContainer from "../organisms/ScrollRefreshContainer";
+import ScrollRefreshContainer from "../appComponents/ScrollRefreshContainer";
 import Header from "../organisms/Header";
 import PostCard from "../organisms/PostCard";
 import PostCategory from "../organisms/PostCategory";
 import Loader from "../organisms/Loader";
-import FixedTrigger from "../mocules/FixedTrigger";
+import FixedTrigger from "../molecules/FixedTrigger";
 import PostCardSkeleton from "../skeleton/PostCardSkeleton";
 
 // import getAccountId from "@/utils/getAccountId";

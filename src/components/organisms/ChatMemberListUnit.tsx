@@ -1,5 +1,5 @@
-import LeftAndRightSlider from "../mocules/LeftAndRightSlider";
-import ProfileCard from "../mocules/ProfileCard";
+import LeftAndRightSlider from "../molecules/LeftAndRightSlider";
+import ProfileCard from "../molecules/ProfileCard";
 
 import formatDate from "@/utils/formatDate";
 

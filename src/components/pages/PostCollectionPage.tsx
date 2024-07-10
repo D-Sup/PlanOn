@@ -6,7 +6,7 @@ import PostService from "@/services/postService"
 
 import Header from "../organisms/Header"
 import PhotoAlbum from "../organisms/PhotoAlbum"
-import FixedTrigger from "../mocules/FixedTrigger"
+import FixedTrigger from "../molecules/FixedTrigger"
 import PhotoAlbumSkeleton from "../skeleton/PhotoAlbumSkeleton"
 
 // import getAccountId from "@/utils/getAccountId"

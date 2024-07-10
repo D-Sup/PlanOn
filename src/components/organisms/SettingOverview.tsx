@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { UserContext } from "./UserInfoProvider";
+import { UserContext } from "../providers/UserInfoProvider";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSetRecoilState, useResetRecoilState } from "recoil";
 import { routeDirectionValue, authUser } from "@/store";
@@ -10,7 +10,7 @@ import useFirestoreDelete from "@/hooks/useFirestoreDelete";
 import logoutService from "@/services/logoutService";
 
 import FontOverView from "./FontOverView";
-import SettingCard from "../mocules/SettingCard";
+import SettingCard from "../molecules/SettingCard";
 
 import { v4 as uuidv4 } from "uuid";
 import { appAuth } from "@/firebase/config";

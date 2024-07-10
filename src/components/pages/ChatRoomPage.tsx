@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, useContext } from "react";
-import { UserContext } from "../organisms/UserInfoProvider";
+import { UserContext } from "../providers/UserInfoProvider";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -14,11 +14,11 @@ import useScrollBottom from "@/hooks/useScrollBottom";
 import extractMetaTagService from "@/services/extractMetaTagService";
 import notificationService from "@/services/notificationService";
 
+import ChatMessageBox from "../organisms/ChatMessageBox";
 import ChatActionOverview from "../organisms/ChatActionOverview";
 import InteractiveInput from "../organisms/InteractiveInput"
 import ChatRoomHeader from "../organisms/ChatRoomHeader";
-import FixedTrigger from "../mocules/FixedTrigger";
-import ChatMessageBox from "../atoms/ChatMessageBox"
+import FixedTrigger from "../molecules/FixedTrigger";
 
 import { produce } from "immer"
 import { db } from "@/firebase/config";

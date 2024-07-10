@@ -4,12 +4,12 @@ import useModalStack from "@/hooks/useModalStack";
 import { useRecoilValue } from "recoil";
 import { modalStack } from "@/store";
 
-import Toast from "./Toast";
-import LoadingModal from "./LoadingModal";
-import Alert from "./Alert";
-import Popup from "./Popup";
-import Modal from "./Modal";
-import PhotoSingleViewer from "./PhotoSingleViewer";
+import Toast from "../organisms/Toast";
+import LoadingModal from "../organisms/LoadingModal";
+import Alert from "../organisms/Alert";
+import Popup from "../organisms/Popup";
+import Modal from "../organisms/Modal";
+import PhotoSingleViewer from "../organisms/PhotoSingleViewer";
 
 import { ModalStackType } from "@/store";
 

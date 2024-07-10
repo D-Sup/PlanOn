@@ -7,7 +7,7 @@ import { routeDirectionValue } from "@/store";
 import { SetterOrUpdater } from "recoil";
 
 import SchedulePlacePicker from "./SchedulePlacePicker";
-import FormField from "../mocules/FormField";
+import FormField from "../molecules/FormField";
 import GenericInput from "../atoms/GenericInput";
 
 import { Switch } from "../shadcnUIKit/switch";

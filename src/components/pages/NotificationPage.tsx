@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import { UserContext } from "../organisms/UserInfoProvider"
+import { UserContext } from "../providers/UserInfoProvider"
 import { useNavigate } from "react-router-dom"
 
 import { useSetRecoilState } from "recoil"
@@ -7,9 +7,9 @@ import { routeDirectionValue } from "@/store"
 
 import formatDate from "@/utils/formatDate"
 
-import FixedTrigger from "../mocules/FixedTrigger"
-import ScrollRefreshContainer from "../organisms/ScrollRefreshContainer"
-import ProfileCard from "../mocules/ProfileCard"
+import FixedTrigger from "../molecules/FixedTrigger"
+import ScrollRefreshContainer from "../appComponents/ScrollRefreshContainer"
+import ProfileCard from "../molecules/ProfileCard"
 import ListUnitSkeleton from "../skeleton/ListUnitSkeleton"
 
 import IconArrow from "../../assets/images/icon-arrow-left.svg?react";

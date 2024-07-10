@@ -6,12 +6,12 @@ import { routeDirectionValue, newScheduleFormValue, updateScheduleFormValue, isN
 
 import ScheduleService from "@/services/scheduleService";
 
-import FixedTrigger from "../mocules/FixedTrigger";
+import FixedTrigger from "../molecules/FixedTrigger";
 import Header from "../organisms/Header"
-import SlideTransition from "../organisms/SlideTransition";
+import SlideTransition from "../transitions/SlideTransition";
 import ScheduleForm from "../organisms/ScheduleForm"
-import ScheduleCardField from "../mocules/ScheduleCardField";
-import ScheduleCard from "../atoms/ScheduleCard";
+import ScheduleCardField from "../molecules/ScheduleCardField";
+import ScheduleCard from "../organisms/ScheduleCard";
 
 import { produce } from "immer"
 import formatDate from "@/utils/formatDate";

@@ -1,5 +1,5 @@
 import { useEffect, useContext } from "react"
-import { UserContext } from "../organisms/UserInfoProvider"
+import { UserContext } from "../providers/UserInfoProvider"
 import { useNavigate, useLocation } from "react-router-dom"
 import useDebounce from "@/hooks/useDebounce"
 
@@ -14,11 +14,11 @@ import useModalStack from "@/hooks/useModalStack"
 
 import UserService from "@/services/userService"
 
-import ScrollRefreshContainer from "../organisms/ScrollRefreshContainer"
+import ScrollRefreshContainer from "../appComponents/ScrollRefreshContainer"
 import Header from "../organisms/Header"
 import ChatMemberListUnit from "../organisms/ChatMemberListUnit"
 import ListUnit from "../organisms/ListUnit"
-import FixedTrigger from "../mocules/FixedTrigger"
+import FixedTrigger from "../molecules/FixedTrigger"
 import SearchBar from "../atoms/SearchBar"
 import ListUnitSkeleton from "../skeleton/ListUnitSkeleton"
 

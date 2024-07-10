@@ -7,7 +7,7 @@ import { routeDirectionValue } from "@/store"
 import ChatService from "@/services/chatService"
 
 import Header from "../organisms/Header"
-import FixedTrigger from "../mocules/FixedTrigger"
+import FixedTrigger from "../molecules/FixedTrigger"
 import ImageFrame from "../atoms/ImageFrame"
 import Loader from "../organisms/Loader"
 

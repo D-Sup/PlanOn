@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import useModalStack from "@/hooks/useModalStack";
 import useFirestoreUpdate from "@/hooks/useFirestoreUpdate";
-import ImageFrame from "./ImageFrame";
+import ImageFrame from "../atoms/ImageFrame";
 
 import getAccountId from "@/utils/getAccountId";
 

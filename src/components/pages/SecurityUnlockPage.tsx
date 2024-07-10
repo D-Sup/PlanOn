@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react"
-import { UserContext } from "../organisms/UserInfoProvider"
+import { UserContext } from "../providers/UserInfoProvider"
 import { useNavigate, useLocation } from "react-router-dom"
 import useFirestoreUpdate from "@/hooks/useFirestoreUpdate"
 import { useSetRecoilState } from "recoil"
