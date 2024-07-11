@@ -2425,7 +2425,7 @@ key 속성을 통해 라우트 경로를 기반으로 설정하여
 라우트가 변경될 때마다 새로운 애니메이션이 적용되도록 할 수 있습니다.  
 timeout 속성을 통해 애니메이션 지속 시간을 설정할 수 있습니다.
 
-- `routeDirectionValueState`
+- `routeDirectionValueState` - 페이지 전환 시 방향과 관련된 상태를 관리하는 Recoil atom입니다.  
 routeDirectionValueState.direction이 빈 문자열이 아닌 경우,  
 설정된 전환 방향에 따라 애니메이션 클래스를 동적으로 설정할 수 있습니다.
 
@@ -2827,6 +2827,68 @@ notificationService(
 > Navigate Back 을 수행할 시 리다이렉트할 URL을 저장하고  
 > 명시적으로 리다이렉트하는 방법으로 해결했습니다.
 
+<details>
+  <summary>코드보기</summary>
+
+```tsx
+import { atom } from "recoil";
+
+interface routeDirectionValueType {
+  direction: "next" | "prev" | "up" | "down" | "fade" | "",
+  previousPageUrl: string[]
+  data: any[],
+}
+
+export const routeDirectionValue = atom<routeDirectionValueType>({
+  key: "routeTransitionDirection",
+  default: {direction: "", previousPageUrl: [], data: []},
+});
+```
+
+```tsx
+import { routeDirectionValue } from "@/store";
+
+const RouteTransition = ( ... ) => {
+
+  const [routeDirectionValueState, setRouteDirectionValueState] = useRecoilState(routeDirectionValue)
+
+  useEffect(() => {
+    if (routeDirectionValueState.direction !== "") {
+      const previousPageUrl = routeDirectionValueState.previousPageUrl
+      const data = routeDirectionValueState.data
+
+      if (previousPageUrl.length !== 0) {
+        navigate(
+          previousPageUrl[previousPageUrl.length - 1], 
+          { 
+            state: data[data.length - 1] 
+            ? JSON.parse(JSON.stringify(data[data.length - 1])) 
+            : {} 
+          }
+        )
+      } else {
+        navigate(-1)
+      }
+
+      if (data.length === 0 && previousPageUrl.length === 0) {
+        setTimeout(() => resetRouteDirectionValueState(), 300)
+      } else {
+        setTimeout(() => setRouteDirectionValueState(Prev => ({
+          ...Prev,
+          previousPageUrl: Prev.previousPageUrl.filter((url) => (url !== previousPageUrl[previousPageUrl.length - 1])),
+          data: Prev.data.filter((url) => (url !== data[data.length - 1])),
+          direction: ""
+        })), 300)
+      }
+    }
+  }, [routeDirectionValueState])
+
+  return (...)
+}
+```
+
+</details>  
+
 <br/>
 
 ### 이전 페이지 상태값 손실
@@ -2845,7 +2907,9 @@ notificationService(
 <details>
   <summary>코드보기</summary>
 
-> routeDirectionValueState 상태를 통해 side effect를 발생시키면 페이지 전환을 처리합니다.   
+> routeDirectionValueState 상태는  
+> 페이지 전환 시 방향과 관련된 상태를 관리하는 Recoil atom입니다.  
+> 해당 상태를 통해 side effect를 발생시키면 페이지 전환을 처리합니다.   
 > 
 > direction 값이 비어 있지 않으면,   
 > previousPageUrl 배열에서 마지막 URL을 가져와 해당 URL로 명시적으로 리다이렉트합니다.   
