@@ -2152,6 +2152,8 @@ export { ModalStack };
 > 스와이프 동작을 통해 모달을 열고 닫거나 모달의 높이를 조절하는 것은 물론,   
 > 이미지를 스와이프하거나, 리스트 항목을 조작하거나, 스와이프하여 새로고침하는 등 사용자의 의도에 맞는 반응을 제공하도록 구현했습니다.
 
+![스와이프](https://github.com/user-attachments/assets/21cd169b-4355-47d2-bfc0-f0de498b8401)
+
 <details>
 <summary>코드보기</summary>
 
